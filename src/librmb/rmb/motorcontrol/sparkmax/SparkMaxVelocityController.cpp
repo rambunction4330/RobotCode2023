@@ -7,8 +7,7 @@ namespace rmb {
 
 SparkMaxVelocityController::SparkMaxVelocityController(const MotorConfig motorConfig, const PIDConfig pidConfig, 
                                                        const ProfileConfig profileConfig, const FeedbackConfig feedbackConfig, 
-                                                       std::initializer_list<const MotorConfig> followerList,
-                                                       std::function<void(rev::CANSparkMax&)> customConfig) :
+                                                       std::initializer_list<const MotorConfig> followerList) :
                                                        sparkMax(motorConfig.id, motorConfig.motorType), 
                                                        pidController(sparkMax.GetPIDController()),
                                                        tolerance(pidConfig.tolerance),
@@ -40,7 +39,6 @@ SparkMaxVelocityController::SparkMaxVelocityController(const MotorConfig motorCo
   }
 
   // Encoder Configuation
-
   switch (encoderType) {
   case EncoderType::HallSensor:
     encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(sparkMax.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kHallSensor, feedbackConfig.countPerRev));
@@ -59,7 +57,6 @@ SparkMaxVelocityController::SparkMaxVelocityController(const MotorConfig motorCo
   pidController.SetFeedbackDevice(*encoder);
   
   // Limit Switch Configuaration
-
   switch(feedbackConfig.forwardSwitch) {
     case LimitSwitchConfig::Disabled:
       sparkMax.GetForwardLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen).EnableLimitSwitch(false);
@@ -89,9 +86,6 @@ SparkMaxVelocityController::SparkMaxVelocityController(const MotorConfig motorCo
     followers.emplace_back(std::make_unique<rev::CANSparkMax>(follower.id, follower.motorType));
     followers.back()->Follow(sparkMax, follower.inverted);
   }
-
-  // Run Custome Config
-  customConfig(sparkMax);
 }
 
 void SparkMaxVelocityController::setVelocity(units::radians_per_second_t velocity) {
@@ -101,10 +95,6 @@ void SparkMaxVelocityController::setVelocity(units::radians_per_second_t velocit
 
 units::radians_per_second_t SparkMaxVelocityController::getTargetVelocity() const {
  return targetVelocity;
-}
-
-units::radians_per_second_t SparkMaxVelocityController::getMaxVelocity() const {
-  return units::revolutions_per_minute_t(pidController.GetSmartMotionMaxVelocity() / gearRatio);
 }
 
 void SparkMaxVelocityController::setPower(double power) {
@@ -140,6 +130,7 @@ units::radians_per_second_t SparkMaxVelocityController::getVelocity() const {
     return units::revolutions_per_minute_t(ab->GetVelocity() / gearRatio);
   }
   }
+
   return 0_rpm;
 }
 
@@ -161,6 +152,7 @@ units::radian_t SparkMaxVelocityController::getPosition() const {
     return units::turn_t(ab->GetPosition() / gearRatio);
   }
   }
+
   return 0_rad;
 }
 
@@ -181,7 +173,7 @@ void SparkMaxVelocityController::zeroPosition(units::radian_t offset) {
   }
   case EncoderType::Absolute: {
     rev::SparkMaxAbsoluteEncoder* ab = static_cast<rev::SparkMaxAbsoluteEncoder*>(encoder.get());
-    ab->SetZeroOffset(ab->GetPosition() + units::turn_t(offset).to<double>() * gearRatio);
+    ab->SetZeroOffset(units::turn_t(offset).to<double>() * gearRatio);
   }
   }
 }

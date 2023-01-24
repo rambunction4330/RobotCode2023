@@ -33,13 +33,6 @@ public:
   virtual units::radians_per_second_t getTargetVelocity() const = 0;
 
   /**
-   * Common interface for getting the maximum angular velocity.
-   * 
-   * @return The maximum angular velocity in radianss per second.
-   */
-  virtual units::radians_per_second_t getMaxVelocity() const = 0;
-
-  /**
    * Common interface for setting a mechanism's raw power output.
    */
   virtual void setPower(double power) = 0;

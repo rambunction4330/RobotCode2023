@@ -13,7 +13,7 @@
 #include "rmb/motorcontrol/feedforward/SimpleFeedforward.h"
 
 namespace rmb {
-// THERES A BUG IN GCC! AAARRGGHHHH!
+
 namespace SparkMaxPositionControllerHelper {
   struct MotorConfig {
     int id;
@@ -30,11 +30,9 @@ namespace SparkMaxPositionControllerHelper {
 
   struct Range {
     units::radian_t maxPosition = std::numeric_limits<units::radian_t>::infinity();
-    units::radian_t minPosition = -std::numeric_limits<units::radian_t>::infinity();
+    units::radian_t minPosition = std::numeric_limits<units::radian_t>::infinity();
     bool isContinouse = false;
   };
-
-  const rmb::SimpleFeedforward<units::radians> defaultFeedforward;
 
   struct ProfileConfig {
     bool useSmartMotion = false;
@@ -72,10 +70,8 @@ public:
   SparkMaxPositionController(const SparkMaxPositionController&) = delete;
     
   SparkMaxPositionController(const MotorConfig motorConfig, const PIDConfig pidConfig = {}, 
-                             const rmb::Feedforward<units::radians>& feedforward = SparkMaxPositionControllerHelper::defaultFeedforward,
                              const Range range = {}, const ProfileConfig profileConfig = {}, 
-                             const FeedbackConfig feedbackConfig = {}, std::initializer_list<const MotorConfig> followers = {},
-                             std::function<void(rev::CANSparkMax&)> customConfig = [](rev::CANSparkMax&){ return; });
+                             const FeedbackConfig feedbackConfig = {}, std::initializer_list<const MotorConfig> followers = {});
 
   //--------------------
   // Controller Methods
@@ -100,14 +96,14 @@ public:
    * 
    * @return The minimum position in radians.
    */
-  units::radian_t getMinPosition() const;
+  units::radian_t getMinPosition() const override;
 
   /**
    * Gets the maximum position.
    * 
    * @return The maximum position in radians.
    */
-  units::radian_t getMaxPosition() const;
+  units::radian_t getMaxPosition() const override;
 
   /**
    * Disables the motor.
@@ -164,6 +160,9 @@ private:
   rev::SparkMaxPIDController pidController;
   units::radian_t targetPosition;
   units::radian_t tolerance;
+
+  units::radian_t minPose;
+  units::radian_t maxPose;
 
   std::unique_ptr<rev::MotorFeedbackSensor> encoder;
   EncoderType encoderType;

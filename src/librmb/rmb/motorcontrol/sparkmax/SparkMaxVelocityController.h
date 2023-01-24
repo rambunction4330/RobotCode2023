@@ -15,7 +15,6 @@
 
 namespace rmb {
 
-// THERES A BUG IN GCC! AAARRGGHHHH!
 namespace SparkMaxVelocityControllerHelper {
   struct MotorConfig {
     int id;
@@ -46,8 +45,6 @@ namespace SparkMaxVelocityControllerHelper {
     int countPerRev = 42;
     LimitSwitchConfig forwardSwitch = Disabled, reverseSwitch = Disabled;
   };
-
-  const rmb::SimpleFeedforward<units::radians> defaultFeedforward;
 }
 
 /**
@@ -68,8 +65,13 @@ public:
     
   SparkMaxVelocityController(const MotorConfig motorConfig, const PIDConfig pidConfig = {}, 
                              const ProfileConfig profileConfig = {}, const FeedbackConfig feedbackConfig = {}, 
-                             std::initializer_list<const MotorConfig> followers = {},
-                             std::function<void(rev::CANSparkMax&)> customConfig = [](rev::CANSparkMax&){ return; });
+                             std::initializer_list<const MotorConfig> followers = {});
+
+  rev::CANSparkMax& getMotor();
+
+  rev::SparkMaxPIDController& getPIDCOntroller();
+
+  std::unique_ptr<rev::MotorFeedbackSensor>& getFeedbackSensor();
 
   //--------------------------------------------------
   // Methods Inherited from AngularVelocityController
@@ -88,13 +90,6 @@ public:
    * @return The target angular velocity in radians per second.
    */
   units::radians_per_second_t getTargetVelocity() const override;
-
-  /**
-   * Gets the maximum angular velocity.
-   * 
-   * @return The maximum angular velocity in radians per second.
-   */
-  units::radians_per_second_t getMaxVelocity() const override;
 
   /**
    * Common interface for setting a mechanism's raw power output.
@@ -131,7 +126,8 @@ public:
 
   /**
    * Zeros the angular positon the motor so the current position is set to 
-   * the offset.
+   * the offset. In the case of an absolute encoder this sets the zero offset with
+   * no regard to the current position.
    *
    * @param offset the offset from the current angular position at which to 
    *               set the zero position.
@@ -157,7 +153,6 @@ private:
   rev::SparkMaxPIDController pidController;
   units::radians_per_second_t targetVelocity = 0.0_rpm;
   units::radians_per_second_t tolerance;
-  units::radians_per_second_t maxVelcoity;
 
   std::unique_ptr<rev::MotorFeedbackSensor> encoder;
   EncoderType encoderType;

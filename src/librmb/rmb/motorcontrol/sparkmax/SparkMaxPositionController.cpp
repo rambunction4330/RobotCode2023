@@ -3,14 +3,13 @@
 
 namespace rmb {
 SparkMaxPositionController::SparkMaxPositionController(const MotorConfig motorConfig, const PIDConfig pidConfig, 
-                                                       const rmb::Feedforward<units::radians>& feedforward,
                                                        const Range range, const ProfileConfig profileConfig, 
                                                        const FeedbackConfig feedbackConfig, 
-                                                       std::initializer_list<const MotorConfig> followerList,
-                                                       std::function<void(rev::CANSparkMax&)> customConfig) :
+                                                       std::initializer_list<const MotorConfig> followerList) :
                                                        sparkMax(motorConfig.id, motorConfig.motorType), 
                                                        pidController(sparkMax.GetPIDController()),
                                                        tolerance(pidConfig.tolerance),
+                                                       minPose(range.minPosition), maxPose(range.maxPosition),
                                                        encoderType(feedbackConfig.encoderType), 
                                                        gearRatio(feedbackConfig.gearRatio) {
 
@@ -30,9 +29,11 @@ SparkMaxPositionController::SparkMaxPositionController(const MotorConfig motorCo
   pidController.SetOutputRange(pidConfig.minOutput, pidConfig.maxOutput);
 
   // Range
-  pidController.SetPositionPIDWrappingEnabled(range.isContinouse);
-  pidController.SetPositionPIDWrappingMinInput(units::turn_t(range.minPosition).to<double>() * gearRatio);
-  pidController.SetPositionPIDWrappingMaxInput(units::turn_t(range.maxPosition).to<double>() * gearRatio);
+  if (range.isContinouse) {
+    pidController.SetPositionPIDWrappingEnabled(true);
+    pidController.SetPositionPIDWrappingMinInput(units::turn_t(range.minPosition).to<double>() * gearRatio);
+    pidController.SetPositionPIDWrappingMaxInput(units::turn_t(range.maxPosition).to<double>() * gearRatio);
+  }
 
   // Motion Profiling Configuration
   controlType = rev::CANSparkMax::ControlType::kPosition;
@@ -93,14 +94,10 @@ SparkMaxPositionController::SparkMaxPositionController(const MotorConfig motorCo
     followers.emplace_back(std::make_unique<rev::CANSparkMax>(follower.id, follower.motorType));
     followers.back()->Follow(sparkMax, follower.inverted);
   }
-
-  // Run Custome Config
-  customConfig(sparkMax);
-
 }
 
 void SparkMaxPositionController::setPosition(units::radian_t position) {
-  targetPosition = position;
+  targetPosition = pidController.GetPositionPIDWrappingEnabled() ? position : std::clamp(position, minPose, maxPose);
   pidController.SetReference(units::turn_t(targetPosition).to<double>() * gearRatio, controlType);
 }
 
@@ -109,11 +106,11 @@ units::radian_t SparkMaxPositionController::getTargetPosition() const {
 }
 
 units::radian_t SparkMaxPositionController::getMinPosition() const {
-  return units::turn_t(pidController.GetPositionPIDWrappingMinInput() / gearRatio);
+  return minPose;
 }
 
 units::radian_t SparkMaxPositionController::getMaxPosition() const {
-  return units::turn_t(pidController.GetPositionPIDWrappingMaxInput() / gearRatio);
+  return maxPose;
 }
 
 void SparkMaxPositionController::disable() {
