@@ -56,7 +56,7 @@ namespace SparkMaxPositionControllerHelper {
  * A wrapper around the SparkMax motorcontroller that allows for the user to set
  * and get the position of the motor accurately through PID functionallity
  */
-class SparkMaxPositionController : AngularPositionFeedbackController {
+class SparkMaxPositionController : public AngularPositionFeedbackController {
 public:
   using MotorConfig = SparkMaxPositionControllerHelper::MotorConfig;
   using PIDConfig = SparkMaxPositionControllerHelper::PIDConfig;

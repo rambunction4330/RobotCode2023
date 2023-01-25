@@ -8,17 +8,17 @@
 namespace ManipulatorConstants {
 
 namespace Elevator {
-  rmb::SparkMaxPositionController::MotorConfig leader {
+  const rmb::SparkMaxPositionController::MotorConfig leader {
     21, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
-  rmb::SparkMaxPositionController::MotorConfig follower {
+  const rmb::SparkMaxPositionController::MotorConfig follower {
     22, rev::CANSparkMax::MotorType::kBrushless, true
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
     0.0 /*  <- P */ , 0.0/* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
-    0.0_rad_per_s /* <- Tolerance */, 
+    0.0_rad /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     1.0 /* <- maxOutput */, -1.0 /* <- minOutput */
   };
@@ -47,13 +47,13 @@ namespace Elevator {
 }
 
 namespace Arm {
-  rmb::SparkMaxPositionController::MotorConfig motorConfig {
+  const rmb::SparkMaxPositionController::MotorConfig motorConfig {
     31, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
     0.0 /*  <- P */ , 0.0/* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
-    0.0_rad_per_s /* <- Tolerance */, 
+    0.0_rad /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     1.0 /* <- maxOutput */, -1.0 /* <- minOutput */
   };
