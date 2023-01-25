@@ -33,13 +33,6 @@ public:
   virtual units::meters_per_second_t getTargetVelocity() const = 0;
 
   /**
-   * Common interface for getting the maximum linear velocity.
-   * 
-   * @return The maximum linear velocity in meters per second.
-   */
-  virtual units::meters_per_second_t getMaxVelocity() const = 0;
-
-  /**
    * Common interface for setting a mechanism's raw power output.
    */
   virtual void setPower(double power) = 0;

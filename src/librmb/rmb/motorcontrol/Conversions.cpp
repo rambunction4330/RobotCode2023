@@ -18,7 +18,6 @@ public:
   
   void setVelocity(units::meters_per_second_t velocity) { angular->setVelocity(velocity / conversion); }
   units::meters_per_second_t getTargetVelocity() const { return angular->getTargetVelocity() * conversion; }
-  units::meters_per_second_t getMaxVelocity() const { return angular->getMaxVelocity() * conversion; }
   void setPower(double power) { angular->setPower(power); }
   void disable() { angular->disable(); }
   void stop() { angular->stop(); }
@@ -74,7 +73,6 @@ class LinearAsAngularVelocityController: public AngularVelocityController {
 
   void setVelocity(units::radians_per_second_t velocity) { linear->setVelocity(velocity * conversion); }
   units::radians_per_second_t getTargetVelocity() const { return linear->getTargetVelocity() / conversion; }
-  units::radians_per_second_t getMaxVelocity() const { return linear->getMaxVelocity() / conversion; }
   void setPower(double power) { linear->setPower(power); }
   void disable() { linear->disable(); }
   void stop() { linear->stop(); }
