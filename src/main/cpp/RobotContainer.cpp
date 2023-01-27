@@ -14,34 +14,34 @@
 
 RobotContainer::RobotContainer() {
   // Set Default Commands
-  driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
+  // driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
 
   // Configure the button bindings
   ConfigureBindings();
 }
 
 void RobotContainer::scheduleAutoCommand() {
-  if (autoCommand.IsScheduled()) { return; }
+  // if (autoCommand.IsScheduled()) { return; }
   
-  // Zero dometry
-  driveSubsystem.resetOdometry(frc::Pose2d(0.0_m, 0.0_m, 0.0_rad));
-  if (!autoCommand.IsScheduled()) {
-    frc::TrajectoryConfig config{0.75_mps, 2.0_mps_sq};
-    config.SetKinematics(DriveConstants::kinematics);
+  // // Zero dometry
+  // driveSubsystem.resetOdometry(frc::Pose2d(0.0_m, 0.0_m, 0.0_rad));
+  // if (!autoCommand.IsScheduled()) {
+  //   frc::TrajectoryConfig config{0.75_mps, 2.0_mps_sq};
+  //   config.SetKinematics(DriveConstants::kinematics);
 
-    frc::Trajectory trajectory = frc::TrajectoryGenerator::GenerateTrajectory(
-      frc::Pose2d(0.0_m, 0.0_m, 0.0_rad), 
-      {{1.2_m, 0.0_m}}, 
-      frc::Pose2d(1.5_m, -1.4_m, 180.0_deg),
-      config
-    );
+  //   frc::Trajectory trajectory = frc::TrajectoryGenerator::GenerateTrajectory(
+  //     frc::Pose2d(0.0_m, 0.0_m, 0.0_rad), 
+  //     {{1.2_m, 0.0_m}}, 
+  //     frc::Pose2d(1.5_m, -1.4_m, 180.0_deg),
+  //     config
+  //   );
 
-    // Drives a trajectory to the front of the charging pad and  the balances on it
-    autoCommand = driveSubsystem.getTrajectoryCommand(trajectory).AndThen(frc2::CommandPtr(BalanceCommand(driveSubsystem)));
+  //   // Drives a trajectory to the front of the charging pad and  the balances on it
+  //   autoCommand = driveSubsystem.getTrajectoryCommand(trajectory).AndThen(frc2::CommandPtr(BalanceCommand(driveSubsystem)));
 
-    // Start to command
-    autoCommand.Schedule();
-  }
+  //   // Start to command
+  //   autoCommand.Schedule();
+  // }
 }
 
 void RobotContainer::ConfigureBindings() {

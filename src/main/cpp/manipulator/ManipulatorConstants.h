@@ -17,28 +17,28 @@ namespace Elevator {
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    0.0 /*  <- P */ , 0.0/* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
+    0.3 /*  <- P */ , 0.0001/* <- I */, 1.5 /* <- D */, 0.0 /* <- FF */,
     0.0_rad /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    1.0 /* <- maxOutput */, -1.0 /* <- minOutput */
+    0.3 /* <- maxOutput */, -0.2 /* <- minOutput */
   };
 
-  const units::meter_t sproketDiameter = 1.625_in;
+  const units::meter_t sproketDiameter = 1.375_in;
 
   const rmb::SparkMaxPositionController::Range range {
-    0.0_m * (2_rad / sproketDiameter)/* <- max */, 1.0_m * (2_rad / sproketDiameter)/* <- min */,
+    27.25_in * (2_rad / sproketDiameter)/* <- max */, 0.0_in * (2_rad / sproketDiameter)/* <- min */,
     false /* <- isContinouse */
   };
 
   const rmb::SparkMaxPositionController::ProfileConfig profileConfig {
     false /* <- useSmartMotion */, 
-    0.0_mps * (2_rad / sproketDiameter) /* <- maxVelocity */, 0.0_rad_per_s /* <- minVelocity */,
-    0.0_mps_sq * (2_rad / sproketDiameter)  /* <- maxAcceleration */,
+    0.2_mps * (2_rad / sproketDiameter) /* <- maxVelocity */, 0.0_rad_per_s /* <- minVelocity */,
+    0.4_mps_sq * (2_rad / sproketDiameter)  /* <- maxAcceleration */,
     rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrategy */
-  };
+  }; 
 
   const rmb::SparkMaxPositionController::FeedbackConfig feedbackConfig {
-    4.0 /* <- gearRatio */, 
+    5.0 /* <- gearRatio */, 
     rmb::SparkMaxPositionController::EncoderType::HallSensor/* <- encoderType */,
     42 /* <- countPerRev */,
     rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- forwardSwitch */,
@@ -52,14 +52,14 @@ namespace Arm {
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    0.0 /*  <- P */ , 0.0/* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
+    0.9 /*  <- P */ , 0.01/* <- I */, 1.5 /* <- D */, 0.0 /* <- FF */,
     0.0_rad /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    1.0 /* <- maxOutput */, -1.0 /* <- minOutput */
+    0.75 /* <- maxOutput */, -0.75 /* <- minOutput */
   };
 
   const rmb::SparkMaxPositionController::Range range {
-    0.0_rad /* <- max */, 1.0_rad /* <- min */,
+    100_deg /* <- max */, -10_deg /* <- min */,
     false /* <- isContinouse */
   };
 
@@ -71,7 +71,7 @@ namespace Arm {
   };
 
   const rmb::SparkMaxPositionController::FeedbackConfig feedbackConfig {
-    4.0 /* <- gearRatio */, 
+    45.0 * (54.0 / 22.0) /* <- gearRatio */, 
     rmb::SparkMaxPositionController::EncoderType::HallSensor/* <- encoderType */,
     42 /* <- countPerRev */,
     rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- forwardSwitch */,

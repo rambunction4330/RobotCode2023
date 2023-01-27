@@ -16,9 +16,7 @@ void Robot::TeleopInit() {}
 void Robot::TeleopPeriodic()  {} 
 void Robot::TeleopExit() {}
 
-void Robot::AutonomousInit() {
-  // container.scheduleAutoCommand();
-}
+void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic()  {} 
 void Robot::AutonomousExit()  {} 
 
