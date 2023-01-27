@@ -29,8 +29,8 @@ namespace SparkMaxPositionControllerHelper {
   };
 
   struct Range {
+    units::radian_t minPosition = -std::numeric_limits<units::radian_t>::infinity();
     units::radian_t maxPosition = std::numeric_limits<units::radian_t>::infinity();
-    units::radian_t minPosition = std::numeric_limits<units::radian_t>::infinity();
     bool isContinouse = false;
   };
 

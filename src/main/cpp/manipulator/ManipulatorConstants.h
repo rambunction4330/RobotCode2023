@@ -26,7 +26,8 @@ namespace Elevator {
   const units::meter_t sproketDiameter = 1.625_in;
 
   const rmb::SparkMaxPositionController::Range range {
-    0.0_m * (2_rad / sproketDiameter)/* <- max */, 1.0_m * (2_rad / sproketDiameter)/* <- min */,
+    0.0_m * (2_rad / sproketDiameter)/* <- min */,
+    1.0_m * (2_rad / sproketDiameter)/* <- max */,
     false /* <- isContinouse */
   };
 
