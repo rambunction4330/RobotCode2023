@@ -7,6 +7,8 @@
 
 namespace ManipulatorConstants {
 
+const units::inch_t maxHeight = 75_in;
+
 namespace Elevator {
   const rmb::SparkMaxPositionController::MotorConfig leader {
     21, rev::CANSparkMax::MotorType::kBrushless, false
@@ -26,8 +28,8 @@ namespace Elevator {
   const units::meter_t sproketDiameter = 1.375_in;
 
   const rmb::SparkMaxPositionController::Range range {
-    0.0_m * (2_rad / sproketDiameter)/* <- min */,
-    1.0_m * (2_rad / sproketDiameter)/* <- max */,
+    12_in * (2_rad / sproketDiameter)/* <- min */,
+    39_in * (2_rad / sproketDiameter)/* <- max */,
     false /* <- isContinouse */
   };
 
@@ -60,7 +62,7 @@ namespace Arm {
   };
 
   const rmb::SparkMaxPositionController::Range range {
-    100_deg /* <- max */, -10_deg /* <- min */,
+    -10_deg /* <- min */, 100_deg /* <- max */,
     false /* <- isContinouse */
   };
 
@@ -78,7 +80,9 @@ namespace Arm {
     rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- forwardSwitch */,
     rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- reverseSwitch */
   };
-}
+
+  const units::meter_t length = 1_m;
+  } // namespace Arm
 
 namespace Claw {
 
