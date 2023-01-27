@@ -50,9 +50,8 @@ frc2::Trigger TwistLessThan(double threshold) const { return AxisLessThan(Axes::
 frc2::Trigger TwistMoreThan(double threshold) const { return AxisGreaterThan(Axes::twist, threshold); }
 
 double GetThrottle() const {
-  double raw = -GetRawAxis(Axes::throttle);
-  if (abs(raw) < deadZone) { return 0.0; }
-  return squareOutputs ? std::copysign(raw * raw, raw) : raw;
+  double raw = (-GetRawAxis(Axes::throttle) + 1.0) / 2.0;
+  return raw;
 }
 
 frc2::Trigger ThrottleLessThan(double threshold) const { return AxisLessThan(Axes::throttle, threshold); }

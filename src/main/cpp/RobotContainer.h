@@ -5,8 +5,11 @@
 #pragma once
 
 #include <rmb/controller/LogitechGamepad.h>
+#include <rmb/controller/LogitechJoystick.h>
 
 #include "drivetrain/DriveSubsystem.h"
+#include "manipulator/ElevatorSubsystem.h"
+#include "manipulator/ArmSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -24,10 +27,9 @@ class RobotContainer {
  private:
   void ConfigureBindings();
 
-  rmb::LogitechGamepad driveGamepad{0, 0.1, true};
-
-  public:
-  DriveSubsystem driveSubsystem;
+  rmb::LogitechJoystick driveStick{0, 0.1, true};
+  ElevatorSubsystem elevatorSubsystem;
+  ArmSubsystem armSubsystem;
   private:
 
   // Holds the autonomus command thats currently being used because the 
