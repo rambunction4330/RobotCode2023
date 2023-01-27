@@ -18,9 +18,12 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
  public:
   ElevatorSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
+  void setHeightPercent(double height);
+  void setHeight(units::meter_t height);
+  bool atHeight();
+  bool goingDown();
+  bool goingUp();
+
   void Periodic() override;
 
  private:
