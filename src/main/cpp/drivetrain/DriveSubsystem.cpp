@@ -6,12 +6,12 @@
 
 #include <iostream>
 
-#include <wpi/raw_ostream.h>
-
-#include <units/base.h>
-
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/RamseteCommand.h>
+
+DriveSubsystem::DriveSubsystem() {
+  frc::SmartDashboard::PutData("Feild", &displayFeild);
+}
 
 void DriveSubsystem::arcadeDrive(double xSpeed, double zRotation) {
   drive.arcadeDrive(xSpeed, zRotation);
@@ -103,6 +103,7 @@ void DriveSubsystem::driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds) {
 
 // Trajectory Following
 frc2::CommandPtr DriveSubsystem::getTrajectoryCommand(frc::Trajectory trajectory) {
+  displayFeild.GetObject("trajectory")->SetTrajectory(trajectory);
   return frc2::CommandPtr(frc2::RamseteCommand(
     trajectory, [&]() { return getPose(); }, DriveConstants::ramseteController,
     DriveConstants::kinematics, 
@@ -122,5 +123,5 @@ void DriveSubsystem::stop() {
 
 // This method will be called once per scheduler run
 void DriveSubsystem::Periodic() {
-  odometry.updatePose();
+  displayFeild.SetRobotPose(odometry.updatePose());
 }

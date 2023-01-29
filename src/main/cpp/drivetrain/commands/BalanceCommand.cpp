@@ -47,6 +47,8 @@ void BalanceCommand::Execute() {
     balanceTimer.Stop();
     balanceTimer.Reset();
   }
+
+  std::cout << units::length::to_string((driveSubsystem.getPose() - offset).X()) << std::endl;
 }
 
 // Called once the command ends or is interrupted.
@@ -56,6 +58,7 @@ void BalanceCommand::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool BalanceCommand::IsFinished() {
-  // Aftering being level for 0.5 seconds the command ends
-  return balanceTimer.Get() > 2.0_s;
+  // Aftering being level for 2.0 seconds the command ends
+  // return balanceTimer.Get() > 2.0_s;
+  return false;
 }
