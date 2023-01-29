@@ -17,12 +17,14 @@ void Robot::TeleopPeriodic()  {}
 void Robot::TeleopExit() {}
 
 void Robot::AutonomousInit() {
-  container.scheduleAutoCommand();
+  container.startAutoCommand();
 }
-void Robot::AutonomousPeriodic()  {
-  // container.driveSubsystem.driveWheelSpeeds(0.75_mps, 0.75_mps);
+
+void Robot::AutonomousPeriodic()  {} 
+
+void Robot::AutonomousExit()  {
+  container.endAutoCommand();
 } 
-void Robot::AutonomousExit()  {} 
 
 void Robot::TestInit() {}
 void Robot::TestPeriodic() {}

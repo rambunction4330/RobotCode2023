@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <frc/smartdashboard/SendableChooser.h>
+
 #include <rmb/controller/LogitechGamepad.h>
 
 #include "drivetrain/DriveSubsystem.h"
@@ -19,16 +21,17 @@ class RobotContainer {
  public:
   RobotContainer();
 
-  void scheduleAutoCommand();
+  void startAutoCommand();
+  void endAutoCommand();
 
- private:
+ private: 
   void ConfigureBindings();
 
   rmb::LogitechGamepad driveGamepad{0, 0.1, true};
-
-  public:
   DriveSubsystem driveSubsystem;
-  private:
+
+
+  frc::SendableChooser<std::string> autonomousChooser;
 
   // Holds the autonomus command thats currently being used because the 
   // for some reason the command schedueler refuses to take ownership
