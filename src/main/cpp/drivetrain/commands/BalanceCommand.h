@@ -40,9 +40,9 @@ private:
 
   frc::TrapezoidProfile<units::meters>::Constraints constraints = {1.5_mph, 2.0_mps_sq};
   Gain_t gain {0.005};
-  units::meter_t goal = 2.5_m;
-  units::meter_t minX = 2.2_m;
-  units::meter_t maxX = 2.8_m;
+  units::meter_t goal = 0.0_m;
+  units::meter_t minX = -0.3_m;
+  units::meter_t maxX = 0.3_m;
   int reversed;
 
   frc::Timer balanceTimer;
