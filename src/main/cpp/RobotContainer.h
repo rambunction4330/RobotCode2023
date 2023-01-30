@@ -5,7 +5,7 @@
 #pragma once
 
 #include <map>
-#include <pair>
+#include <tuple>
 
 #include <frc/smartdashboard/SendableChooser.h>
 
@@ -36,10 +36,10 @@ class RobotContainer {
   std::pair<frc2::CommandPtr, frc2::CommandPtr> noAutoCommand = {
     frc2::CommandPtr(frc2::PrintCommand("\"NO AUTO; RED\"\n")),
     frc2::CommandPtr(frc2::PrintCommand("\"NO AUTO; BLUE\"\n"))
-  }
+  };
 
   std::map<std::string, std::pair<frc2::CommandPtr, frc2::CommandPtr>> autoCommands;
-  frc::SendableChooser<std::pair<const frc2::CommandPtr&, const frc2::CommandPtr&>> autonomousChooser;
+  frc::SendableChooser<std::pair<frc2::Command*, frc2::Command*>> autonomousChooser;
 
-  frc2::CommandPtr& currentAuto = noAutoCommand;
+  frc2::Command* currentAuto = std::get<0>(noAutoCommand).get();
 };

@@ -23,54 +23,55 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
 
   // Setup Autonomouse Routines
-  autoCommands["Leave Community Left"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Leave Community Left", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
 
-  autoCommands["Leave Community Right"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Leave Community Right", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
 
-  autoCommands["Put Low Leave Community Left"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Put Low Leave Community Left", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
 
-  autoCommands["Put Low Leave Community Right"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Put Low Leave Community Right", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
 
-  autoCommands["Put Mid Leave Community Left"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Put Mid Leave Community Left", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
 
-  autoCommands["Put Mid Leave Community Right"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
-  autoCommands["Balance"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Put Mid Leave Community Right", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
 
-  autoCommands["Put Low Balance"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Balance", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
 
-  autoCommands["Put Mid Balance"] = {
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: RED\n")), 
-    frc2::CommandPtr(frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n"))
-  };
+  autoCommands.emplace("Put Low Balance", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
+
+  autoCommands.emplace("Put Mid Balance", std::make_pair(
+    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
+    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
+  ));
   
   // Setup Auto Chooser
-  autonomousChooser.SetDefaultOption("No Auto", noAutoCommand);
-  for (const auto& [key, value] : autoCommands) {
-    autonomousChooser.AddOption(key, value);
+  autonomousChooser.SetDefaultOption("No Auto", {noAutoCommand.first.get(), noAutoCommand.second.get()});
+  for (auto& [key, value] : autoCommands) {
+    autonomousChooser.AddOption(key, {value.first.get(), value.second.get()});
   }
 }
 
@@ -78,12 +79,12 @@ void RobotContainer::startAutoCommand() {
   auto selected = autonomousChooser.GetSelected();
   switch (frc::DriverStation::GetAlliance()) {
     case frc::DriverStation::Alliance::kRed:
-      currentAuto = std::get<0>(selected)
-      currentAuto.Schedule();
+      currentAuto = selected.first;
+      currentAuto->Schedule();
       break;
     case frc::DriverStation::Alliance::kBlue:
-      currentAuto = std::get<1>(selected)
-      currentAuto.Schedule();
+      currentAuto = selected.second;
+      currentAuto->Schedule();
       break;
     default:
       return;
@@ -91,7 +92,7 @@ void RobotContainer::startAutoCommand() {
 }
 
 void RobotContainer::endAutoCommand() {
-  currentAuto.Cancel();
+  currentAuto->Cancel();
 }
 
 void RobotContainer::ConfigureBindings() {
