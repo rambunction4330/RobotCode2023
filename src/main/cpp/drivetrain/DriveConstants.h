@@ -29,7 +29,7 @@ namespace DriveConstants {
   };
 
   const rmb::SparkMaxVelocityController::PIDConfig pidConfig {
-    0.0000015 /*  <- P */ , 0.000000001 /* <- I */, 0.000001 /* <- D */, 0.000184 /* <- FF */,
+    0.0000015 /*  <- P */ , 0.000000001 /* <- I */, 0.00001 /* <- D */, 0.000184 /* <- FF */,
     0.0_rad_per_s /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     1.0 /* <- maxOutput */, -1.0 /* <- minOutput */

@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <map>
+#include <pair>
+
 #include <frc/smartdashboard/SendableChooser.h>
 
 #include <rmb/controller/LogitechGamepad.h>
@@ -30,11 +33,13 @@ class RobotContainer {
   rmb::LogitechGamepad driveGamepad{0, 0.1, true};
   DriveSubsystem driveSubsystem;
 
+  std::pair<frc2::CommandPtr, frc2::CommandPtr> noAutoCommand = {
+    frc2::CommandPtr(frc2::PrintCommand("\"NO AUTO; RED\"\n")),
+    frc2::CommandPtr(frc2::PrintCommand("\"NO AUTO; BLUE\"\n"))
+  }
 
-  frc::SendableChooser<std::string> autonomousChooser;
+  std::map<std::string, std::pair<frc2::CommandPtr, frc2::CommandPtr>> autoCommands;
+  frc::SendableChooser<std::pair<const frc2::CommandPtr&, const frc2::CommandPtr&>> autonomousChooser;
 
-  // Holds the autonomus command thats currently being used because the 
-  // for some reason the command schedueler refuses to take ownership
-  // of it.
-  frc2::CommandPtr autoCommand{frc2::PrintCommand("THERE'S NO AUTO")};
+  frc2::CommandPtr& currentAuto = noAutoCommand;
 };
