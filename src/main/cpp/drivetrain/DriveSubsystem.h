@@ -20,6 +20,8 @@
 
 #include <AHRS.h>
 
+#include <pathplanner/lib/PathPlannerTrajectory.h>
+
 #include <rmb/motorcontrol/feedback/LinearVelocityFeedbackController.h>
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 #include <rmb/drive/DifferentialDrive.h>
@@ -62,14 +64,17 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
 
   // Auto Driving
+  void stop();
   void driveWheelSpeeds(units::meters_per_second_t left, units::meters_per_second_t right);
   void driveWheelSpeeds(frc::DifferentialDriveWheelSpeeds wheelSpeeds);
   void driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds);
   frc2::CommandPtr getTrajectoryCommand(frc::Trajectory trajectory);
+  frc2::CommandPtr getAutoCommand(std::vector<pathplanner::PathPlannerTrajectory> trajectorys,
+                                  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap);
 
   // Balancing
   units::radian_t getRobotPitch();
-  void stop();
+  frc2::CommandPtr getBalanceCommand();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.

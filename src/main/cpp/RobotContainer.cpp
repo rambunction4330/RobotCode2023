@@ -13,6 +13,8 @@
 #include <frc/trajectory/TrajectoryUtil.h>
 #include <frc/trajectory/Trajectory.h>
 
+#include <pathplanner/lib/PathPlanner.h>
+
 #include "drivetrain/commands/BalanceCommand.h"
 
 RobotContainer::RobotContainer() {
@@ -23,72 +25,35 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
 
   // Setup Autonomouse Routines
-  autoCommands.emplace("Leave Community Left", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
+  autoCommands.emplace("Leave Community Left", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Low Leave Community Left", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Low Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Mid Leave Community Left", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
 
-  autoCommands.emplace("Leave Community Right", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
+  // Example Auto
+  autoCommands.emplace("Balance", 
+    driveSubsystem.getAutoCommand(
+      pathplanner::PathPlanner::loadPathGroup("balance_auto.json", 1.5_mps, 2.0_mps_sq, false), 
+      std::unordered_map<std::string, std::shared_ptr<frc2::Command>>{
+        {"balance", std::make_shared<BalanceCommand>(driveSubsystem, false)}
+      }
+    )
+  );
 
-  autoCommands.emplace("Put Low Leave Community Left", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
-
-  autoCommands.emplace("Put Low Leave Community Right", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
-
-  autoCommands.emplace("Put Mid Leave Community Left", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
-
-  autoCommands.emplace("Put Mid Leave Community Right", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
-
-  autoCommands.emplace("Balance", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
-
-  autoCommands.emplace("Put Low Balance", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
-
-  autoCommands.emplace("Put Mid Balance", std::make_pair(
-    frc2::PrintCommand("NOT IMPLEMENTED: RED\n"), 
-    frc2::PrintCommand("NOT IMPLEMENTED: BLUE\n")
-  ));
+  autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   
   // Setup Auto Chooser
-  autonomousChooser.SetDefaultOption("No Auto", {noAutoCommand.first.get(), noAutoCommand.second.get()});
+  autonomousChooser.SetDefaultOption("No Auto", noAutoCommand.get());
   for (auto& [key, value] : autoCommands) {
-    autonomousChooser.AddOption(key, {value.first.get(), value.second.get()});
+    autonomousChooser.AddOption(key, value.get());
   }
 }
 
 void RobotContainer::startAutoCommand() {
-  auto selected = autonomousChooser.GetSelected();
-  switch (frc::DriverStation::GetAlliance()) {
-    case frc::DriverStation::Alliance::kRed:
-      currentAuto = selected.first;
-      currentAuto->Schedule();
-      break;
-    case frc::DriverStation::Alliance::kBlue:
-      currentAuto = selected.second;
-      currentAuto->Schedule();
-      break;
-    default:
-      return;
-  }
+  autonomousChooser.GetSelected();
 }
 
 void RobotContainer::endAutoCommand() {
