@@ -8,10 +8,14 @@
 #include <iostream>
 
 BalanceCommand::BalanceCommand(DriveSubsystem& drive, bool r) : 
-  driveSubsystem(drive), reversed(r ? -1 : 1) {
+  driveSubsystem(drive) {
   AddRequirements({&driveSubsystem});
 
-  
+  // Sets min, max and inital goal besed on reverse state
+  goal *= r ? -1 : 1;
+  minX *= r ? -1 : 1;
+  minX *= r ? -1 : 1;
+  gain *= r ? -1 : 1;
 }
 
 // Called when the command is initially scheduled.
@@ -19,11 +23,6 @@ void BalanceCommand::Initialize() {
 
   // Resets corrdinate system of command without effecting the rest of the robot.
   offset = driveSubsystem.getPose();
-
-  // Sets min, max and inital goal besed on reverse state
-  goal *= reversed;
-  minX *= reversed;
-  minX *= reversed;
 }
 
 // Called repeatedly when this Command is scheduled to run

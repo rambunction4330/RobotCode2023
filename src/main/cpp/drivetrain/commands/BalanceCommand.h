@@ -43,7 +43,6 @@ private:
   units::meter_t goal = 0.0_m;
   units::meter_t minX = -0.3_m;
   units::meter_t maxX = 0.3_m;
-  int reversed;
 
   frc::Timer balanceTimer;
 };
