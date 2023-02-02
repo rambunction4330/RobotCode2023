@@ -33,14 +33,7 @@ RobotContainer::RobotContainer() {
   autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
 
   // Example Auto
-  autoCommands.emplace("Balance", 
-    driveSubsystem.getAutoCommand(
-      pathplanner::PathPlanner::loadPathGroup("balance_auto.json", 1.5_mps, 2.0_mps_sq, false), 
-      std::unordered_map<std::string, std::shared_ptr<frc2::Command>>{
-        {"balance", std::make_shared<BalanceCommand>(driveSubsystem, false)}
-      }
-    )
-  );
+  autoCommands.emplace("Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_auto.json", 1.5_mps, 2.0_mps_sq, false)));
 
   autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));

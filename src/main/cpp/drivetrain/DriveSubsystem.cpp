@@ -9,8 +9,6 @@
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/RamseteCommand.h>
 
-#include <pathplanner/lib/auto/RamseteAutoBuilder.h>
-
 #include "drivetrain/commands/BalanceCommand.h"
 
 DriveSubsystem::DriveSubsystem() {
@@ -108,28 +106,6 @@ void DriveSubsystem::driveWheelSpeeds(frc::DifferentialDriveWheelSpeeds wheelSpe
 
 void DriveSubsystem::driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds) {
   drive.driveChassisSpeeds(chassisSpeeds);
-}
-
-// Trajectory Following
-frc2::CommandPtr DriveSubsystem::getTrajectoryCommand(frc::Trajectory trajectory) {
-  displayFeild.GetObject("trajectory")->SetTrajectory(trajectory);
-  return frc2::CommandPtr(frc2::RamseteCommand(
-    trajectory, [&]() { return getPose(); }, DriveConstants::ramseteController,
-    DriveConstants::kinematics, 
-    [&](units::meters_per_second_t leftVelocity, units::meters_per_second_t rightVelocity) { driveWheelSpeeds(leftVelocity, rightVelocity); },
-    {this}
-  ));
-}
-
-frc2::CommandPtr DriveSubsystem::getAutoCommand(std::vector<pathplanner::PathPlannerTrajectory> trajectorys,
-                                                std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap) {
-  return pathplanner::RamseteAutoBuilder(
-    [&]() { return getPose(); }, [&](auto initPose) { resetOdometry(initPose); },
-    DriveConstants::ramseteController, DriveConstants::kinematics,
-    [&](units::meters_per_second_t leftVelocity, units::meters_per_second_t rightVelocity) { 
-      driveWheelSpeeds(leftVelocity, rightVelocity); 
-    }, eventMap, {this}, true
-  ).followPathGroupWithEvents(trajectorys);
 }
 
 units::radian_t DriveSubsystem::getRobotPitch() {

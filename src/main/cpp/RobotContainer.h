@@ -5,13 +5,17 @@
 #pragma once
 
 #include <map>
+#include <unordered_map>
 #include <tuple>
 
 #include <frc/smartdashboard/SendableChooser.h>
 
+#include <pathplanner/lib/auto/RamseteAutoBuilder.h>
+
 #include <rmb/controller/LogitechGamepad.h>
 
 #include "drivetrain/DriveSubsystem.h"
+#include "drivetrain/commands/BalanceCommand.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -38,4 +42,16 @@ class RobotContainer {
   frc::SendableChooser<frc2::Command*> autonomousChooser;
 
   frc2::Command* currentAuto = noAutoCommand.get();
+
+  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap {
+    {"balance", std::make_shared<BalanceCommand>(driveSubsystem, false)}
+  };
+
+  pathplanner::RamseteAutoBuilder autoBuilder {
+    [this]() { return driveSubsystem.getPose(); }, [this](frc::Pose2d initPose) { driveSubsystem.resetOdometry(initPose); },
+    DriveConstants::ramseteController, DriveConstants::kinematics,
+    [this](units::meters_per_second_t leftVelocity, units::meters_per_second_t rightVelocity) { 
+      driveSubsystem.driveWheelSpeeds(leftVelocity, rightVelocity); 
+    }, eventMap, {&driveSubsystem}, true
+  };
 };
