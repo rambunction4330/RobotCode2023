@@ -13,19 +13,19 @@
 namespace DriveConstants {
 
   const rmb::SparkMaxVelocityController::MotorConfig leftLeader {
-    11, rev::CANSparkMax::MotorType::kBrushless, false
+    1, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxVelocityController::MotorConfig leftFollower {
-    12, rev::CANSparkMax::MotorType::kBrushless, false
+    2, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxVelocityController::MotorConfig rightLeader {
-    13, rev::CANSparkMax::MotorType::kBrushless, true
+    3, rev::CANSparkMax::MotorType::kBrushless, true
   };
 
   const rmb::SparkMaxVelocityController::MotorConfig rightFollower {
-    14, rev::CANSparkMax::MotorType::kBrushless, false
+    4, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxVelocityController::PIDConfig pidConfig {
@@ -57,7 +57,7 @@ namespace DriveConstants {
     units::unit_t<frc::RamseteController::zeta_unit>(0.7) /* <- zeta */ 
   };
 
-  static frc::DifferentialDriveKinematics kinematics{ 27.875_in /* <- track width */};
+  static frc::DifferentialDriveKinematics kinematics{ 27.75_in /* <- track width */};
 
   const frc::SerialPort::Port gyroPort = frc::SerialPort::Port::kMXP;
 

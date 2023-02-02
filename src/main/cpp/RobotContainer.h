@@ -7,6 +7,7 @@
 #include <map>
 #include <unordered_map>
 #include <tuple>
+#include <iostream>
 
 #include <frc/smartdashboard/SendableChooser.h>
 
@@ -48,7 +49,9 @@ class RobotContainer {
   };
 
   pathplanner::RamseteAutoBuilder autoBuilder {
-    [this]() { return driveSubsystem.getPose(); }, [this](frc::Pose2d initPose) { driveSubsystem.resetOdometry(initPose); },
+    [this]() { return driveSubsystem.getPose(); }, [this](frc::Pose2d initPose) { 
+      driveSubsystem.resetOdometry(initPose); 
+    },
     DriveConstants::ramseteController, DriveConstants::kinematics,
     [this](units::meters_per_second_t leftVelocity, units::meters_per_second_t rightVelocity) { 
       driveSubsystem.driveWheelSpeeds(leftVelocity, rightVelocity); 

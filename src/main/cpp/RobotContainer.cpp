@@ -19,7 +19,7 @@
 
 RobotContainer::RobotContainer() {
   // Set Default Commands
-  driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
+  // driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
 
   // Configure button bindings
   ConfigureBindings();
@@ -33,7 +33,7 @@ RobotContainer::RobotContainer() {
   autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
 
   // Example Auto
-  autoCommands.emplace("Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_auto.json", 1.5_mps, 2.0_mps_sq, false)));
+  autoCommands.emplace("Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_auto", 0.75_mps, 2.0_mps_sq, false)));
 
   autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
@@ -43,10 +43,13 @@ RobotContainer::RobotContainer() {
   for (auto& [key, value] : autoCommands) {
     autonomousChooser.AddOption(key, value.get());
   }
+
+  frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
 }
 
 void RobotContainer::startAutoCommand() {
-  autonomousChooser.GetSelected();
+  currentAuto = autonomousChooser.GetSelected();
+  currentAuto->Schedule();
 }
 
 void RobotContainer::endAutoCommand() {
