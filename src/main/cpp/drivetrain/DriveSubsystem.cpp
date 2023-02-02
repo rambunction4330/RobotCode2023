@@ -6,12 +6,14 @@
 
 #include <iostream>
 
-#include <wpi/raw_ostream.h>
-
-#include <units/base.h>
-
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/RamseteCommand.h>
+
+#include "drivetrain/commands/BalanceCommand.h"
+
+DriveSubsystem::DriveSubsystem() {
+  frc::SmartDashboard::PutData("Feild", &displayFeild);
+}
 
 void DriveSubsystem::arcadeDrive(double xSpeed, double zRotation) {
   drive.arcadeDrive(xSpeed, zRotation);
@@ -89,6 +91,11 @@ frc::ChassisSpeeds DriveSubsystem::getChassisSpeeds() const {
   return DriveConstants::kinematics.ToChassisSpeeds(getWheelSpeeds());
 }
 
+void DriveSubsystem::stop() {
+  left->stop();
+  right->stop();
+}
+
 void DriveSubsystem::driveWheelSpeeds(units::meters_per_second_t left, units::meters_per_second_t right) {
   drive.driveWheelSpeeds(left, right);
 }
@@ -101,26 +108,15 @@ void DriveSubsystem::driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds) {
   drive.driveChassisSpeeds(chassisSpeeds);
 }
 
-// Trajectory Following
-frc2::CommandPtr DriveSubsystem::getTrajectoryCommand(frc::Trajectory trajectory) {
-  return frc2::CommandPtr(frc2::RamseteCommand(
-    trajectory, [&]() { return getPose(); }, DriveConstants::ramseteController,
-    DriveConstants::kinematics, 
-    [&](units::meters_per_second_t leftVelocity, units::meters_per_second_t rightVelocity) { driveWheelSpeeds(leftVelocity, rightVelocity); },
-    {this}
-  ));
-}
-
 units::radian_t DriveSubsystem::getRobotPitch() {
   return units::degree_t(gyro->GetRoll());
 }
 
-void DriveSubsystem::stop() {
-  left->stop();
-  right->stop();
+frc2::CommandPtr DriveSubsystem::getBalanceCommand() {
+  return frc2::CommandPtr(BalanceCommand(*this));
 }
 
 // This method will be called once per scheduler run
 void DriveSubsystem::Periodic() {
-  odometry.updatePose();
+  displayFeild.SetRobotPose(odometry.updatePose());
 }

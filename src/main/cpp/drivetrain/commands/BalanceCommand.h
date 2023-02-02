@@ -36,14 +36,13 @@ class BalanceCommand : public frc2::CommandHelper<frc2::CommandBase, BalanceComm
 
 private:
   DriveSubsystem& driveSubsystem;
-  frc::Pose2d offset = {};
+  frc::Pose2d offset;
 
-  frc::TrapezoidProfile<units::meters>::Constraints constraints = {0.75_mph, 2.0_mps_sq};
+  frc::TrapezoidProfile<units::meters>::Constraints constraints = {1.5_mph, 2.0_mps_sq};
   Gain_t gain {0.005};
-  units::meter_t goal = 1.5_m;
-  units::meter_t minX = 1.2_m;
-  units::meter_t maxX = 1.8_m;
-  int reversed;
+  units::meter_t goal = 0.0_m;
+  units::meter_t minX = -0.3_m;
+  units::meter_t maxX = 0.3_m;
 
   frc::Timer balanceTimer;
 };

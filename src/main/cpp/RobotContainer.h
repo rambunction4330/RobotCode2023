@@ -4,6 +4,15 @@
 
 #pragma once
 
+#include <map>
+#include <unordered_map>
+#include <tuple>
+#include <iostream>
+
+#include <frc/smartdashboard/SendableChooser.h>
+
+#include <pathplanner/lib/auto/RamseteAutoBuilder.h>
+
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/controller/LogitechJoystick.h>
 
@@ -22,18 +31,34 @@ class RobotContainer {
  public:
   RobotContainer();
 
-  void scheduleAutoCommand();
+  void startAutoCommand();
+  void endAutoCommand();
 
- private:
+ private: 
   void ConfigureBindings();
 
-  rmb::LogitechJoystick driveStick{0, 0.1, true};
+  rmb::LogitechGamepad driveGamepad{0, 0.1, true};
+  DriveSubsystem driveSubsystem;
   ElevatorSubsystem elevatorSubsystem;
   ArmSubsystem armSubsystem;
-  private:
 
-  // Holds the autonomus command thats currently being used because the 
-  // for some reason the command schedueler refuses to take ownership
-  // of it.
-  frc2::CommandPtr autoCommand{frc2::PrintCommand("THERE'S NO AUTO")};
+  frc2::CommandPtr noAutoCommand = frc2::CommandPtr(frc2::PrintCommand("NO AUTO\n"));
+  std::map<std::string, frc2::CommandPtr> autoCommands;
+  frc::SendableChooser<frc2::Command*> autonomousChooser;
+
+  frc2::Command* currentAuto = noAutoCommand.get();
+
+  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap {
+    {"balance", std::make_shared<BalanceCommand>(driveSubsystem, false)}
+  };
+
+  pathplanner::RamseteAutoBuilder autoBuilder {
+    [this]() { return driveSubsystem.getPose(); }, [this](frc::Pose2d initPose) { 
+      driveSubsystem.resetOdometry(initPose); 
+    },
+    DriveConstants::ramseteController, DriveConstants::kinematics,
+    [this](units::meters_per_second_t leftVelocity, units::meters_per_second_t rightVelocity) { 
+      driveSubsystem.driveWheelSpeeds(leftVelocity, rightVelocity); 
+    }, eventMap, {&driveSubsystem}, true
+  };
 };

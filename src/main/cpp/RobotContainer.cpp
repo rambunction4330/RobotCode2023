@@ -6,9 +6,14 @@
 
 #include <iostream>
 
+#include <frc/Filesystem.h>
+#include <frc/DriverStation.h>
 #include <frc/trajectory/TrajectoryConfig.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
+#include <frc/trajectory/TrajectoryUtil.h>
 #include <frc/trajectory/Trajectory.h>
+
+#include <pathplanner/lib/PathPlanner.h>
 
 #include "drivetrain/commands/BalanceCommand.h"
 
@@ -16,32 +21,39 @@ RobotContainer::RobotContainer() {
   // Set Default Commands
   // driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
 
-  // Configure the button bindings
+  // Configure button bindings
   ConfigureBindings();
+
+  // Setup Autonomouse Routines
+  autoCommands.emplace("Leave Community Left", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Low Leave Community Left", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Low Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Mid Leave Community Left", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+
+  // Example Auto
+  autoCommands.emplace("Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_auto", 0.75_mps, 2.0_mps_sq, false)));
+
+  autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
+  
+  // Setup Auto Chooser
+  autonomousChooser.SetDefaultOption("No Auto", noAutoCommand.get());
+  for (auto& [key, value] : autoCommands) {
+    autonomousChooser.AddOption(key, value.get());
+  }
+
+  frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
 }
 
-void RobotContainer::scheduleAutoCommand() {
-  // if (autoCommand.IsScheduled()) { return; }
-  
-  // // Zero dometry
-  // driveSubsystem.resetOdometry(frc::Pose2d(0.0_m, 0.0_m, 0.0_rad));
-  // if (!autoCommand.IsScheduled()) {
-  //   frc::TrajectoryConfig config{0.75_mps, 2.0_mps_sq};
-  //   config.SetKinematics(DriveConstants::kinematics);
+void RobotContainer::startAutoCommand() {
+  currentAuto = autonomousChooser.GetSelected();
+  currentAuto->Schedule();
+}
 
-  //   frc::Trajectory trajectory = frc::TrajectoryGenerator::GenerateTrajectory(
-  //     frc::Pose2d(0.0_m, 0.0_m, 0.0_rad), 
-  //     {{1.2_m, 0.0_m}}, 
-  //     frc::Pose2d(1.5_m, -1.4_m, 180.0_deg),
-  //     config
-  //   );
-
-  //   // Drives a trajectory to the front of the charging pad and  the balances on it
-  //   autoCommand = driveSubsystem.getTrajectoryCommand(trajectory).AndThen(frc2::CommandPtr(BalanceCommand(driveSubsystem)));
-
-  //   // Start to command
-  //   autoCommand.Schedule();
-  // }
+void RobotContainer::endAutoCommand() {
+  currentAuto->Cancel();
 }
 
 void RobotContainer::ConfigureBindings() {

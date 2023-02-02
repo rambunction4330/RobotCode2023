@@ -16,9 +16,15 @@ void Robot::TeleopInit() {}
 void Robot::TeleopPeriodic()  {} 
 void Robot::TeleopExit() {}
 
-void Robot::AutonomousInit() {}
+void Robot::AutonomousInit() {
+  container.startAutoCommand();
+}
+
 void Robot::AutonomousPeriodic()  {} 
-void Robot::AutonomousExit()  {} 
+
+void Robot::AutonomousExit()  {
+  container.endAutoCommand();
+} 
 
 void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
