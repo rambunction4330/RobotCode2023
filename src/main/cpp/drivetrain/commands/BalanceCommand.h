@@ -24,7 +24,7 @@ class BalanceCommand : public frc2::CommandHelper<frc2::CommandBase, BalanceComm
   using Gain = units::compound_unit<units::meters, units::inverse<units::radians>>;
   using Gain_t = units::unit_t<Gain>;
 
-  BalanceCommand(DriveSubsystem& driveSubsystem, bool reversed = false);
+  BalanceCommand(DriveSubsystem& driveSubsystem);
 
   void Initialize() override;
 
@@ -38,11 +38,11 @@ private:
   DriveSubsystem& driveSubsystem;
   frc::Pose2d offset;
 
-  frc::TrapezoidProfile<units::meters>::Constraints constraints = {1.5_mph, 2.0_mps_sq};
-  Gain_t gain {0.005};
+  frc::TrapezoidProfile<units::meters>::Constraints constraints = {1.0_mph, 1.0_mps_sq};
+  Gain_t gain {0.00001};
   units::meter_t goal = 0.0_m;
-  units::meter_t minX = -0.3_m;
-  units::meter_t maxX = 0.3_m;
+  units::meter_t minX = -0.2_m;
+  units::meter_t maxX = 0.2_m;
 
   frc::Timer balanceTimer;
 };

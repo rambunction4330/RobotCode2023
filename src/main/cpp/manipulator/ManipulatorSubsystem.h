@@ -41,13 +41,6 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
     bool armIsRaising() const;
     bool armIsLowering() const;
 
-    /************
-     * Claw     *
-     ************/
-    void setClawClosed(bool isClosed);
-    void toggleClaw();
-    bool getClawClosed() const;
-
   private:
     /************
      * Elevator *
@@ -87,20 +80,5 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
       )
     };
 
-    /************
-     * Claw      *
-     ************/
-
-    std::shared_ptr<rmb::AngularPositionFeedbackController> clawMotor{
-      std::make_shared<rmb::SparkMaxPositionController>(
-        ManipulatorConstants::Claw::motorConfig,
-        ManipulatorConstants::Claw::pidConfig,
-        ManipulatorConstants::Claw::feedforward,
-        ManipulatorConstants::Claw::range,
-        ManipulatorConstants::Claw::profileConfig,
-        ManipulatorConstants::Claw::feedbackConfig
-      )
-    }; 
-
-  bool clawClosed = false;
+    units::radian_t targetArmPose;
 };

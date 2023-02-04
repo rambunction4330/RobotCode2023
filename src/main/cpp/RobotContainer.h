@@ -21,6 +21,7 @@
 #include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/DriveSubsystem.h"
 #include "manipulator/ManipulatorSubsystem.h"
+#include "claw/ClawSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -43,6 +44,7 @@ class RobotContainer {
   rmb::LogitechGamepad driveGamepad{0, 0.05, true};
   DriveSubsystem driveSubsystem;
   ManipulatorSubsystem manipulatorSubystem; 
+  ClawSubsystem clawSubystem; 
 
   frc2::CommandPtr noAutoCommand = frc2::CommandPtr(frc2::PrintCommand("NO AUTO\n"));
   std::map<std::string, frc2::CommandPtr> autoCommands;
@@ -51,12 +53,28 @@ class RobotContainer {
   frc2::Command* currentAuto = noAutoCommand.get();
 
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap {
-    {"lower", std::make_shared<frc2::FunctionalCommand>(frc2::FunctionalCommand(
+
+    {"drivetrain_balance", std::make_shared<BalanceCommand>(driveSubsystem)},
+
+    {"claw_grab", std::make_shared<frc2::InstantCommand>(frc2::InstantCommand(
+      [this]() {
+        clawSubystem.setClawClosed(true);
+      },
+      {&clawSubystem}
+    ))},
+
+    {"claw_release", std::make_shared<frc2::InstantCommand>(frc2::InstantCommand(
+      [this]() {
+        clawSubystem.setClawClosed(false);
+      },
+      {&clawSubystem}
+    ))},
+
+    {"manipulator_compact", std::make_shared<frc2::FunctionalCommand>(frc2::FunctionalCommand(
       [this]() {},
       [this]() {
-        manipulatorSubystem.setElevatorHeight(38.0_in);
-        manipulatorSubystem.setArmPosition(-82.0_deg);
-        manipulatorSubystem.setClawClosed(false);
+        manipulatorSubystem.setElevatorHeight(0.0_in);
+        manipulatorSubystem.setArmPosition(92.5_deg);
       },
       [this](bool) {},
       [this]() {
@@ -65,24 +83,11 @@ class RobotContainer {
       {&manipulatorSubystem}
     ))},
 
-    {"grab", std::make_shared<frc2::FunctionalCommand>(frc2::FunctionalCommand(
+    {"manipulator_cube_high", std::make_shared<frc2::FunctionalCommand>(frc2::FunctionalCommand(
       [this]() {},
       [this]() {
-        manipulatorSubystem.setClawClosed(true);
-      },
-      [this](bool) {},
-      [this]() {
-        return manipulatorSubystem.getClawClosed();
-      },
-      {&manipulatorSubystem}
-    ))},
-
-    {"pickup", std::make_shared<frc2::FunctionalCommand>(frc2::FunctionalCommand(
-      [this]() {},
-      [this]() {
-        manipulatorSubystem.setElevatorHeight(0.0_in);
-        manipulatorSubystem.setArmPosition(90.0_deg);
-        manipulatorSubystem.setClawClosed(true);
+        manipulatorSubystem.setElevatorHeight(38.0_in);
+        manipulatorSubystem.setArmPosition(10.0_deg);
       },
       [this](bool) {},
       [this]() {

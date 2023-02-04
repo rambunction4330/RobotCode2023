@@ -1,27 +1,34 @@
 #include "ManipulatorSubsystem.h"
 
+#include <frc/trajectory/TrapezoidProfile.h>
+
 #include <iostream>
 
 ManipulatorSubsystem::ManipulatorSubsystem() {
     armMotor->zeroPosition(95_deg);
-    armMotor->setPosition(90_deg);
+    setArmPosition(92.5_deg);
     elevatorMotor->zeroPosition(minElevatorHeight);
-    clawMotor->zeroPosition(0.0_deg);
+    setElevatorHeight(12_in);
 }
 
 void ManipulatorSubsystem::Periodic() {
-    setArmPosition(armMotor->getTargetPosition());
+    setArmPosition(targetArmPose);
 }
 
 // begin arm
 void ManipulatorSubsystem::setArmPosition(units::radian_t position) {
     // Clamp to dynamic range based on elevator position;
     units::radian_t clamped = std::clamp(position, calculateArmMinPose(), calculateArmMaxPose());
-    armMotor->setPosition(clamped);
+    targetArmPose = clamped;
+    frc::TrapezoidProfile<units::radians> profile {{100_deg_per_s, 200_deg_per_s_sq}, 
+                                                   {targetArmPose, 0.0_rad_per_s},
+                                                   {armMotor->getPosition(), armMotor->getVelocity()}};
+
+    armMotor->setPosition(profile.Calculate(200_ms).position);
 }
 
 void ManipulatorSubsystem::incArmPositon(units::radian_t increment) {
-    setArmPosition(armMotor->getTargetPosition() + increment);
+    setArmPosition(targetArmPose + increment);
 }
 
 units::radian_t ManipulatorSubsystem::getArmPosition() const {
@@ -29,10 +36,10 @@ units::radian_t ManipulatorSubsystem::getArmPosition() const {
 }
 
 units::radian_t ManipulatorSubsystem::getArmError() const {
-    return armMotor->getError();
+    return armMotor->getPosition() - targetArmPose;
 }
 
-bool ManipulatorSubsystem::armAtPosition() const { return armMotor->atTarget(); }
+bool ManipulatorSubsystem::armAtPosition() const { return units::math::abs(getArmError()) < ManipulatorConstants::Arm::pidConfig.tolerance; }
 
 bool ManipulatorSubsystem::armIsRaising() const {
     return !armAtPosition() && getArmError() < 0.0_rad;
@@ -84,18 +91,5 @@ bool ManipulatorSubsystem::elevatorGoingDown() {
 
 bool ManipulatorSubsystem::elevatorGoingUp() {
     return elevatorMotor->getError() < (elevatorMotor->getTargetPosition() + elevatorMotor->getTolerance());
-}
-
-void ManipulatorSubsystem::setClawClosed(bool isClosed) {
-  clawClosed = isClosed;
-  clawMotor->setPosition(clawClosed ? ManipulatorConstants::Claw::range.maxPosition : ManipulatorConstants::Claw::range.minPosition);
-}
-
-bool ManipulatorSubsystem::getClawClosed() const {
-  return clawClosed;
-}
-
-void ManipulatorSubsystem::toggleClaw() {
-  setClawClosed(!clawClosed);
 }
 // end elevator

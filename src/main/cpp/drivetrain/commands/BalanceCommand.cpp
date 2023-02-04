@@ -7,15 +7,9 @@
 #include <units/math.h>
 #include <iostream>
 
-BalanceCommand::BalanceCommand(DriveSubsystem& drive, bool r) : 
+BalanceCommand::BalanceCommand(DriveSubsystem& drive) : 
   driveSubsystem(drive) {
   AddRequirements({&driveSubsystem});
-
-  // Sets min, max and inital goal besed on reverse state
-  goal *= r ? -1 : 1;
-  minX *= r ? -1 : 1;
-  minX *= r ? -1 : 1;
-  gain *= r ? -1 : 1;
 }
 
 // Called when the command is initially scheduled.
@@ -46,8 +40,6 @@ void BalanceCommand::Execute() {
     balanceTimer.Stop();
     balanceTimer.Reset();
   }
-
-  std::cout << units::length::to_string((driveSubsystem.getPose() - offset).X()) << std::endl;
 }
 
 // Called once the command ends or is interrupted.
@@ -58,6 +50,5 @@ void BalanceCommand::End(bool interrupted) {
 // Returns true when the command should end.
 bool BalanceCommand::IsFinished() {
   // Aftering being level for 2.0 seconds the command ends
-  // return balanceTimer.Get() > 2.0_s;
-  return false;
+  return balanceTimer.Get() > 2.0_s;
 }

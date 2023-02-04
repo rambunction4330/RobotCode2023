@@ -22,13 +22,16 @@
 RobotContainer::RobotContainer() {
   // Set Default Commands
   driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
+
   manipulatorSubystem.SetDefaultCommand(frc2::RunCommand([this]() { 
     manipulatorSubystem.setElevatorHeightPercent(joystick.GetThrottle());
     manipulatorSubystem.incArmPositon(0.5_deg * -joystick.GetX());
-    if (joystick.GetTriggerPressed()) {
-      manipulatorSubystem.toggleClaw();
-    }
   }, {&manipulatorSubystem}));
+
+  clawSubystem.SetDefaultCommand(frc2::RunCommand([this]() {
+    if (joystick.GetTriggerPressed()) {
+      clawSubystem.toggleClaw();
+    }}, {&clawSubystem}));
 
   // Configure button bindings
   ConfigureBindings();
@@ -42,7 +45,7 @@ RobotContainer::RobotContainer() {
   autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
 
   // Example Auto
-  autoCommands.emplace("Zig Zag", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("zig_zag", 0.5_mps, 1.0_mps_sq, false)));
+  autoCommands.emplace("Cube High Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("cube_high_balance", 1.75_mps, 3.0_mps_sq, true)));
 
   autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
