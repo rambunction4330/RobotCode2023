@@ -13,13 +13,22 @@
 #include <frc/trajectory/TrajectoryUtil.h>
 #include <frc/trajectory/Trajectory.h>
 
+#include <frc2/command/RunCommand.h>
+
 #include <pathplanner/lib/PathPlanner.h>
 
 #include "drivetrain/commands/BalanceCommand.h"
 
 RobotContainer::RobotContainer() {
   // Set Default Commands
-  // driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
+  driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
+  manipulatorSubystem.SetDefaultCommand(frc2::RunCommand([this]() { 
+    manipulatorSubystem.setElevatorHeightPercent(joystick.GetThrottle());
+    manipulatorSubystem.incArmPositon(0.5_deg * -joystick.GetX());
+    if (joystick.GetTriggerPressed()) {
+      manipulatorSubystem.toggleClaw();
+    }
+  }, {&manipulatorSubystem}));
 
   // Configure button bindings
   ConfigureBindings();
@@ -33,7 +42,7 @@ RobotContainer::RobotContainer() {
   autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
 
   // Example Auto
-  autoCommands.emplace("Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_auto", 0.75_mps, 2.0_mps_sq, false)));
+  autoCommands.emplace("Zig Zag", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("zig_zag", 0.5_mps, 1.0_mps_sq, false)));
 
   autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));

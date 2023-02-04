@@ -20,7 +20,7 @@ void DriveSubsystem::arcadeDrive(double xSpeed, double zRotation) {
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechJoystick& joystick) {
-  arcadeDrive(joystick.GetX(), joystick.GetTwist());
+  arcadeDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle());
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
@@ -40,7 +40,7 @@ void DriveSubsystem::curvatureDrive(double xSpeed, double zRotation, bool turnIn
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechJoystick& joystick) {
-  curvatureDrive(joystick.GetX(), joystick.GetTwist(), joystick.GetTrigger());
+  curvatureDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle(), joystick.GetTrigger());
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechGamepad& gamepad) {

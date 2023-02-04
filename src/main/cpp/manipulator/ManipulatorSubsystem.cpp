@@ -1,9 +1,12 @@
 #include "ManipulatorSubsystem.h"
 
+#include <iostream>
+
 ManipulatorSubsystem::ManipulatorSubsystem() {
-    armMotor->zeroPosition(100_deg);
-    elevatorMotor->zeroPosition(
-        ManipulatorConstants::Elevator::range.minPosition);
+    armMotor->zeroPosition(95_deg);
+    armMotor->setPosition(90_deg);
+    elevatorMotor->zeroPosition(minElevatorHeight);
+    clawMotor->zeroPosition(0.0_deg);
 }
 
 void ManipulatorSubsystem::Periodic() {
@@ -13,8 +16,7 @@ void ManipulatorSubsystem::Periodic() {
 // begin arm
 void ManipulatorSubsystem::setArmPosition(units::radian_t position) {
     // Clamp to dynamic range based on elevator position;
-    units::radian_t clamped =
-        std::clamp(position, calculateArmMinPose(), calculateArmMaxPose());
+    units::radian_t clamped = std::clamp(position, calculateArmMinPose(), calculateArmMaxPose());
     armMotor->setPosition(clamped);
 }
 
@@ -42,26 +44,26 @@ bool ManipulatorSubsystem::armIsLowering() const {
 
 units::radian_t ManipulatorSubsystem::calculateArmMinPose() const {
     // return -std::numeric_limits<units::radian_t>::infinity();
-    return units::math::asin(getElevatorHeight() / ManipulatorConstants::Arm::length);
+    return -units::math::asin((getElevatorHeight() - ManipulatorConstants::minClawHeight) / ManipulatorConstants::Arm::length);
 }
 
 units::radian_t ManipulatorSubsystem::calculateArmMaxPose() const {
     // return std::numeric_limits<units::radian_t>::infinity();
-    return units::math::asin((ManipulatorConstants::maxHeight - getElevatorHeight()) / ManipulatorConstants::Arm::length);
+    return units::math::asin((ManipulatorConstants::maxClawHeight - getElevatorHeight()) / ManipulatorConstants::Arm::length);
 }
 // end arm
 
 // begin elevator
 void ManipulatorSubsystem::setElevatorHeightPercent(double heightPercentage) {
-    elevatorMotor->setPosition(heightPercentage * ManipulatorConstants::Elevator::range.maxPosition);
+    elevatorMotor->setPosition(minElevatorHeight  + (heightPercentage * (maxElevatorHeight - minElevatorHeight)));
 }
 
-void ManipulatorSubsystem::setElevatorHeight(units::meter_t height) {
-    elevatorMotor->setPosition(height);
-}
+// void ManipulatorSubsystem::setElevatorHeight(units::meter_t height) {
+//     elevatorMotor->setPosition(height);
+// }
 
 // double ManipulatorSubsystem::getElevatorHeightPercent() {
-//     return elevatorMotor->getPosition() / ManipulatorConstants::Elevator::range.maxPosition;
+//     return elevatorMotor->getPosition() - ManipulatorConstants::Elevator::range.minPosition / ManipulatorConstants::Elevator::range.maxPosition;
 // }
 
 units::meter_t ManipulatorSubsystem::getElevatorHeight() const {
@@ -82,5 +84,18 @@ bool ManipulatorSubsystem::elevatorGoingDown() {
 
 bool ManipulatorSubsystem::elevatorGoingUp() {
     return elevatorMotor->getError() < (elevatorMotor->getTargetPosition() + elevatorMotor->getTolerance());
+}
+
+void ManipulatorSubsystem::setClawClosed(bool isClosed) {
+  clawClosed = isClosed;
+  clawMotor->setPosition(clawClosed ? ManipulatorConstants::Claw::range.maxPosition : ManipulatorConstants::Claw::range.minPosition);
+}
+
+bool ManipulatorSubsystem::getClawClosed() const {
+  return clawClosed;
+}
+
+void ManipulatorSubsystem::toggleClaw() {
+  setClawClosed(!clawClosed);
 }
 // end elevator

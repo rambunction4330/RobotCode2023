@@ -15,31 +15,32 @@ namespace rmb {
 /**
  * Voltage feedforward for an elevator mechanism.
  **/
-class ElevatorFeedforward : public Feedforward<units::meters> {
+template <typename DistanceUnit>
+class ElevatorFeedforward : public Feedforward<DistanceUnit> {
 public:
-  using Distance_t = typename Feedforward<units::meters>::
+  using Distance_t = typename Feedforward<DistanceUnit>::
       Distance_t; /**< @see Feedforward<DistanceUnit>::Distance_t*/
-  using VelocityUnit = typename Feedforward<units::meters>::
+  using VelocityUnit = typename Feedforward<DistanceUnit>::
       VelocityUnit; /**< @see Feedforward<DistanceUnit>::VelocityUnit*/
-  using Velocity_t = typename Feedforward<units::meters>::
+  using Velocity_t = typename Feedforward<DistanceUnit>::
       Velocity_t; /**< @see Feedforward<DistanceUnit>::Velocity_t*/
-  using AccelerationUnit = typename Feedforward<units::meters>::
+  using AccelerationUnit = typename Feedforward<DistanceUnit>::
       AccelerationUnit; /**< @see Feedforward<DistanceUnit>::AccelerationUnit*/
-  using Acceleration_t = typename Feedforward<units::meters>::
+  using Acceleration_t = typename Feedforward<DistanceUnit>::
       Acceleration_t; /**< @see Feedforward<DistanceUnit>::Acceleration_t */
 
   using KsUnit = typename Feedforward<
-      units::meters>::KsUnit; /**< @see Feedforward<DistanceUnit>::KsUnit*/
+      DistanceUnit>::KsUnit; /**< @see Feedforward<DistanceUnit>::KsUnit*/
   using Ks_t = typename Feedforward<
-      units::meters>::Ks_t; /**< @see Feedforward<DistanceUnit>::Ks_t*/
+      DistanceUnit>::Ks_t; /**< @see Feedforward<DistanceUnit>::Ks_t*/
   using KvUnit = typename Feedforward<
-      units::meters>::KvUnit; /**< @see Feedforward<DistanceUnit>::KvUnit*/
+      DistanceUnit>::KvUnit; /**< @see Feedforward<DistanceUnit>::KvUnit*/
   using Kv_t = typename Feedforward<
-      units::meters>::Kv_t; /**< @see Feedforward<DistanceUnit>::Kv_t*/
+      DistanceUnit>::Kv_t; /**< @see Feedforward<DistanceUnit>::Kv_t*/
   using KaUnit = typename Feedforward<
-      units::meters>::KaUnit; /**< @see Feedforward<DistanceUnit>::KaUnit*/
+      DistanceUnit>::KaUnit; /**< @see Feedforward<DistanceUnit>::KaUnit*/
   using Ka_t = typename Feedforward<
-      units::meters>::Ka_t; /**< @see Feedforward<DistanceUnit>::Ka_t*/
+      DistanceUnit>::Ka_t; /**< @see Feedforward<DistanceUnit>::Ka_t*/
 
   /**
    * Creates an ElevatorFeedforward

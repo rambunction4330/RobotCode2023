@@ -15,7 +15,7 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   public:
     void Periodic() override;
 
-    ManipulatorSubsystem() = default;
+    ManipulatorSubsystem();
 
     /************
      * Elevator *
@@ -41,16 +41,24 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
     bool armIsRaising() const;
     bool armIsLowering() const;
 
+    /************
+     * Claw     *
+     ************/
+    void setClawClosed(bool isClosed);
+    void toggleClaw();
+    bool getClawClosed() const;
+
   private:
     /************
      * Elevator *
      ************/
-    std::shared_ptr<rmb::LinearPositionFeedbackController> elevatorMotor{
+    std::shared_ptr<rmb::LinearPositionFeedbackController> elevatorMotor {
         rmb::asLinear(
             (std::shared_ptr<rmb::AngularPositionFeedbackController>)
                 std::make_shared<rmb::SparkMaxPositionController>(
                     ManipulatorConstants::Elevator::leader,
                     ManipulatorConstants::Elevator::pidConfig,
+                    ManipulatorConstants::Elevator::feedforward,
                     ManipulatorConstants::Elevator::range,
                     ManipulatorConstants::Elevator::profileConfig,
                     ManipulatorConstants::Elevator::feedbackConfig,
@@ -58,19 +66,41 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
                         const rmb::SparkMaxPositionController::MotorConfig>{
                         ManipulatorConstants::Elevator::follower}),
             ManipulatorConstants::Elevator::sproketDiameter / 2.0_rad)};
+    
+    const units::meter_t minElevatorHeight = ManipulatorConstants::Elevator::range.minPosition * (ManipulatorConstants::Elevator::sproketDiameter / 2.0_rad);
+    const units::meter_t maxElevatorHeight = ManipulatorConstants::Elevator::range.maxPosition * (ManipulatorConstants::Elevator::sproketDiameter / 2.0_rad);
 
     /************
      * Arm      *
      ************/
-    // TODO: Dynamic Arm Range
     units::radian_t calculateArmMinPose() const;
     units::radian_t calculateArmMaxPose() const;
 
     std::shared_ptr<rmb::AngularPositionFeedbackController> armMotor{
-        std::make_shared<rmb::SparkMaxPositionController>(
-            ManipulatorConstants::Arm::motorConfig,
-            ManipulatorConstants::Arm::pidConfig,
-            ManipulatorConstants::Arm::range,
-            ManipulatorConstants::Arm::profileConfig,
-            ManipulatorConstants::Arm::feedbackConfig)};
+      std::make_shared<rmb::SparkMaxPositionController>(
+        ManipulatorConstants::Arm::motorConfig,
+        ManipulatorConstants::Arm::pidConfig,
+        ManipulatorConstants::Arm::feedforward,
+        ManipulatorConstants::Arm::range,
+        ManipulatorConstants::Arm::profileConfig,
+        ManipulatorConstants::Arm::feedbackConfig
+      )
+    };
+
+    /************
+     * Claw      *
+     ************/
+
+    std::shared_ptr<rmb::AngularPositionFeedbackController> clawMotor{
+      std::make_shared<rmb::SparkMaxPositionController>(
+        ManipulatorConstants::Claw::motorConfig,
+        ManipulatorConstants::Claw::pidConfig,
+        ManipulatorConstants::Claw::feedforward,
+        ManipulatorConstants::Claw::range,
+        ManipulatorConstants::Claw::profileConfig,
+        ManipulatorConstants::Claw::feedbackConfig
+      )
+    }; 
+
+  bool clawClosed = false;
 };

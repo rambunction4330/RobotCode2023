@@ -69,7 +69,8 @@ public:
   SparkMaxPositionController(SparkMaxPositionController&&) = delete;
   SparkMaxPositionController(const SparkMaxPositionController&) = delete;
     
-  SparkMaxPositionController(const MotorConfig motorConfig, const PIDConfig pidConfig = {}, 
+  SparkMaxPositionController(const MotorConfig motorConfig, const PIDConfig pidConfig = {},
+                             const std::shared_ptr<Feedforward<units::radians>> feedforward = std::make_shared<SimpleFeedforward<units::radians>>(), 
                              const Range range = {}, const ProfileConfig profileConfig = {}, 
                              const FeedbackConfig feedbackConfig = {}, std::initializer_list<const MotorConfig> followers = {});
 
@@ -160,6 +161,8 @@ private:
   rev::SparkMaxPIDController pidController;
   units::radian_t targetPosition;
   units::radian_t tolerance;
+
+  const std::shared_ptr<Feedforward<units::radians>> feedforward;
 
   units::radian_t minPose;
   units::radian_t maxPose;

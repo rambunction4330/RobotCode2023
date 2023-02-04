@@ -1,14 +1,15 @@
-
 #include "rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
 
 namespace rmb {
-SparkMaxPositionController::SparkMaxPositionController(const MotorConfig motorConfig, const PIDConfig pidConfig, 
+SparkMaxPositionController::SparkMaxPositionController(const MotorConfig motorConfig, const PIDConfig pidConfig,
+                                                       const std::shared_ptr<Feedforward<units::radians>> feedforward, 
                                                        const Range range, const ProfileConfig profileConfig, 
                                                        const FeedbackConfig feedbackConfig, 
                                                        std::initializer_list<const MotorConfig> followerList) :
                                                        sparkMax(motorConfig.id, motorConfig.motorType), 
                                                        pidController(sparkMax.GetPIDController()),
                                                        tolerance(pidConfig.tolerance),
+                                                       feedforward(feedforward),
                                                        minPose(range.minPosition), maxPose(range.maxPosition),
                                                        encoderType(feedbackConfig.encoderType), 
                                                        gearRatio(feedbackConfig.gearRatio) {
@@ -98,7 +99,7 @@ SparkMaxPositionController::SparkMaxPositionController(const MotorConfig motorCo
 
 void SparkMaxPositionController::setPosition(units::radian_t position) {
   targetPosition = pidController.GetPositionPIDWrappingEnabled() ? position : std::clamp(position, minPose, maxPose);
-  pidController.SetReference(units::turn_t(targetPosition).to<double>() * gearRatio, controlType);
+  pidController.SetReference(units::turn_t(targetPosition).to<double>() * gearRatio, controlType, 0, feedforward->calculateStatic(0.0_rpm, position).to<double>());
 }
 
 units::radian_t SparkMaxPositionController::getTargetPosition() const {
