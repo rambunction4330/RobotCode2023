@@ -2,8 +2,7 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
-
-#include <memory>
+#include <frc2/command/CommandPtr.h>
 
 #include <rmb/motorcontrol/feedback/AngularPositionFeedbackController.h>
 #include <rmb/motorcontrol/feedback/LinearPositionFeedbackController.h>
@@ -20,6 +19,8 @@ class ClawSubsystem : public frc2::SubsystemBase {
     void setClawClosed(bool isClosed);
     void toggleClaw();
     bool getClawClosed() const;
+
+    frc2::CommandPtr getClosedCommand(bool setClosed);
 
   private:
     std::shared_ptr<rmb::AngularPositionFeedbackController> clawMotor{

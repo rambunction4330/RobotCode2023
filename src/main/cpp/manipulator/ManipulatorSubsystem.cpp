@@ -1,6 +1,7 @@
 #include "ManipulatorSubsystem.h"
 
 #include <frc/trajectory/TrapezoidProfile.h>
+#include <frc2/command/FunctionalCommand.h>
 
 #include <iostream>
 
@@ -93,3 +94,14 @@ bool ManipulatorSubsystem::elevatorGoingUp() {
     return elevatorMotor->getError() < (elevatorMotor->getTargetPosition() + elevatorMotor->getTolerance());
 }
 // end elevator
+
+void ManipulatorSubsystem::setState(const ManipulatorState state) {
+  setArmPosition(state.armAngle);
+  setElevatorHeight(state.elevatorHeight);
+}
+
+frc2::CommandPtr ManipulatorSubsystem::getStateCommand(const ManipulatorState state) {
+  return frc2::FunctionalCommand([](){}, [this, state](){ setState(state); }, [](bool){}, 
+                                 [this]() { return armAtPosition() && elevatorAtHeight(); },
+                                 {this}).ToPtr();
+}

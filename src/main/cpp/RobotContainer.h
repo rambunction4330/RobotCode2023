@@ -7,7 +7,6 @@
 #include <memory>
 #include <map>
 #include <unordered_map>
-#include <tuple>
 #include <iostream>
 
 #include <frc/smartdashboard/SendableChooser.h>
@@ -40,63 +39,35 @@ class RobotContainer {
  private: 
   void ConfigureBindings();
 
+  /**************
+   * Subsystems *
+   **************/
   rmb::LogitechJoystick joystick{1, 0.05, true};
   rmb::LogitechGamepad driveGamepad{0, 0.05, true};
   DriveSubsystem driveSubsystem;
-  ManipulatorSubsystem manipulatorSubystem; 
-  ClawSubsystem clawSubystem; 
+  ManipulatorSubsystem manipulatorSubsystem; 
+  ClawSubsystem clawSubsystem; 
 
-  frc2::CommandPtr noAutoCommand = frc2::CommandPtr(frc2::PrintCommand("NO AUTO\n"));
-  std::map<std::string, frc2::CommandPtr> autoCommands;
-  frc::SendableChooser<frc2::Command*> autonomousChooser;
-
-  frc2::Command* currentAuto = noAutoCommand.get();
-
+  /****************
+   * Path Planner *
+   ****************/
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap {
-
+    // Drivetrain Commands
     {"drivetrain_balance", std::make_shared<BalanceCommand>(driveSubsystem)},
 
-    {"claw_grab", std::make_shared<frc2::InstantCommand>(frc2::InstantCommand(
-      [this]() {
-        clawSubystem.setClawClosed(true);
-      },
-      {&clawSubystem}
-    ))},
-
-    {"claw_release", std::make_shared<frc2::InstantCommand>(frc2::InstantCommand(
-      [this]() {
-        clawSubystem.setClawClosed(false);
-      },
-      {&clawSubystem}
-    ))},
-
-    {"manipulator_compact", std::make_shared<frc2::FunctionalCommand>(frc2::FunctionalCommand(
-      [this]() {},
-      [this]() {
-        manipulatorSubystem.setElevatorHeight(0.0_in);
-        manipulatorSubystem.setArmPosition(92.5_deg);
-      },
-      [this](bool) {},
-      [this]() {
-        return manipulatorSubystem.elevatorAtHeight() && manipulatorSubystem.armAtPosition();
-      },
-      {&manipulatorSubystem}
-    ))},
-
-    {"manipulator_cube_high", std::make_shared<frc2::FunctionalCommand>(frc2::FunctionalCommand(
-      [this]() {},
-      [this]() {
-        manipulatorSubystem.setElevatorHeight(38.0_in);
-        manipulatorSubystem.setArmPosition(10.0_deg);
-      },
-      [this](bool) {},
-      [this]() {
-        return manipulatorSubystem.elevatorAtHeight() && manipulatorSubystem.armAtPosition();
-      },
-      {&manipulatorSubystem}
-    ))}
+    // Manipulator Commands
+    {"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
+    {"manipulator_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::highState).Unwrap()},
+    {"manipulator_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::midState).Unwrap()},
+    {"manipulator_low_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowCompactState).Unwrap()},
+    {"manipulator_low_reach", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowReachState).Unwrap()},
+ 
+    // Claw Commands
+    {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
+    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()}
   };
 
+  // Auto Builder
   pathplanner::RamseteAutoBuilder autoBuilder {
     [this]() { return driveSubsystem.getPose(); }, [this](frc::Pose2d initPose) { 
       driveSubsystem.resetOdometry(initPose); 
@@ -106,4 +77,14 @@ class RobotContainer {
       driveSubsystem.driveWheelSpeeds(leftVelocity, rightVelocity); 
     }, eventMap, {&driveSubsystem}, true
   };
+
+
+  /****************
+   * Auto Chooser *
+   ****************/
+  frc2::CommandPtr noAutoCommand = frc2::CommandPtr(frc2::PrintCommand("NO AUTO\n"));
+  std::map<std::string, frc2::CommandPtr> autoCommands;
+  frc2::Command* currentAuto = noAutoCommand.get();
+
+  frc::SendableChooser<frc2::Command*> autonomousChooser;
 };

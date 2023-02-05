@@ -1,8 +1,7 @@
 #include "claw/ClawSubsystem.h"
 
 #include <frc/trajectory/TrapezoidProfile.h>
-
-#include <iostream>
+#include <frc2/command/InstantCommand.h>
 
 ClawSubsystem::ClawSubsystem() {
     clawMotor->zeroPosition(0.0_deg);
@@ -10,8 +9,8 @@ ClawSubsystem::ClawSubsystem() {
 
 void ClawSubsystem::Periodic() {}
 
-void ClawSubsystem::setClawClosed(bool isClosed) {
-  clawClosed = isClosed;
+void ClawSubsystem::setClawClosed(bool setClosed) {
+  clawClosed = setClosed;
   clawMotor->setPosition(clawClosed ? ClawConstants::range.maxPosition : ClawConstants::range.minPosition);
 }
 
@@ -21,4 +20,8 @@ bool ClawSubsystem::getClawClosed() const {
 
 void ClawSubsystem::toggleClaw() {
   setClawClosed(!clawClosed);
+}
+
+frc2::CommandPtr ClawSubsystem::getClosedCommand(bool setClosed) {
+  return frc2::InstantCommand([this, setClosed]() { setClawClosed(setClosed); }, {this}).ToPtr();
 }

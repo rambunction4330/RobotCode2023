@@ -100,5 +100,5 @@ namespace Arm {
   };
 
   const units::meter_t length = 44_in;
-  } // namespace Arm
+} // namespace Arm
 }
