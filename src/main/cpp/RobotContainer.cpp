@@ -21,18 +21,18 @@
 
 RobotContainer::RobotContainer() {
   // Set Default Commands
-  driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
+  driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(gamepad));
 
-  manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
-    manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    manipulatorSubsystem.incArmPositon(0.5_deg * -joystick.GetX());
-  }, {&manipulatorSubsystem}));
+  // manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
+  //   manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
+  //   manipulatorSubsystem.incArmPositon(0.5_deg * -joystick.GetX());
+  // }, {&manipulatorSubsystem}));
 
-  clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
-    if (joystick.GetTriggerPressed()) {
-      clawSubsystem.toggleClaw();
-    }
-  }, {&clawSubsystem}));
+  // clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
+  //   if (joystick.GetTriggerPressed()) {
+  //     clawSubsystem.toggleClaw();
+  //   }
+  // }, {&clawSubsystem}));
 
   // Configure button bindings
   ConfigureBindings();
@@ -59,6 +59,30 @@ RobotContainer::RobotContainer() {
   }
 
   frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
+
+  teleopCommands.emplace("Gamepad Arcade", driveSubsystem.arcadeDriveCommand(gamepad));
+  teleopCommands.emplace("Gamepad Curvature", driveSubsystem.curvatureDriveCommand(gamepad));
+  teleopCommands.emplace("Gamepad Tank", driveSubsystem.tankDriveCommand(gamepad));
+
+  teleopCommands.emplace("Joystick Arcade", driveSubsystem.arcadeDriveCommand(joystick));
+  teleopCommands.emplace("Joystick Curvature", driveSubsystem.curvatureDriveCommand(joystick));
+
+  // Setup Auto Chooser
+  teleopChooser.SetDefaultOption("Gamepad Arcade", defaultTeleopCommand.get());
+  for (auto& [key, value] : teleopCommands) {
+    teleopChooser.AddOption(key, value.get());
+  }
+
+  frc::SmartDashboard::PutData("Teleop Chooser", &teleopChooser);
+}
+
+void RobotContainer::startTeleop() {
+  currentTeleop = teleopChooser.GetSelected();
+  currentTeleop->Schedule();
+}
+
+void RobotContainer::endTeleop() {
+  currentTeleop->Cancel();
 }
 
 void RobotContainer::startAutoCommand() {

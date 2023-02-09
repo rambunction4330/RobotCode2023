@@ -20,7 +20,7 @@ void DriveSubsystem::arcadeDrive(double xSpeed, double zRotation) {
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechJoystick& joystick) {
-  arcadeDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle());
+  arcadeDrive(joystick.GetX() * joystick.GetThrottle(), -joystick.GetTwist() * joystick.GetThrottle());
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
@@ -40,11 +40,11 @@ void DriveSubsystem::curvatureDrive(double xSpeed, double zRotation, bool turnIn
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechJoystick& joystick) {
-  curvatureDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle(), joystick.GetTrigger());
+  curvatureDrive(joystick.GetX() * joystick.GetThrottle(), -joystick.GetTwist() * joystick.GetThrottle(), joystick.GetTrigger());
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechGamepad& gamepad) {
-  curvatureDrive(gamepad.GetLeftX(), gamepad.GetRightY(), gamepad.GetLeftBumper());
+  curvatureDrive(gamepad.GetLeftX(), -gamepad.GetRightY(), gamepad.GetLeftBumper());
 }
 
 frc2::CommandPtr DriveSubsystem::curvatureDriveCommand(const rmb::LogitechJoystick& joystick) {
@@ -64,7 +64,7 @@ void DriveSubsystem::tankDrive(const rmb::LogitechJoystick& left, const rmb::Log
 }
 
 void DriveSubsystem::tankDrive(const rmb::LogitechGamepad& gamepad) {
-  tankDrive(gamepad.GetLeftX(), -gamepad.GetRightX());
+  tankDrive(gamepad.GetLeftX(), gamepad.GetRightX());
 }
 
 frc2::CommandPtr DriveSubsystem::tankDirveCommand(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right) {

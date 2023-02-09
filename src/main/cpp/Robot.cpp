@@ -12,9 +12,13 @@ void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  container.startTeleop();
+}
 void Robot::TeleopPeriodic()  {} 
-void Robot::TeleopExit() {}
+void Robot::TeleopExit() {
+  container.endTeleop();
+}
 
 void Robot::AutonomousInit() {
   container.startAutoCommand();

@@ -36,17 +36,20 @@ class RobotContainer {
   void startAutoCommand();
   void endAutoCommand();
 
+  void startTeleop();
+  void endTeleop();
+
  private: 
   void ConfigureBindings();
 
   /**************
    * Subsystems *
    **************/
+  rmb::LogitechGamepad gamepad{0, 0.0, true};
   rmb::LogitechJoystick joystick{1, 0.0, true};
-  rmb::LogitechGamepad driveGamepad{0, 0.0, true};
   DriveSubsystem driveSubsystem;
-  ManipulatorSubsystem manipulatorSubsystem; 
-  ClawSubsystem clawSubsystem; 
+  // ManipulatorSubsystem manipulatorSubsystem; 
+  // ClawSubsystem clawSubsystem; 
 
   /****************
    * Path Planner *
@@ -55,16 +58,16 @@ class RobotContainer {
     // Drivetrain Commands
     {"drivetrain_balance", std::make_shared<BalanceCommand>(driveSubsystem)},
 
-    // Manipulator Commands
-    {"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
-    {"manipulator_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::highState).Unwrap()},
-    {"manipulator_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::midState).Unwrap()},
-    {"manipulator_low_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowCompactState).Unwrap()},
-    {"manipulator_low_reach", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowReachState).Unwrap()},
+    // // Manipulator Commands
+    // {"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
+    // {"manipulator_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::highState).Unwrap()},
+    // {"manipulator_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::midState).Unwrap()},
+    // {"manipulator_low_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowCompactState).Unwrap()},
+    // {"manipulator_low_reach", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowReachState).Unwrap()},
  
-    // Claw Commands
-    {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
-    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()}
+    // // Claw Commands
+    // {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
+    // {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()}
   };
 
   // Auto Builder
@@ -87,4 +90,13 @@ class RobotContainer {
   frc2::Command* currentAuto = noAutoCommand.get();
 
   frc::SendableChooser<frc2::Command*> autonomousChooser;
+
+  /******************
+   * Driver Testing *
+   ******************/
+
+  frc2::CommandPtr defaultTeleopCommand = driveSubsystem.arcadeDriveCommand(gamepad);
+  std::map<std::string, frc2::CommandPtr> teleopCommands;
+  frc2::Command* currentTeleop = defaultTeleopCommand.get();
+  frc::SendableChooser<frc2::Command*> teleopChooser;
 };
