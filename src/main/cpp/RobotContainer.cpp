@@ -28,7 +28,11 @@ RobotContainer::RobotContainer() {
     manipulatorSubsystem.incArmPositon(0.5_deg * -joystick.GetX());
   }, {&manipulatorSubsystem}));
 
-  clawSubsystem.SetDefaultCommand(clawSubsystem.getClosedCommand(false));
+  clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
+    if (joystick.GetTriggerPressed()) {
+      clawSubsystem.toggleClaw();
+    }
+  }, {&clawSubsystem}));
 
   // Configure button bindings
   ConfigureBindings();
@@ -42,7 +46,8 @@ RobotContainer::RobotContainer() {
   autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
 
   // Example Auto
-  autoCommands.emplace("Cube High Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("cube_high_balance", 1.75_mps, 3.0_mps_sq, true)));
+  autoCommands.emplace("Cube High Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("cube_high_balance", 1.75_mps, 2.0_mps_sq, true)));
+    autoCommands.emplace("Balance Test", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_test", 1.0_mps, 1.0_mps_sq, true)));
 
   autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));

@@ -20,6 +20,7 @@ void ManipulatorSubsystem::Periodic() {
 void ManipulatorSubsystem::setArmPosition(units::radian_t position) {
     // Clamp to dynamic range based on elevator position;
     units::radian_t clamped = std::clamp(position, calculateArmMinPose(), calculateArmMaxPose());
+    
     targetArmPose = clamped;
     frc::TrapezoidProfile<units::radians> profile {{100_deg_per_s, 200_deg_per_s_sq}, 
                                                    {targetArmPose, 0.0_rad_per_s},

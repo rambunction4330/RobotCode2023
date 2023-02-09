@@ -14,11 +14,11 @@ namespace ClawConstants {
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    10.0 /*  <- P */ , 0.0 /* <- I */, 2.0 /* <- D */, 0.0 /* <- FF */,
+    10.0 /*  <- P */ , 0.0 /* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
     0.0_rad /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    0.6 /* <- maxOutput */, -0.1 /* <- minOutput */
-  };
+    0.4 /* <- maxOutput */, -0.1 /* <- minOutput */
+  }; 
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
     std::make_shared<rmb::SimpleFeedforward<units::radians>>()

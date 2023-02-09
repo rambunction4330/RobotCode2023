@@ -22,16 +22,18 @@ void BalanceCommand::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void BalanceCommand::Execute() {
   // Increments goal based on gain robot pitch
-  goal += (driveSubsystem.getRobotPitch() * gain);
+  double feedback = -driveSubsystem.getRobotPitch().to<double>() - 0.06;
+  if (abs(feedback) < 0.005) { feedback = 0.0; }
+  goal = units::meter_t(balanceController.Calculate(feedback));
   goal = std::clamp(goal, minX, maxX);
   
   // Genrates profile
   frc::TrapezoidProfile<units::meters> profile = {constraints, 
                                                   {goal, 0.0_mps}, 
-                                                  {(driveSubsystem.getPose() - offset).X(), driveSubsystem.getChassisSpeeds().vx}};
+                                                  {(driveSubsystem.getPose() - offset).X(), 0.0_mps}};
 
   // Drives profile
-  driveSubsystem.driveChassisSpeeds({profile.Calculate(20_ms).velocity, 0.0_mps, 0.0_rpm});
+  driveSubsystem.driveChassisSpeeds({profile.Calculate(40_ms).velocity, 0.0_mps, 0.0_rpm});
 
   // Start timer if level and reset of not
   if (units::math::abs(driveSubsystem.getRobotPitch()) < 2.5_deg) {

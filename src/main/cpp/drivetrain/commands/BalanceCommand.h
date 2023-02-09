@@ -38,11 +38,11 @@ private:
   DriveSubsystem& driveSubsystem;
   frc::Pose2d offset;
 
-  frc::TrapezoidProfile<units::meters>::Constraints constraints = {1.0_mph, 1.0_mps_sq};
-  Gain_t gain {0.00001};
+  frc::TrapezoidProfile<units::meters>::Constraints constraints = {0.5_mps, 7.0_mps_sq};
+  frc::PIDController balanceController {0.12, 0.175, 0.0};
   units::meter_t goal = 0.0_m;
-  units::meter_t minX = -0.2_m;
-  units::meter_t maxX = 0.2_m;
+  units::meter_t minX = -0.4_m;
+  units::meter_t maxX = 0.4_m;
 
   frc::Timer balanceTimer;
 };
