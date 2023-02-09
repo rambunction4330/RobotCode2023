@@ -115,6 +115,7 @@ private:
   frc::DifferentialDrivePoseEstimator poseEstimator;
 
   // Vision Handleing
+  std::shared_ptr<nt::NetworkTable> visionTable;
   NT_Listener visionListener;
   mutable std::mutex visionThreadMutex;
 };
