@@ -53,7 +53,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void tankDrive(double leftSpeed, double rightSpeed);
   void tankDrive(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right);
   void tankDrive(const rmb::LogitechGamepad& gamepad);
-  frc2::CommandPtr tankDirveCommand(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right);
+  frc2::CommandPtr tankDriveCommand(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right);
   frc2::CommandPtr tankDriveCommand(const rmb::LogitechGamepad& gamepad);
 
   // Odometry Fucntions

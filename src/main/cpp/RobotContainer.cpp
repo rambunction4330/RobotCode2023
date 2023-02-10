@@ -66,6 +66,7 @@ RobotContainer::RobotContainer() {
 
   teleopCommands.emplace("Joystick Arcade", driveSubsystem.arcadeDriveCommand(joystick));
   teleopCommands.emplace("Joystick Curvature", driveSubsystem.curvatureDriveCommand(joystick));
+  teleopCommands.emplace("Joystick Tank", driveSubsystem.tankDriveCommand(joystick, joystick2));
 
   // Setup Auto Chooser
   teleopChooser.SetDefaultOption("Gamepad Arcade", defaultTeleopCommand.get());
