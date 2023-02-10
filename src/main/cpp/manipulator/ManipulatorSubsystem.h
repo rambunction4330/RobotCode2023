@@ -23,11 +23,11 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
     units::radian_t armAngle;
   };
 
-  constexpr static ManipulatorSubsystem::ManipulatorState compactState {12_in, 92.5_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState highState {39.0_in, 10.0_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState compactState {11_in, 92.5_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState highState {38.0_in, 10.0_deg};
   constexpr static ManipulatorSubsystem::ManipulatorState midState {20_in, 60_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState lowCompactState {39.0_in, -46.0_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState lowReachState {12_in, -5.0_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState lowCompactState {38.0_in, -46.0_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState lowReachState {11_in, -5.0_deg};
 
   ManipulatorSubsystem();
 

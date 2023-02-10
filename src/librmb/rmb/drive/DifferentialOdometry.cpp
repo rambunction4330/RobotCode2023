@@ -1,5 +1,7 @@
 #include "rmb/drive/DifferentialOdometry.h"
 
+#include <iostream>
+
 #include <units/time.h>
 
 #include <networktables/DoubleArrayTopic.h>
@@ -16,32 +18,50 @@ DifferentialOdometry::DifferentialOdometry(
     poseEstimator(kinematics, gyro->GetRotation2d(), 
       leftEncoder->getPosition(), rightEncoder->getPosition(), initalPose
     ), visionTable(visionTable) {
+      
+  nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
 
-  visionListener = visionTable->AddListener(
-    nt::EventFlags::kPublish, 
-    [this](nt::NetworkTable* table, std::string_view key, const nt::Event& event){
+  auto table = inst.GetTable("visionTable");
 
-    if (key == "pose") {
-      nt::TimestampedDoubleArray rawData = table->GetDoubleArrayTopic(key).Subscribe({}).GetAtomic();
+  sub = table->GetDoubleArrayTopic("pose").Subscribe({});
 
-      if (rawData.value.size() != 3) { return; }
+  visionListener = inst.AddListener(sub, nt::EventFlags::kValueAll, 
+    [this] (const nt::Event& event) {
+      nt::TimestampedDoubleArray atomic = event.
+    });
 
-      frc::Pose2d pose = {units::meter_t(rawData.value[0]), units::meter_t(rawData.value[1]), units::radian_t(rawData.value[2])};
-      units::second_t time = units::microsecond_t(rawData.time);
 
-      std::lock_guard<std::mutex> lock(visionThreadMutex);
-      poseEstimator.AddVisionMeasurement(pose, time);
-    }
+  // visionListener = visionTable->AddListener(
+  //   nt::EventFlags::kTopic, 
+  //   [this](nt::NetworkTable* table, std::string_view key, const nt::Event& event){
 
-    if (key == "stdDev") {
-      std::vector<double> rawData = table->GetDoubleArrayTopic(key).Subscribe({}).Get();
+  //   std::cout << "HERE!\n";
 
-      if (rawData.size() != 3) { return; }
+  //   if (key == "pose") {
+  //     nt::TimestampedDoubleArray rawData = table->GetDoubleArrayTopic(key).Subscribe({}).GetAtomic();
 
-      std::lock_guard<std::mutex> lock(visionThreadMutex);
-      poseEstimator.SetVisionMeasurementStdDevs({rawData[0], rawData[1], rawData[2]});
-    }
-  });
+  //     if (rawData.value.size() != 3) { return; }
+
+  //     frc::Pose2d pose = {units::meter_t(rawData.value[0]), units::meter_t(rawData.value[1]), units::radian_t(rawData.value[2])};
+  //     units::second_t time = units::microsecond_t(rawData.time);
+
+  //     std::cout << "(X: " << units::length::to_string(pose.X())
+  //               << " Y: " << units::length::to_string(pose.Y())
+  //               << "Theta: " << units::angle::to_string(pose.Rotation().Radians()) << std::endl;
+
+  //     std::lock_guard<std::mutex> lock(visionThreadMutex);
+  //     poseEstimator.AddVisionMeasurement(pose, time);
+  //   }
+
+  //   if (key == "stdDev") {
+  //     std::vector<double> rawData = table->GetDoubleArrayTopic(key).Subscribe({}).Get();
+
+  //     if (rawData.size() != 3) { return; }
+
+  //     std::lock_guard<std::mutex> lock(visionThreadMutex);
+  //     poseEstimator.SetVisionMeasurementStdDevs({rawData[0], rawData[1], rawData[2]});
+  //   }
+  // });
 }
 
 DifferentialOdometry::~DifferentialOdometry() {

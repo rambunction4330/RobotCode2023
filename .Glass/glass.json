@@ -12,7 +12,9 @@
       }
     },
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Feild": "Field2d"
     }
   },
   "NetworkTables Settings": {
