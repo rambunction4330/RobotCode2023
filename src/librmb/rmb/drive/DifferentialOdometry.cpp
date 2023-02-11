@@ -37,7 +37,7 @@ DifferentialOdometry::DifferentialOdometry(
     }
   );
 
-  poseListener = inst.AddListener(stdDevSubscriber, nt::EventFlags::kProperties, 
+  stdDevListener = inst.AddListener(stdDevSubscriber, nt::EventFlags::kProperties, 
     [this] (const nt::Event& event) {
       std::vector<double> rawData = stdDevSubscriber.Get();
 
