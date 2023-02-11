@@ -69,7 +69,7 @@ namespace Arm {
     0.07 /*  <- P */ , 0.0 /* <- I */, 2.0 /* <- D */, 0.0 /* <- FF */,
     2.5_deg /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    0.5 /* <- maxOutput */, -0.8 /* <- minOutput */
+    0.4 /* <- maxOutput */, -0.7 /* <- minOutput */
   };
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {

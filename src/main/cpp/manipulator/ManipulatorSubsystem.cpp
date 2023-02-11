@@ -22,7 +22,7 @@ void ManipulatorSubsystem::setArmPosition(units::radian_t position) {
     units::radian_t clamped = std::clamp(position, calculateArmMinPose(), calculateArmMaxPose());
     
     targetArmPose = clamped;
-    frc::TrapezoidProfile<units::radians> profile {{150_deg_per_s, 300_deg_per_s_sq}, 
+    frc::TrapezoidProfile<units::radians> profile {{100_deg_per_s, 200_deg_per_s_sq}, 
                                                    {targetArmPose, 0.0_rad_per_s},
                                                    {armMotor->getPosition(), armMotor->getVelocity()}};
 

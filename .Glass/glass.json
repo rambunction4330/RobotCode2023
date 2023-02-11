@@ -1,8 +1,5 @@
 {
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
     "Retained Values": {
       "open": false
     },
@@ -14,7 +11,8 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auto Chooser": "String Chooser",
-      "/SmartDashboard/Feild": "Field2d"
+      "/SmartDashboard/Feild": "Field2d",
+      "/SmartDashboard/Teleop Chooser": "String Chooser"
     }
   },
   "NetworkTables Settings": {

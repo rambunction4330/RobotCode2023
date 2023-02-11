@@ -25,7 +25,7 @@ RobotContainer::RobotContainer() {
 
   manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
     manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    manipulatorSubsystem.incArmPositon(1.0_deg * -joystick.GetX());
+    manipulatorSubsystem.incArmPositon(0.75_deg * -joystick.GetX());
   }, {&manipulatorSubsystem}));
 
   clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
