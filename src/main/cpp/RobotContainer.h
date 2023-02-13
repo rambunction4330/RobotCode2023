@@ -45,8 +45,8 @@ class RobotContainer {
   rmb::LogitechJoystick joystick{1, 0.0, true};
   rmb::LogitechGamepad driveGamepad{0, 0.0, true};
   DriveSubsystem driveSubsystem;
-  ManipulatorSubsystem manipulatorSubsystem; 
-  ClawSubsystem clawSubsystem; 
+  //ManipulatorSubsystem manipulatorSubsystem; 
+  //ClawSubsystem clawSubsystem; 
 
   /****************
    * Path Planner *
@@ -56,7 +56,7 @@ class RobotContainer {
     {"drivetrain_balance", std::make_shared<BalanceCommand>(driveSubsystem)},
 
     // Manipulator Commands
-    {"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
+    /*{"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
     {"manipulator_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::highState).Unwrap()},
     {"manipulator_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::midState).Unwrap()},
     {"manipulator_low_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowCompactState).Unwrap()},
@@ -64,7 +64,7 @@ class RobotContainer {
  
     // Claw Commands
     {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
-    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()}
+    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()}*/
   };
 
   // Auto Builder

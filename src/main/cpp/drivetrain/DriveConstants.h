@@ -13,19 +13,19 @@
 namespace DriveConstants {
 
   const rmb::SparkMaxVelocityController::MotorConfig leftLeader {
-    11, rev::CANSparkMax::MotorType::kBrushless, false
+    1, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxVelocityController::MotorConfig leftFollower {
-    12, rev::CANSparkMax::MotorType::kBrushless, false
+    2, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxVelocityController::MotorConfig rightLeader {
-    13, rev::CANSparkMax::MotorType::kBrushless, true
+    3, rev::CANSparkMax::MotorType::kBrushless, true
   };
 
   const rmb::SparkMaxVelocityController::MotorConfig rightFollower {
-    14, rev::CANSparkMax::MotorType::kBrushless, false
+    4, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxVelocityController::PIDConfig pidConfig {
