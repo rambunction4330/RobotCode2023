@@ -73,6 +73,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   units::radian_t getRobotPitch();
   frc2::CommandPtr getBalanceCommand();
 
+
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -113,7 +115,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
     left, right, 
     DriveConstants::kinematics, 
     gyro,
-    nt::NetworkTableInstance::GetDefault().GetTable(DriveConstants::visionTableString)
+    DriveConstants::visionTableString
   };
 
   frc::Field2d displayFeild; 

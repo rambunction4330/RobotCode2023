@@ -24,16 +24,16 @@ namespace Elevator {
   const units::meter_t sproketDiameter = 1.175_in;
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    0.05 /*  <- P */ , 0.0/* <- I */, 0.2 /* <- D */, 0.0 /* <- FF */,
-    2.5_in * (2_rad / sproketDiameter) /* <- Tolerance */, 
+    0.08 /*  <- P */ , 0.0/* <- I */, 1.0 /* <- D */, 0.0 /* <- FF */,
+    3.0_in * (2_rad / sproketDiameter) /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    0.3 /* <- maxOutput */, -0.2 /* <- minOutput */
+    0.5 /* <- maxOutput */, -0.5 /* <- minOutput */
   };
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
     std::make_shared<rmb::ElevatorFeedforward<units::radians>>(
       rmb::ElevatorFeedforward<units::radians>::Ks_t{0.0} /* <- Ks */, 
-      rmb::ElevatorFeedforward<units::radians>::Ks_t{0.46} /* <- Kg */, 
+      rmb::ElevatorFeedforward<units::radians>::Ks_t{0.5} /* <- Kg */, 
       rmb::ElevatorFeedforward<units::radians>::Kv_t{0.0} /* <- Kv */, 
       rmb::ElevatorFeedforward<units::radians>::Ka_t{0.0} /* <- Ka */)
   };
@@ -66,15 +66,15 @@ namespace Arm {
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    0.07 /*  <- P */ , 0.0 /* <- I */, 2.0 /* <- D */, 0.0 /* <- FF */,
-    2.5_deg /* <- Tolerance */, 
+    0.05 /*  <- P */ , 0.0 /* <- I */, 1.0 /* <- D */, 0.0 /* <- FF */,
+    3.0_deg /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    0.4 /* <- maxOutput */, -0.7 /* <- minOutput */
+    0.4 /* <- maxOutput */, -0.3 /* <- minOutput */
   };
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
     std::make_shared<rmb::ArmFeedforward>(rmb::ArmFeedforward::Ks_t{0.0} /* <- Ks */, 
-                                          rmb::ArmFeedforward::Ks_t{0.5} /* <- Kcos */, 
+                                          rmb::ArmFeedforward::Ks_t{0.75} /* <- Kcos */, 
                                           rmb::ArmFeedforward::Kv_t{0.0} /* <- Kv */, 
                                           rmb::ArmFeedforward::Ka_t{0.0} /* <- Ka */)
   };

@@ -23,10 +23,10 @@ RobotContainer::RobotContainer() {
   // Set Default Commands
   driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
 
-  manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
-    manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    manipulatorSubsystem.incArmPositon(0.75_deg * -joystick.GetX());
-  }, {&manipulatorSubsystem}));
+  // manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
+  //   manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
+  //   manipulatorSubsystem.incArmPositon(0.75_deg * -joystick.GetX());
+  // }, {&manipulatorSubsystem}));
 
   clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
     if (joystick.GetTriggerPressed()) {
@@ -45,9 +45,11 @@ RobotContainer::RobotContainer() {
   autoCommands.emplace("Put Mid Leave Community Left", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Leave Community Right", frc2::PrintCommand("NOT IMPLEMENTED\n"));
 
+  autoCommands.emplace("Cube High Leave Community", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("cube_high_com", 2.0_mps, 3.0_mps_sq, true)));
+
   // Example Auto
   autoCommands.emplace("Cube High Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("cube_high_balance", 1.75_mps, 2.0_mps_sq, true)));
-    autoCommands.emplace("Balance Test", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_test", 1.0_mps, 1.0_mps_sq, true)));
+  autoCommands.emplace("Balance Test", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_test", 1.0_mps, 1.0_mps_sq, true)));
 
   autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
@@ -72,4 +74,10 @@ void RobotContainer::endAutoCommand() {
 
 void RobotContainer::ConfigureBindings() {
   // Configure your trigger bindings here
+  joystick.Button(7).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
+  joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState));
+  joystick.Button(9).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
+  joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
+  joystick.Button(11).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
+  joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
 }

@@ -23,11 +23,13 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
     units::radian_t armAngle;
   };
 
-  constexpr static ManipulatorSubsystem::ManipulatorState compactState {11_in, 92.5_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState highState {38.0_in, 10.0_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState midState {20_in, 60_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState lowCompactState {38.0_in, -46.0_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState lowReachState {11_in, -5.0_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState compactState {11_in, 90.0_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState cubeHighState {38.0_in, 10.0_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState cubeMidState {11_in, 45_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState cubePickupState {38_in, -45_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState coneMidState {11_in, 45_deg};
+  constexpr static ManipulatorSubsystem::ManipulatorState conePickupState {11_in, -7.5_deg};
+    constexpr static ManipulatorSubsystem::ManipulatorState substationState {38_in, 0.0_deg};
 
   ManipulatorSubsystem();
 
@@ -62,6 +64,7 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
    *******/
   void setState(const ManipulatorState state);
   frc2::CommandPtr getStateCommand(const ManipulatorState state);
+  frc2::CommandPtr getInstantStateCommand(const ManipulatorState state);
  private:
   /************
    * Elevator *

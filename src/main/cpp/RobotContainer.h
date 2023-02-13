@@ -57,10 +57,10 @@ class RobotContainer {
 
     // Manipulator Commands
     {"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
-    {"manipulator_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::highState).Unwrap()},
-    {"manipulator_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::midState).Unwrap()},
-    {"manipulator_low_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowCompactState).Unwrap()},
-    {"manipulator_low_reach", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::lowReachState).Unwrap()},
+    {"manipulator_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState).Unwrap()},
+    {"manipulator_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState).Unwrap()},
+    {"manipulator_low_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState).Unwrap()},
+    {"manipulator_low_reach", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState).Unwrap()},
  
     // Claw Commands
     {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},

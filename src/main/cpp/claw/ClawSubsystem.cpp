@@ -5,6 +5,7 @@
 
 ClawSubsystem::ClawSubsystem() {
     clawMotor->zeroPosition(0.0_deg);
+    clawMotor->setPosition(10.0_deg);
 }
 
 void ClawSubsystem::Periodic() {}

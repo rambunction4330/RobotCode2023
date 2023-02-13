@@ -2,12 +2,13 @@
 
 #include <frc/trajectory/TrapezoidProfile.h>
 #include <frc2/command/FunctionalCommand.h>
+#include <frc2/command/InstantCommand.h>
 
 #include <iostream>
 
 ManipulatorSubsystem::ManipulatorSubsystem() {
-    armMotor->zeroPosition(95_deg);
-    setArmPosition(92.5_deg);
+    armMotor->zeroPosition(100_deg);
+    setArmPosition(90.0_deg);
     elevatorMotor->zeroPosition(minElevatorHeight);
     setElevatorHeight(11_in);
 }
@@ -22,11 +23,11 @@ void ManipulatorSubsystem::setArmPosition(units::radian_t position) {
     units::radian_t clamped = std::clamp(position, calculateArmMinPose(), calculateArmMaxPose());
     
     targetArmPose = clamped;
-    frc::TrapezoidProfile<units::radians> profile {{100_deg_per_s, 200_deg_per_s_sq}, 
+    frc::TrapezoidProfile<units::radians> profile {{200_deg_per_s, 400_deg_per_s_sq}, 
                                                    {targetArmPose, 0.0_rad_per_s},
                                                    {armMotor->getPosition(), armMotor->getVelocity()}};
 
-    armMotor->setPosition(profile.Calculate(200_ms).position);
+    armMotor->setPosition(targetArmPose);
 }
 
 void ManipulatorSubsystem::incArmPositon(units::radian_t increment) {
@@ -105,4 +106,8 @@ frc2::CommandPtr ManipulatorSubsystem::getStateCommand(const ManipulatorState st
   return frc2::FunctionalCommand([](){}, [this, state](){ setState(state); }, [](bool){}, 
                                  [this]() { return armAtPosition() && elevatorAtHeight(); },
                                  {this}).ToPtr();
+}
+
+frc2::CommandPtr ManipulatorSubsystem::getInstantStateCommand(const ManipulatorState state) {
+  return frc2::InstantCommand([this, state](){ setState(state); }, {this}).ToPtr();
 }
