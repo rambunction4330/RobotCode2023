@@ -12,6 +12,7 @@
 #include "drivetrain/commands/BalanceCommand.h"
 
 DriveSubsystem::DriveSubsystem() {
+  resetOdometry({2_ft, 8_ft, 0.0_rad});
   frc::SmartDashboard::PutData("Feild", &displayFeild);
 }
 
@@ -20,7 +21,7 @@ void DriveSubsystem::arcadeDrive(double xSpeed, double zRotation) {
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechJoystick& joystick) {
-  arcadeDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle());
+  arcadeDrive(joystick.GetX() * joystick.GetThrottle(), -joystick.GetTwist() * joystick.GetThrottle());
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
@@ -41,11 +42,11 @@ void DriveSubsystem::curvatureDrive(double xSpeed, double zRotation, bool turnIn
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechJoystick& joystick) {
-  curvatureDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle(), joystick.GetTrigger());
+  curvatureDrive(joystick.GetX() * joystick.GetThrottle(), -joystick.GetTwist() * joystick.GetThrottle(), joystick.GetTrigger());
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechGamepad& gamepad) {
-  curvatureDrive(gamepad.GetLeftX(), gamepad.GetRightY(), gamepad.GetLeftBumper());
+  curvatureDrive(gamepad.GetLeftX(), -gamepad.GetRightY(), gamepad.GetLeftBumper());
 }
 
 frc2::CommandPtr DriveSubsystem::curvatureDriveCommand(const rmb::LogitechJoystick& joystick) {
@@ -61,14 +62,14 @@ void DriveSubsystem::tankDrive(double leftSpeed, double rightSpeed) {
 }
 
 void DriveSubsystem::tankDrive(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right) {
-  tankDrive(left.GetX(), right.GetX());
+  tankDrive(left.GetX() * left.GetThrottle(), right.GetX() * left.GetThrottle());
 }
 
 void DriveSubsystem::tankDrive(const rmb::LogitechGamepad& gamepad) {
-  tankDrive(gamepad.GetLeftX(), -gamepad.GetRightX());
+  tankDrive(gamepad.GetLeftX(), gamepad.GetRightX());
 }
 
-frc2::CommandPtr DriveSubsystem::tankDirveCommand(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right) {
+frc2::CommandPtr DriveSubsystem::tankDriveCommand(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right) {
   return frc2::CommandPtr(frc2::RunCommand([&]() { tankDrive(left, right); }, {this}));
 }
 

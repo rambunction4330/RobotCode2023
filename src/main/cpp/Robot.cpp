@@ -9,16 +9,20 @@
 #include <units/velocity.h>
 
 void Robot::RobotInit() {
-  // frc::CameraServer::StartAutomaticCapture();
+  frc::CameraServer::StartAutomaticCapture();
 }
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  container.startTeleop();
+}
 void Robot::TeleopPeriodic()  {} 
-void Robot::TeleopExit() {}
+void Robot::TeleopExit() {
+  container.endTeleop();
+}
 
 void Robot::AutonomousInit() {
   container.startAutoCommand();
