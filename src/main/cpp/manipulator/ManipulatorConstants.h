@@ -39,8 +39,8 @@ namespace Elevator {
   };
 
   const rmb::SparkMaxPositionController::Range range {
-    12_in * (2_rad / sproketDiameter)/* <- min */,
-    39_in * (2_rad / sproketDiameter)/* <- max */,
+    11_in * (2_rad / sproketDiameter)/* <- min */,
+    38_in * (2_rad / sproketDiameter)/* <- max */,
     false /* <- isContinouse */
   };
 
@@ -66,7 +66,7 @@ namespace Arm {
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    0.06 /*  <- P */ , 0.0 /* <- I */, 2.0 /* <- D */, 0.0 /* <- FF */,
+    0.07 /*  <- P */ , 0.0 /* <- I */, 2.0 /* <- D */, 0.0 /* <- FF */,
     2.5_deg /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     0.4 /* <- maxOutput */, -0.7 /* <- minOutput */

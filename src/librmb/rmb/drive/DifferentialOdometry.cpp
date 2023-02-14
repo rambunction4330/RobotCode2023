@@ -1,5 +1,7 @@
 #include "rmb/drive/DifferentialOdometry.h"
 
+#include <iostream>
+
 #include <units/time.h>
 
 #include <networktables/DoubleArrayTopic.h>
@@ -11,17 +13,19 @@ namespace rmb {
 DifferentialOdometry::DifferentialOdometry(
   std::shared_ptr<LinearEncoder> left, std::shared_ptr<LinearEncoder> right,
   frc::DifferentialDriveKinematics& kinematics, std::shared_ptr<frc::Gyro> gyroscope, 
-  std::shared_ptr<nt::NetworkTable> visionTable, const frc::Pose2d& initalPose
+  std::string visionTable, const frc::Pose2d& initalPose
 ) : leftEncoder(left), rightEncoder(right), gyro(gyroscope), 
-    poseEstimator(kinematics, gyro->GetRotation2d(), leftEncoder->getPosition(), 
-                  rightEncoder->getPosition(), initalPose) {
+    poseEstimator(kinematics, gyro->GetRotation2d(), 
+      leftEncoder->getPosition(), rightEncoder->getPosition(), initalPose){
+      
+  nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
+  auto table = inst.GetTable(visionTable);
+  poseSubscriber = table->GetDoubleArrayTopic("pose").Subscribe({});
+  stdDevSubscriber = table->GetDoubleArrayTopic("stdDev").Subscribe({});
 
-  visionListener = visionTable->AddListener(
-    nt::EventFlags::kPublish, 
-    [this](nt::NetworkTable* table, std::string_view key, const nt::Event& event){
-
-    if (key == "pose") {
-      nt::TimestampedDoubleArray rawData = table->GetDoubleArrayTopic(key).Subscribe({}).GetAtomic();
+  poseListener = inst.AddListener(poseSubscriber, nt::EventFlags::kProperties, 
+    [this] (const nt::Event& event) {
+      nt::TimestampedDoubleArray rawData = poseSubscriber.GetAtomic();
 
       if (rawData.value.size() != 3) { return; }
 
@@ -31,20 +35,23 @@ DifferentialOdometry::DifferentialOdometry(
       std::lock_guard<std::mutex> lock(visionThreadMutex);
       poseEstimator.AddVisionMeasurement(pose, time);
     }
+  );
 
-    if (key == "stdDev") {
-      std::vector<double> rawData = table->GetDoubleArrayTopic(key).Subscribe({}).Get();
+  stdDevListener = inst.AddListener(stdDevSubscriber, nt::EventFlags::kProperties, 
+    [this] (const nt::Event& event) {
+      std::vector<double> rawData = stdDevSubscriber.Get();
 
       if (rawData.size() != 3) { return; }
 
       std::lock_guard<std::mutex> lock(visionThreadMutex);
       poseEstimator.SetVisionMeasurementStdDevs({rawData[0], rawData[1], rawData[2]});
     }
-  });
+  );
 }
 
 DifferentialOdometry::~DifferentialOdometry() {
-  nt::RemoveListener(visionListener);
+  nt::RemoveListener(poseListener);
+  nt::RemoveListener(stdDevListener);
 }
 
 DifferentialOdometry::DifferentialOdometry(

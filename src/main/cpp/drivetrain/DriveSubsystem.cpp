@@ -25,7 +25,8 @@ void DriveSubsystem::arcadeDrive(const rmb::LogitechJoystick& joystick) {
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
-  arcadeDrive(gamepad.GetLeftX(), -gamepad.GetRightY());
+  double additional = gamepad.GetLeftTrigger() / 2.0;
+  arcadeDrive((0.5 + additional) * gamepad.GetLeftX(), (0.5 + additional) * -gamepad.GetRightY());
 }
 
 frc2::CommandPtr DriveSubsystem::arcadeDriveCommand(const rmb::LogitechJoystick& joystick) {

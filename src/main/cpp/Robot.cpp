@@ -1,5 +1,7 @@
 #include "Robot.h"
 
+#include <cameraserver/CameraServer.h>
+
 #include <iostream>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc/trajectory/TrajectoryConfig.h>

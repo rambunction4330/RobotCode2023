@@ -9,7 +9,7 @@ ManipulatorSubsystem::ManipulatorSubsystem() {
     armMotor->zeroPosition(95_deg);
     setArmPosition(92.5_deg);
     elevatorMotor->zeroPosition(minElevatorHeight);
-    setElevatorHeight(12_in);
+    setElevatorHeight(11_in);
 }
 
 void ManipulatorSubsystem::Periodic() {

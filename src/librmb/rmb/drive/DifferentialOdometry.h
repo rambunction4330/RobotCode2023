@@ -7,6 +7,7 @@
 #include <units/length.h>
 
 #include <networktables/NetworkTableInstance.h>
+#include <networktables/DoubleArrayTopic.h>
 
 #include <frc/geometry/Pose2d.h>
 #include <frc/interfaces/Gyro.h>
@@ -58,7 +59,7 @@ public:
                        std::shared_ptr<LinearEncoder> rightEncoder,
                        frc::DifferentialDriveKinematics& kinematics,
                        std::shared_ptr<frc::Gyro> gyro,
-                       std::shared_ptr<nt::NetworkTable> visionTable,
+                       std::string visionTable,
                        const frc::Pose2d& initalPose = frc::Pose2d());
 
   /**
@@ -115,7 +116,10 @@ private:
   frc::DifferentialDrivePoseEstimator poseEstimator;
 
   // Vision Handleing
-  NT_Listener visionListener;
+  nt::DoubleArraySubscriber poseSubscriber;
+  nt::DoubleArraySubscriber stdDevSubscriber;
+  NT_Listener poseListener;
+  NT_Listener stdDevListener;
   mutable std::mutex visionThreadMutex;
 };
 } // namespace rmb

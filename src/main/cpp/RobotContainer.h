@@ -51,8 +51,6 @@ class RobotContainer {
   rmb::LogitechJoystick joystick{1, 0.0, true};
   rmb::LogitechJoystick joystick2{2, 0.0, true};
   DriveSubsystem driveSubsystem;
-  // ManipulatorSubsystem manipulatorSubsystem; 
-  // ClawSubsystem clawSubsystem; 
 
   /****************
    * Path Planner *
