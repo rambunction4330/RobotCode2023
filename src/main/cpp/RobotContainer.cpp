@@ -47,7 +47,8 @@ RobotContainer::RobotContainer() {
 
   // Example Auto
   autoCommands.emplace("Cube High Balance", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("cube_high_balance", 1.75_mps, 2.0_mps_sq, true)));
-    autoCommands.emplace("Balance Test", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_test", 1.0_mps, 1.0_mps_sq, true)));
+  autoCommands.emplace("Balance Test", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("balance_test", 1.0_mps, 1.0_mps_sq, true)));
+  autoCommands.emplace("Test", autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup("testing", 1.0_mps, 1.0_mps_sq, false)));
 
   autoCommands.emplace("Put Low Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));
   autoCommands.emplace("Put Mid Balance", frc2::PrintCommand("NOT IMPLEMENTED\n"));

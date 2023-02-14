@@ -29,7 +29,7 @@ namespace DriveConstants {
   };
 
   const rmb::SparkMaxVelocityController::PIDConfig pidConfig {
-    0.0000009 /*  <- P */ , 0.0000001 /* <- I */, 0.0001 /* <- D */, 0.000187 /* <- FF */,
+    0.000001 /*  <- P */ , 0.0000005 /* <- I */, 0.0001 /* <- D */, 0.000187 /* <- FF */,
     0.0_rad_per_s /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     1.0 /* <- maxOutput */, -1.0 /* <- minOutput */
@@ -53,11 +53,11 @@ namespace DriveConstants {
   };
 
   static const frc::RamseteController ramseteController {
-    units::unit_t<frc::RamseteController::b_unit>(1.0) /* <- b */,
+    units::unit_t<frc::RamseteController::b_unit>(2.0) /* <- b */,
     units::unit_t<frc::RamseteController::zeta_unit>(0.8) /* <- zeta */ 
   };
 
-  static frc::DifferentialDriveKinematics kinematics{ 27.875_in /* <- track width */};
+  static frc::DifferentialDriveKinematics kinematics{ 27.75_in /* <- track width */};
 
   const frc::SerialPort::Port gyroPort = frc::SerialPort::Port::kMXP;
 
