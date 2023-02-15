@@ -23,8 +23,9 @@ DifferentialOdometry::DifferentialOdometry(
   poseSubscriber = table->GetDoubleArrayTopic("pose").Subscribe({});
   stdDevSubscriber = table->GetDoubleArrayTopic("stdDev").Subscribe({});
 
-  poseListener = inst.AddListener(poseSubscriber, nt::EventFlags::kProperties, 
+  poseListener = inst.AddListener(poseSubscriber, nt::EventFlags::kImmediate|nt::EventFlags::kValueAll, 
     [this] (const nt::Event& event) {
+
       nt::TimestampedDoubleArray rawData = poseSubscriber.GetAtomic();
 
       if (rawData.value.size() != 3) { return; }
@@ -37,7 +38,7 @@ DifferentialOdometry::DifferentialOdometry(
     }
   );
 
-  stdDevListener = inst.AddListener(stdDevSubscriber, nt::EventFlags::kProperties, 
+  stdDevListener = inst.AddListener(stdDevSubscriber, nt::EventFlags::kImmediate|nt::EventFlags::kValueAll, 
     [this] (const nt::Event& event) {
       std::vector<double> rawData = stdDevSubscriber.Get();
 
@@ -77,11 +78,6 @@ frc::Pose2d DifferentialOdometry::updatePose() {
 
 
 void DifferentialOdometry::resetPose(const frc::Pose2d& pose) {
-  // leftEncoder->zeroPosition();
-  // rightEncoder->zeroPosition();
-  // gyro->Reset();
-  
-
   std::lock_guard<std::mutex> lock(visionThreadMutex);
   poseEstimator.ResetPosition(gyro->GetRotation2d(), 
                               leftEncoder->getPosition(), 

@@ -23,10 +23,10 @@ RobotContainer::RobotContainer() {
   // Set Default Commands
   driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
 
-  // manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
-  //   manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-  //   manipulatorSubsystem.incArmPositon(0.75_deg * -joystick.GetX());
-  // }, {&manipulatorSubsystem}));
+  manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
+    manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
+    manipulatorSubsystem.incArmPositon(0.75_deg * -joystick.GetX());
+  }, {&manipulatorSubsystem}));
 
   clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
     if (joystick.GetTriggerPressed()) {

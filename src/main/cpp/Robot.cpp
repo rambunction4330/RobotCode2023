@@ -8,9 +8,7 @@
 #include <frc2/command/PrintCommand.h>
 #include <units/velocity.h>
 
-void Robot::RobotInit() {
-  // frc::CameraServer::StartAutomaticCapture();
-}
+void Robot::RobotInit() {}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
