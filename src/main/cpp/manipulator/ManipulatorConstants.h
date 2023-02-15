@@ -9,7 +9,7 @@
 
 namespace ManipulatorConstants {
 
-const units::inch_t minClawHeight = 6_in;
+const units::inch_t minClawHeight = 8_in;
 const units::inch_t maxClawHeight = 75_in;
 
 namespace Elevator {
@@ -66,7 +66,7 @@ namespace Arm {
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    0.05 /*  <- P */ , 0.0 /* <- I */, 1.0 /* <- D */, 0.0 /* <- FF */,
+    0.06 /*  <- P */ , 0.0 /* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
     3.0_deg /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     0.4 /* <- maxOutput */, -0.3 /* <- minOutput */
@@ -74,7 +74,7 @@ namespace Arm {
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
     std::make_shared<rmb::ArmFeedforward>(rmb::ArmFeedforward::Ks_t{0.0} /* <- Ks */, 
-                                          rmb::ArmFeedforward::Ks_t{0.75} /* <- Kcos */, 
+                                          rmb::ArmFeedforward::Ks_t{0.5} /* <- Kcos */, 
                                           rmb::ArmFeedforward::Kv_t{0.0} /* <- Kv */, 
                                           rmb::ArmFeedforward::Ka_t{0.0} /* <- Ka */)
   };
@@ -99,6 +99,6 @@ namespace Arm {
     rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- reverseSwitch */
   };
 
-  const units::meter_t length = 44_in;
+  const units::meter_t length = 47.5_in;
 } // namespace Arm
 }

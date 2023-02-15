@@ -25,11 +25,11 @@ RobotContainer::RobotContainer() {
 
   manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
     manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    manipulatorSubsystem.incArmPositon(0.75_deg * -joystick.GetX());
+    manipulatorSubsystem.incArmPositon(1.5_deg * -joystick.GetX());
   }, {&manipulatorSubsystem}));
 
   clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
-    if (joystick.GetTriggerPressed()) {
+    if (driveGamepad.GetRightBumperPressed()) {
       clawSubsystem.toggleClaw();
     }
   }, {&clawSubsystem}));
@@ -74,10 +74,10 @@ void RobotContainer::endAutoCommand() {
 
 void RobotContainer::ConfigureBindings() {
   // Configure your trigger bindings here
-  joystick.Button(7).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
-  joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState));
-  joystick.Button(9).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
-  joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
-  joystick.Button(11).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
-  joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
+  // joystick.Button(7).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
+  // joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState));
+  // joystick.Button(9).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
+  // joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
+  // joystick.Button(11).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
+  // joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
 }

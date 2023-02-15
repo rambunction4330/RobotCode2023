@@ -105,6 +105,4 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
       ManipulatorConstants::Arm::feedbackConfig
     )
   };
-
-  units::radian_t targetArmPose;
 };

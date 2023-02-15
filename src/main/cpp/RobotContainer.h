@@ -44,6 +44,7 @@ class RobotContainer {
    **************/
   rmb::LogitechJoystick joystick{1, 0.0, true};
   rmb::LogitechGamepad driveGamepad{0, 0.0, true};
+  // rmb::LogitechJoystick driveStick{0, 0.0, true};
   DriveSubsystem driveSubsystem;
   ManipulatorSubsystem manipulatorSubsystem; 
   ClawSubsystem clawSubsystem; 

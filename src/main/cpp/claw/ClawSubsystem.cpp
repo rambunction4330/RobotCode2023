@@ -4,8 +4,8 @@
 #include <frc2/command/InstantCommand.h>
 
 ClawSubsystem::ClawSubsystem() {
-    clawMotor->zeroPosition(0.0_deg);
-    clawMotor->setPosition(10.0_deg);
+    clawMotor->zeroPosition(35.0_deg);
+    clawMotor->setPosition(45.0_deg);
 }
 
 void ClawSubsystem::Periodic() {}

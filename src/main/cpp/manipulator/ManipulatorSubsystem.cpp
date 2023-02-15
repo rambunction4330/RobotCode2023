@@ -14,24 +14,18 @@ ManipulatorSubsystem::ManipulatorSubsystem() {
 }
 
 void ManipulatorSubsystem::Periodic() {
-    setArmPosition(targetArmPose);
+    setArmPosition(armMotor->getTargetPosition());
 }
 
 // begin arm
 void ManipulatorSubsystem::setArmPosition(units::radian_t position) {
     // Clamp to dynamic range based on elevator position;
     units::radian_t clamped = std::clamp(position, calculateArmMinPose(), calculateArmMaxPose());
-    
-    targetArmPose = clamped;
-    frc::TrapezoidProfile<units::radians> profile {{200_deg_per_s, 400_deg_per_s_sq}, 
-                                                   {targetArmPose, 0.0_rad_per_s},
-                                                   {armMotor->getPosition(), armMotor->getVelocity()}};
-
-    armMotor->setPosition(targetArmPose);
+    armMotor->setPosition(clamped);
 }
 
 void ManipulatorSubsystem::incArmPositon(units::radian_t increment) {
-    setArmPosition(targetArmPose + increment);
+    setArmPosition(armMotor->getTargetPosition() + increment);
 }
 
 units::radian_t ManipulatorSubsystem::getArmPosition() const {
@@ -39,10 +33,10 @@ units::radian_t ManipulatorSubsystem::getArmPosition() const {
 }
 
 units::radian_t ManipulatorSubsystem::getArmError() const {
-    return armMotor->getPosition() - targetArmPose;
+    return armMotor->getError();
 }
 
-bool ManipulatorSubsystem::armAtPosition() const { return units::math::abs(getArmError()) < ManipulatorConstants::Arm::pidConfig.tolerance; }
+bool ManipulatorSubsystem::armAtPosition() const { return armMotor->atTarget(); }
 
 bool ManipulatorSubsystem::armIsRaising() const {
     return !armAtPosition() && getArmError() < 0.0_rad;

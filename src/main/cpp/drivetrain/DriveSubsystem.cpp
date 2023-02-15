@@ -24,7 +24,7 @@ void DriveSubsystem::arcadeDrive(const rmb::LogitechJoystick& joystick) {
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
-  double multiplier = 0.5 + (gamepad.GetLeftTrigger() / 2.0);
+  double multiplier = 0.5 + (gamepad.GetLeftTrigger() / 2.0) - (gamepad.GetRightTrigger() / 4.0);
   arcadeDrive(gamepad.GetLeftX() * multiplier, -gamepad.GetRightY() * multiplier);
 }
 
