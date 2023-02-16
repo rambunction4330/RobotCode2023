@@ -1,4 +1,6 @@
 #include "rmb/drive/DifferentialOdometry.h"
+#include "ntcore_cpp.h"
+#include "wpi/timestamp.h"
 
 #include <iostream>
 
@@ -16,16 +18,17 @@ DifferentialOdometry::DifferentialOdometry(
   std::string visionTable, const frc::Pose2d& initalPose
 ) : leftEncoder(left), rightEncoder(right), gyro(gyroscope), 
     poseEstimator(kinematics, gyro->GetRotation2d(), 
-      leftEncoder->getPosition(), rightEncoder->getPosition(), initalPose){
+      leftEncoder->getPosition(), rightEncoder->getPosition(), initalPose,
+      {0.02, 0.02, 0.01}, {1.0, 1.0, 1.0}){
       
   nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   auto table = inst.GetTable(visionTable);
+
   poseSubscriber = table->GetDoubleArrayTopic("pose").Subscribe({});
   stdDevSubscriber = table->GetDoubleArrayTopic("stdDev").Subscribe({});
 
-  poseListener = inst.AddListener(poseSubscriber, nt::EventFlags::kImmediate|nt::EventFlags::kValueAll, 
+  poseListener = inst.AddListener(poseSubscriber, nt::EventFlags::kValueAll, 
     [this] (const nt::Event& event) {
-
       nt::TimestampedDoubleArray rawData = poseSubscriber.GetAtomic();
 
       if (rawData.value.size() != 3) { return; }
@@ -38,7 +41,7 @@ DifferentialOdometry::DifferentialOdometry(
     }
   );
 
-  stdDevListener = inst.AddListener(stdDevSubscriber, nt::EventFlags::kImmediate|nt::EventFlags::kValueAll, 
+  stdDevListener = inst.AddListener(stdDevSubscriber, nt::EventFlags::kValueAll, 
     [this] (const nt::Event& event) {
       std::vector<double> rawData = stdDevSubscriber.Get();
 
