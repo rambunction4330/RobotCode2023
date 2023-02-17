@@ -57,19 +57,38 @@ class RobotContainer {
    * Path Planner *
    ****************/
 
-  // 
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap {
     // Drivetrain Commands
     {"drivetrain_balance", std::make_shared<BalanceCommand>(driveSubsystem)},
 
     //Manipulator Commands
-    {"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
-    {"manipulator_cube_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState).Unwrap()},
-    {"manipulator_cube_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState).Unwrap()},
-    {"manipulator_cube_pickup", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState).Unwrap()},
-    {"manipulator_cone_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState).Unwrap()},
-    {"manipulator_cone_pickup", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState).Unwrap()},
-    {"manipulator_substation", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::substationState).Unwrap()},
+    {"manipulator_compact", manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::compactState
+    ).Unwrap()},
+
+    {"manipulator_cube_high", manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::cubeHighState
+    ).Unwrap()},
+
+    {"manipulator_cube_mid", manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::cubeMidState
+    ).Unwrap()},
+
+    {"manipulator_cube_pickup", manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::cubePickupState
+    ).Unwrap()},
+
+    {"manipulator_cone_mid", manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::coneMidState
+    ).Unwrap()},
+
+    {"manipulator_cone_pickup", manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::conePickupState
+    ).Unwrap()},
+
+    {"manipulator_substation", manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::substationState
+    ).Unwrap()},
  
     // Claw Commands
     {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
@@ -78,12 +97,12 @@ class RobotContainer {
 
   // Auto Builder
   pathplanner::RamseteAutoBuilder autoBuilder {
-    [this]() { return driveSubsystem.getPose(); }, [this](frc::Pose2d initPose) { 
+    [this]() { return driveSubsystem.getPose(); }, 
+    [this](frc::Pose2d initPose) { 
       driveSubsystem.resetOdometry(initPose); 
-    },
-    DriveConstants::ramseteController, DriveConstants::kinematics,
-    [this](units::meters_per_second_t leftVelocity, units::meters_per_second_t rightVelocity) { 
-      driveSubsystem.driveWheelSpeeds(leftVelocity, rightVelocity); 
+    }, DriveConstants::ramseteController, DriveConstants::kinematics,
+    [this](units::meters_per_second_t left, units::meters_per_second_t right) { 
+      driveSubsystem.driveWheelSpeeds(left, right); 
     }, eventMap, {&driveSubsystem}, true
   };
 
@@ -110,7 +129,7 @@ class RobotContainer {
     "sub_put_high"
   };
 
-  frc2::CommandPtr noAutoCommand = frc2::CommandPtr(frc2::PrintCommand("NO AUTO\n"));
+  frc2::CommandPtr noAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
   std::vector<frc2::CommandPtr> autoCommands;
   frc2::Command* currentAuto = noAutoCommand.get();
 

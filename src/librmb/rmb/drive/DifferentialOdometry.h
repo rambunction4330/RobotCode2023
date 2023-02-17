@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <memory>
@@ -97,7 +96,8 @@ public:
 
   /**
    * Updates the current position of the robot using encoder and gyroscope 
-   * data. Vision estimations are updated on a separate thread generated at object construction
+   * data. Vision estimations are updated on a separate thread generated at 
+   * object construction.
    * 
    * @return The updated position.
    */
@@ -111,15 +111,44 @@ public:
   void resetPose(const frc::Pose2d& pose = frc::Pose2d()) override;
 
 private:
+
+  /** Linear encoders for determining wheel positions. */
   std::shared_ptr<LinearEncoder> leftEncoder, rightEncoder;
+
+  /** Gyroscope for determining robot heading. */
   std::shared_ptr<frc::Gyro> gyro;
+
+  /** Object to handle the math behind pose estimation. */
   frc::DifferentialDrivePoseEstimator poseEstimator;
 
-  // Vision Handleing
+  /** 
+   * Network Tables subscriber for vision positon predictions.
+   *
+   * Datya is sent in a three entry double array ordered X, Y, Theta. X and Y 
+   * are in meters and Theta is in radians. 
+   */
   nt::DoubleArraySubscriber poseSubscriber;
+
+  /** 
+   * Network Tables subscriber for the standard deviation of vision predictions.
+   *
+   * Data is sent in a three entry double array ordered X, Y, Theta. X and Y 
+   * are in meters and Theta is in radians. The standard deviations are a 
+   * measure of how much the reported positon typically deviates from the true 
+   * positon. Larger values denote less accuracy in vision data, while smaller 
+   * values denote higher accuracy.
+   */
   nt::DoubleArraySubscriber stdDevSubscriber;
+
+  /** Handle for keeping track of vision posion callback for position. */
   NT_Listener poseListener;
+
+  /** Handle for keeping track of vision positon standard deviations callback 
+   * for position. 
+   */
   NT_Listener stdDevListener;
+
+  /** mutex to protect position estimations between vision threads. */
   mutable std::mutex visionThreadMutex;
 };
 } // namespace rmb
