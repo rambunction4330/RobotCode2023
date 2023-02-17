@@ -19,7 +19,7 @@ DifferentialOdometry::DifferentialOdometry(
 ) : leftEncoder(left), rightEncoder(right), gyro(gyroscope), 
     poseEstimator(kinematics, gyro->GetRotation2d(), 
       leftEncoder->getPosition(), rightEncoder->getPosition(), initalPose,
-      {0.02, 0.02, 0.01}, {1.0, 1.0, 1.0}){
+      {0.02, 0.02, 0.01}, {0.1, 0.5, 0.5}){
       
   nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   auto table = inst.GetTable(visionTable);

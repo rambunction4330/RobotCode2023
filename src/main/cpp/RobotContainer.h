@@ -7,6 +7,7 @@
 #include <memory>
 #include <map>
 #include <unordered_map>
+#include <array>
 #include <iostream>
 
 #include <frc/smartdashboard/SendableChooser.h>
@@ -33,6 +34,9 @@ class RobotContainer {
  public:
   RobotContainer();
 
+  void setAutoDefaults();
+  void setTeleopDefaults();
+
   void startAutoCommand();
   void endAutoCommand();
 
@@ -52,16 +56,20 @@ class RobotContainer {
   /****************
    * Path Planner *
    ****************/
+
+  // 
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap {
     // Drivetrain Commands
     {"drivetrain_balance", std::make_shared<BalanceCommand>(driveSubsystem)},
 
-    // Manipulator Commands
+    //Manipulator Commands
     {"manipulator_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState).Unwrap()},
-    {"manipulator_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState).Unwrap()},
-    {"manipulator_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState).Unwrap()},
-    {"manipulator_low_compact", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState).Unwrap()},
-    {"manipulator_low_reach", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState).Unwrap()},
+    {"manipulator_cube_high", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState).Unwrap()},
+    {"manipulator_cube_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState).Unwrap()},
+    {"manipulator_cube_pickup", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState).Unwrap()},
+    {"manipulator_cone_mid", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState).Unwrap()},
+    {"manipulator_cone_pickup", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState).Unwrap()},
+    {"manipulator_substation", manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::substationState).Unwrap()},
  
     // Claw Commands
     {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
@@ -83,8 +91,27 @@ class RobotContainer {
   /****************
    * Auto Chooser *
    ****************/
+
+  std::array<std::string, 15> autoNames {
+    "wall_move",
+    "wall_balance",
+    "wall_put_mid",
+    "wall_put_high",
+    "center_move_wall",
+    "center_move_sub",
+    "center_balance",
+    "center_wall_put_mid",
+    "center_wall_put_high",
+    "center_sub_put_mid",
+    "center_sub_put_high",
+    "sub_move",
+    "sub_balance",
+    "sub_put_mid",
+    "sub_put_high"
+  };
+
   frc2::CommandPtr noAutoCommand = frc2::CommandPtr(frc2::PrintCommand("NO AUTO\n"));
-  std::map<std::string, frc2::CommandPtr> autoCommands;
+  std::vector<frc2::CommandPtr> autoCommands;
   frc2::Command* currentAuto = noAutoCommand.get();
 
   frc::SendableChooser<frc2::Command*> autonomousChooser;

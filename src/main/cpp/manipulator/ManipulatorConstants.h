@@ -24,7 +24,7 @@ namespace Elevator {
   const units::meter_t sproketDiameter = 1.175_in;
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    0.08 /*  <- P */ , 0.0/* <- I */, 1.0 /* <- D */, 0.0 /* <- FF */,
+    0.08 /*  <- P */ , 0.0/* <- I */, 0.5 /* <- D */, 0.0 /* <- FF */,
     3.0_in * (2_rad / sproketDiameter) /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     0.5 /* <- maxOutput */, -0.5 /* <- minOutput */
@@ -33,7 +33,7 @@ namespace Elevator {
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
     std::make_shared<rmb::ElevatorFeedforward<units::radians>>(
       rmb::ElevatorFeedforward<units::radians>::Ks_t{0.0} /* <- Ks */, 
-      rmb::ElevatorFeedforward<units::radians>::Ks_t{0.5} /* <- Kg */, 
+      rmb::ElevatorFeedforward<units::radians>::Ks_t{0.4} /* <- Kg */, 
       rmb::ElevatorFeedforward<units::radians>::Kv_t{0.0} /* <- Kv */, 
       rmb::ElevatorFeedforward<units::radians>::Ka_t{0.0} /* <- Ka */)
   };
