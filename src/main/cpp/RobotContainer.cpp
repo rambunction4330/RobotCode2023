@@ -54,7 +54,7 @@ void RobotContainer::setTeleopDefaults() {
   // Default manual manipulator control
   manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
     manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    manipulatorSubsystem.incArmPositon(1.5_deg * -joystick.GetX());
+    manipulatorSubsystem.incArmAngle(1.5_deg * -joystick.GetX());
   }, {&manipulatorSubsystem}));
 
   // Default manual claw control

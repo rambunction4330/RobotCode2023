@@ -12,6 +12,7 @@
 #include "drivetrain/commands/BalanceCommand.h"
 
 DriveSubsystem::DriveSubsystem() {
+  // Show the robots poition on the feild in shuffleboard.
   frc::SmartDashboard::PutData("Feild", &displayFeild);
 }
 
@@ -20,60 +21,83 @@ void DriveSubsystem::arcadeDrive(double xSpeed, double zRotation) {
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechJoystick& joystick) {
-  arcadeDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle());
+  arcadeDrive(joystick.GetX() * joystick.GetThrottle(), 
+              joystick.GetTwist() * joystick.GetThrottle());
 }
 
 void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
-  double multiplier = 0.5 + (gamepad.GetLeftTrigger() / 2.0) - (gamepad.GetRightTrigger() / 4.0);
-  arcadeDrive(gamepad.GetLeftX() * multiplier, -gamepad.GetRightY() * multiplier);
+  // Limit to half speed by default, with the left trigger inceasing max speed, 
+  // and right reducing it.
+  double multiplier = 0.5;
+  multiplier += gamepad.GetLeftTrigger() / 2.0;
+  multiplier -= gamepad.GetRightTrigger() / 4.0;
+
+  arcadeDrive(gamepad.GetLeftX() * multiplier, 
+              -gamepad.GetRightY() * multiplier);
 }
 
-frc2::CommandPtr DriveSubsystem::arcadeDriveCommand(const rmb::LogitechJoystick& joystick) {
-  return frc2::CommandPtr(frc2::RunCommand([&]() { arcadeDrive(joystick); }, {this}));
+frc2::CommandPtr 
+DriveSubsystem::arcadeDriveCommand(const rmb::LogitechJoystick& joystick) {
+  // Wrap drive function as continually executing command.
+  return frc2::RunCommand([&]() { arcadeDrive(joystick); }, {this}).ToPtr();
 }
 
-frc2::CommandPtr DriveSubsystem::arcadeDriveCommand(const rmb::LogitechGamepad& gamepad) {
-  return frc2::CommandPtr(frc2::RunCommand([&]() { arcadeDrive(gamepad); }, {this}));
+frc2::CommandPtr 
+DriveSubsystem::arcadeDriveCommand(const rmb::LogitechGamepad& gamepad) {
+  // Wrap drive function as continually executing command.
+  return frc2::RunCommand([&]() { arcadeDrive(gamepad); }, {this}).ToPtr();
 }
 
-void DriveSubsystem::curvatureDrive(double xSpeed, double zRotation, bool turnInPlace) {
+void DriveSubsystem::curvatureDrive(double xSpeed, 
+                                    double zRotation, 
+                                    bool turnInPlace) {
   drive.curvatureDrive(xSpeed, zRotation, turnInPlace);
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechJoystick& joystick) {
-  curvatureDrive(joystick.GetX() * joystick.GetThrottle(), joystick.GetTwist() * joystick.GetThrottle(), joystick.GetTrigger());
+  curvatureDrive(joystick.GetX() * joystick.GetThrottle(), 
+                 joystick.GetTwist() * joystick.GetThrottle(), 
+                 joystick.GetTrigger());
 }
 
 void DriveSubsystem::curvatureDrive(const rmb::LogitechGamepad& gamepad) {
-  curvatureDrive(gamepad.GetLeftX(), gamepad.GetRightY(), gamepad.GetLeftBumper());
+  // Limit to half speed by default, with the left trigger inceasing max speed, 
+  // and right reducing it.
+  double multiplier = 0.5;
+  multiplier += gamepad.GetLeftTrigger() / 2.0;
+  multiplier -= gamepad.GetRightTrigger() / 4.0;
+
+  curvatureDrive(gamepad.GetLeftX() * multiplier, 
+                 gamepad.GetRightY() * multiplier, 
+                 gamepad.GetLeftBumper());
 }
 
-frc2::CommandPtr DriveSubsystem::curvatureDriveCommand(const rmb::LogitechJoystick& joystick) {
-  return frc2::CommandPtr(frc2::RunCommand([&]() { curvatureDrive(joystick); }, {this}));
+frc2::CommandPtr 
+DriveSubsystem::curvatureDriveCommand(const rmb::LogitechJoystick& joystick) {
+  // Wrap drive function as continually executing command.
+  return frc2::CommandPtr(frc2::RunCommand(
+           [&]() { curvatureDrive(joystick); }, {this}
+         ));
 }
 
-frc2::CommandPtr DriveSubsystem::curvatureDriveCommand(const rmb::LogitechGamepad& gamepad) {
-  return frc2::CommandPtr(frc2::RunCommand([&]() { curvatureDrive(gamepad); }, {this}));
+frc2::CommandPtr 
+DriveSubsystem::curvatureDriveCommand(const rmb::LogitechGamepad& gamepad) {
+  // Wrap drive function as continually executing command.
+  return frc2::RunCommand([&]() { curvatureDrive(gamepad); }, {this}).ToPtr();
 }
 
 void DriveSubsystem::tankDrive(double leftSpeed, double rightSpeed) {
   drive.tankDrive(leftSpeed, rightSpeed);
 }
 
-void DriveSubsystem::tankDrive(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right) {
-  tankDrive(left.GetX(), right.GetX());
-}
-
 void DriveSubsystem::tankDrive(const rmb::LogitechGamepad& gamepad) {
   tankDrive(gamepad.GetLeftX(), -gamepad.GetRightX());
 }
 
-frc2::CommandPtr DriveSubsystem::tankDirveCommand(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right) {
-  return frc2::CommandPtr(frc2::RunCommand([&]() { tankDrive(left, right); }, {this}));
-}
-
-frc2::CommandPtr DriveSubsystem::tankDriveCommand(const rmb::LogitechGamepad& gamepad) {
-  return frc2::CommandPtr(frc2::RunCommand([&]() { tankDrive(gamepad); }, {this}));
+frc2::CommandPtr 
+DriveSubsystem::tankDriveCommand(const rmb::LogitechGamepad& gamepad) {
+  // Wrap drive function as continually executing command.
+  return frc2::RunCommand([&]() { tankDrive(gamepad); }, {this}).ToPtr();
 }
 
 void DriveSubsystem::resetOdometry(frc::Pose2d pose) {
@@ -85,7 +109,7 @@ frc::Pose2d DriveSubsystem::getPose() const {
 }
 
 frc::DifferentialDriveWheelSpeeds DriveSubsystem::getWheelSpeeds() const {
-  return {left->getVelocity(), right->getVelocity() };
+  return { left->getVelocity(), right->getVelocity() };
 }
 
 frc::ChassisSpeeds DriveSubsystem::getChassisSpeeds() const {
@@ -97,12 +121,14 @@ void DriveSubsystem::stop() {
   right->stop();
 }
 
-void DriveSubsystem::driveWheelSpeeds(units::meters_per_second_t left, units::meters_per_second_t right) {
+void DriveSubsystem::driveWheelSpeeds(units::meters_per_second_t left, 
+                                      units::meters_per_second_t right) {
   drive.driveWheelSpeeds(left, right);
 }
 
-void DriveSubsystem::driveWheelSpeeds(frc::DifferentialDriveWheelSpeeds wheelSpeeds) {
-  drive.driveWheelSpeeds(wheelSpeeds);
+void 
+DriveSubsystem::driveWheelSpeeds(frc::DifferentialDriveWheelSpeeds speeds) {
+  drive.driveWheelSpeeds(speeds);
 }
 
 void DriveSubsystem::driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds) {
@@ -114,10 +140,11 @@ units::radian_t DriveSubsystem::getRobotPitch() {
 }
 
 frc2::CommandPtr DriveSubsystem::getBalanceCommand() {
+  // Get balance command for this drivetrain.
   return frc2::CommandPtr(BalanceCommand(*this));
 }
 
-// This method will be called once per scheduler run
 void DriveSubsystem::Periodic() {
+  // Update odometry while sending the new positon to  shuffleboard.
   displayFeild.SetRobotPose(odometry.updatePose());
 }

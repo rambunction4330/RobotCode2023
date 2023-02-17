@@ -25,7 +25,7 @@ namespace ClawConstants {
   };
 
   const rmb::SparkMaxPositionController::Range range {
-    45_deg /* <- min */, 145_deg /* <- max */,
+    10_deg /* <- min */, 90_deg /* <- max */,
     false /* <- isContinouse */
   };
 
@@ -33,14 +33,14 @@ namespace ClawConstants {
     false /* <- useSmartMotion */, 
     0.0_rpm /* <- maxVelocity */, 0.0_rad_per_s /* <- minVelocity */,
     0.0_rad_per_s_sq  /* <- maxAcceleration */,
-    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrategy */
+    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrat */
   };
 
   const rmb::SparkMaxPositionController::FeedbackConfig feedbackConfig {
     1.0 /* <- gearRatio */, 
-    rmb::SparkMaxPositionController::EncoderType::Quadrature/* <- encoderType */,
+    rmb::SparkMaxPositionController::EncoderType::Quadrature/* <- encoder */,
     4096 /* <- countPerRev */,
-    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- forwardSwitch */,
-    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- reverseSwitch */
+    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- fwd */,
+    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- rev */
   };
 }

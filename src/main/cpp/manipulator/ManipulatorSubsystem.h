@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <memory>
@@ -23,13 +22,13 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
     units::radian_t armAngle;
   };
 
-  constexpr static ManipulatorSubsystem::ManipulatorState compactState {11_in, 90.0_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState cubeHighState {38.0_in, 10.0_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState cubeMidState {11_in, 45_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState cubePickupState {38_in, -45_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState coneMidState {11_in, 45_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState conePickupState {11_in, -7.5_deg};
-  constexpr static ManipulatorSubsystem::ManipulatorState substationState {38_in, 0.0_deg};
+  constexpr static ManipulatorState compactState {11_in, 90.0_deg};
+  constexpr static ManipulatorState cubeHighState {38.0_in, 10.0_deg};
+  constexpr static ManipulatorState cubeMidState {11_in, 45_deg};
+  constexpr static ManipulatorState cubePickupState {38_in, -45_deg};
+  constexpr static ManipulatorState coneMidState {11_in, 45_deg};
+  constexpr static ManipulatorState conePickupState {11_in, -7.5_deg};
+  constexpr static ManipulatorState substationState {38_in, 0.0_deg};
 
   ManipulatorSubsystem();
 
@@ -38,34 +37,35 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   /************
    * Elevator *
    ************/
-  void setElevatorHeightPercent(double height);
   void setElevatorHeight(units::meter_t height);
-  // double getElevatorHeightPercent();
+  void setElevatorHeightPercent(double height);
   units::meter_t getElevatorHeight() const;
+  units::meter_t getElevatorError() const;
   bool elevatorAtHeight();
-  bool elevatorGoingDown();
-  bool elevatorGoingUp();
-
-  void setArmPosition(units::radian_t position);
-  void incArmPositon(units::radian_t increment);
+  bool elevatorIsRaising();
+  bool elevatorIsLowering();
 
   /*******
    * Arm *
    *******/
-  units::radian_t getArmPosition() const;
 
+  void setArmAngle(units::radian_t angle);
+  void incArmAngle(units::radian_t increment);
+  units::radian_t getArmAngle() const;
   units::radian_t getArmError() const;
   bool armAtPosition() const;
   bool armIsRaising() const;
   bool armIsLowering() const;
 
-  /*******
-   * All *
-   *******/
+  /**********
+   * States *
+   **********/
   void setState(const ManipulatorState state);
   frc2::CommandPtr getStateCommand(const ManipulatorState state);
   frc2::CommandPtr getInstantStateCommand(const ManipulatorState state);
+
  private:
+
   /************
    * Elevator *
    ************/
@@ -79,22 +79,18 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
         ManipulatorConstants::Elevator::range,
         ManipulatorConstants::Elevator::profileConfig,
         ManipulatorConstants::Elevator::feedbackConfig,
-        std::initializer_list<const rmb::SparkMaxPositionController::MotorConfig>{
-          ManipulatorConstants::Elevator::follower}
+        std::initializer_list<
+        const rmb::SparkMaxPositionController::MotorConfig>{
+          ManipulatorConstants::Elevator::follower
+        }
       ),
       ManipulatorConstants::Elevator::sproketDiameter / 2.0_rad
     )
   };
     
-  const units::meter_t minElevatorHeight = ManipulatorConstants::Elevator::range.minPosition * (ManipulatorConstants::Elevator::sproketDiameter / 2.0_rad);
-  const units::meter_t maxElevatorHeight = ManipulatorConstants::Elevator::range.maxPosition * (ManipulatorConstants::Elevator::sproketDiameter / 2.0_rad);
-
   /*******
    * Arm *
    *******/
-  units::radian_t calculateArmMinPose() const;
-  units::radian_t calculateArmMaxPose() const;
-
   std::shared_ptr<rmb::AngularPositionFeedbackController> armMotor{
     std::make_shared<rmb::SparkMaxPositionController>(
       ManipulatorConstants::Arm::motorConfig,
@@ -105,4 +101,7 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
       ManipulatorConstants::Arm::feedbackConfig
     )
   };
+
+  units::radian_t calculateArmMinPose() const;
+  units::radian_t calculateArmMaxPose() const;
 };

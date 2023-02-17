@@ -29,7 +29,8 @@ namespace DriveConstants {
   };
 
   const rmb::SparkMaxVelocityController::PIDConfig pidConfig {
-    0.000001 /*  <- P */ , 0.000000001 /* <- I */, 0.0001 /* <- D */, 0.000187 /* <- FF */,
+    0.000001 /*  <- P */ , 0.000000001 /* <- I */, 
+    0.0001 /* <- D */, 0.000187 /* <- FF */,
     0.0_rad_per_s /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
     1.0 /* <- maxOutput */, -1.0 /* <- minOutput */
@@ -39,17 +40,18 @@ namespace DriveConstants {
 
   const rmb::SparkMaxVelocityController::ProfileConfig profileConfig {
     false /* <- useSmartMotion */, 
-    3.75_mps * (2_rad / wheelDiameter) /* <- maxVelocity */, 0.0_rad_per_s /* <- minVelocity */,
+    3.75_mps * (2_rad / wheelDiameter) /* <- maxVelocity */, 
+    0.0_rad_per_s /* <- minVelocity */,
     1.0_mps_sq * (2_rad / wheelDiameter)  /* <- maxAcceleration */,
-    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrategy */
+    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrat */
   };
 
   const rmb::SparkMaxVelocityController::FeedbackConfig feedbackConfig {
     10.71 /* <- gearRatio */, 
-    rmb::SparkMaxVelocityController::EncoderType::HallSensor/* <- encoderType */,
+    rmb::SparkMaxVelocityController::EncoderType::HallSensor/* <- encoder */,
     42 /* <- countPerRev */,
-    rmb::SparkMaxVelocityController::LimitSwitchConfig::Disabled /* <- forwardSwitch */,
-    rmb::SparkMaxVelocityController::LimitSwitchConfig::Disabled /* <- reverseSwitch */
+    rmb::SparkMaxVelocityController::LimitSwitchConfig::Disabled /* <- fwd */,
+    rmb::SparkMaxVelocityController::LimitSwitchConfig::Disabled /* <- rev */
   };
 
   static const frc::RamseteController ramseteController {
@@ -57,7 +59,7 @@ namespace DriveConstants {
     units::unit_t<frc::RamseteController::zeta_unit>(0.7) /* <- zeta */ 
   };
 
-  static frc::DifferentialDriveKinematics kinematics{ 27.875_in /* <- track width */};
+  static frc::DifferentialDriveKinematics kinematics{ 27.875_in };
 
   const frc::SerialPort::Port gyroPort = frc::SerialPort::Port::kMXP;
 

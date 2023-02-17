@@ -37,7 +37,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
  public:
   DriveSubsystem();
 
-  // Teleop Drive Fucntions
+  /****************
+   * Teleop Drive *
+   ****************/
   void arcadeDrive(double xSpeed, double zRotation);
   void arcadeDrive(const rmb::LogitechJoystick& joystick);
   void arcadeDrive(const rmb::LogitechGamepad& gamepad);
@@ -51,33 +53,34 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc2::CommandPtr curvatureDriveCommand(const rmb::LogitechGamepad& gamepad);
 
   void tankDrive(double leftSpeed, double rightSpeed);
-  void tankDrive(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right);
   void tankDrive(const rmb::LogitechGamepad& gamepad);
-  frc2::CommandPtr tankDirveCommand(const rmb::LogitechJoystick& left, const rmb::LogitechJoystick& right);
   frc2::CommandPtr tankDriveCommand(const rmb::LogitechGamepad& gamepad);
 
-  // Odometry Fucntions
+  /************
+   * Odometry *
+   ************/
   void resetOdometry(frc::Pose2d pose = frc::Pose2d());
   frc::Pose2d getPose() const;
   frc::DifferentialDriveWheelSpeeds getWheelSpeeds() const;
   frc::ChassisSpeeds getChassisSpeeds() const;
 
 
-  // Auto Driving
+  /********
+   * Auto *
+   ********/
   void stop();
-  void driveWheelSpeeds(units::meters_per_second_t left, units::meters_per_second_t right);
+  void driveWheelSpeeds(units::meters_per_second_t left, 
+                        units::meters_per_second_t right);
+
   void driveWheelSpeeds(frc::DifferentialDriveWheelSpeeds wheelSpeeds);
   void driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds);
 
-  // Balancing
+  /***********
+   * Balance *
+   ***********/
   units::radian_t getRobotPitch();
   frc2::CommandPtr getBalanceCommand();
 
-
-
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
   void Periodic() override;
 
  private:
@@ -87,7 +90,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
       std::make_shared<rmb::SparkMaxVelocityController>(
         DriveConstants::leftLeader, DriveConstants::pidConfig, 
         DriveConstants::profileConfig, DriveConstants::feedbackConfig, 
-        std::initializer_list<const rmb::SparkMaxVelocityController::MotorConfig>{DriveConstants::leftFollower}
+        std::initializer_list<
+        const rmb::SparkMaxVelocityController::MotorConfig>{
+          DriveConstants::leftFollower
+        }
       ),
       DriveConstants::wheelDiameter / 2.0_rad
     )
@@ -99,7 +105,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
       std::make_shared<rmb::SparkMaxVelocityController>(
         DriveConstants::rightLeader, DriveConstants::pidConfig, 
         DriveConstants::profileConfig, DriveConstants::feedbackConfig, 
-        std::initializer_list<const rmb::SparkMaxVelocityController::MotorConfig>{DriveConstants::rightFollower}
+        std::initializer_list<
+        const rmb::SparkMaxVelocityController::MotorConfig>{
+          DriveConstants::rightFollower
+        }
       ), 
       DriveConstants::wheelDiameter / 2.0_rad
     )
@@ -109,7 +118,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
     left, right, DriveConstants::kinematics 
   };
 
-  std::shared_ptr<AHRS> gyro = std::make_shared<AHRS>(DriveConstants::gyroPort); 
+  std::shared_ptr<AHRS> gyro  {
+    std::make_shared<AHRS>(DriveConstants::gyroPort)
+  }; 
 
   rmb::DifferentialOdometry odometry { 
     left, right, 

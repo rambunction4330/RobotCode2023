@@ -35,28 +35,34 @@ namespace Elevator {
       rmb::ElevatorFeedforward<units::radians>::Ks_t{0.0} /* <- Ks */, 
       rmb::ElevatorFeedforward<units::radians>::Ks_t{0.4} /* <- Kg */, 
       rmb::ElevatorFeedforward<units::radians>::Kv_t{0.0} /* <- Kv */, 
-      rmb::ElevatorFeedforward<units::radians>::Ka_t{0.0} /* <- Ka */)
+      rmb::ElevatorFeedforward<units::radians>::Ka_t{0.0} /* <- Ka */
+    )
   };
 
+  // Linear limts
+  const static units::meter_t minHeight = 11_in;
+  const static units::meter_t maxHeight = 38_in;
+
   const rmb::SparkMaxPositionController::Range range {
-    11_in * (2_rad / sproketDiameter)/* <- min */,
-    38_in * (2_rad / sproketDiameter)/* <- max */,
+    minHeight * (2_rad / sproketDiameter)/* <- min */,
+    maxHeight * (2_rad / sproketDiameter)/* <- max */,
     false /* <- isContinouse */
   };
 
   const rmb::SparkMaxPositionController::ProfileConfig profileConfig {
     false /* <- useSmartMotion */, 
-    0.2_mps * (2_rad / sproketDiameter) /* <- maxVelocity */, 0.0_rad_per_s /* <- minVelocity */,
+    0.2_mps * (2_rad / sproketDiameter) /* <- maxVelocity */, 
+    0.0_rad_per_s /* <- minVelocity */,
     0.4_mps_sq * (2_rad / sproketDiameter)  /* <- maxAcceleration */,
-    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrategy */
+    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrat */
   }; 
 
   const rmb::SparkMaxPositionController::FeedbackConfig feedbackConfig {
     4.0 /* <- gearRatio */, 
-    rmb::SparkMaxPositionController::EncoderType::HallSensor/* <- encoderType */,
+    rmb::SparkMaxPositionController::EncoderType::HallSensor/* <- encoder */,
     42 /* <- countPerRev */,
-    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- forwardSwitch */,
-    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- reverseSwitch */
+    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- fwd */,
+    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- rev */
   };
 }
 
@@ -73,10 +79,12 @@ namespace Arm {
   };
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
-    std::make_shared<rmb::ArmFeedforward>(rmb::ArmFeedforward::Ks_t{0.0} /* <- Ks */, 
-                                          rmb::ArmFeedforward::Ks_t{0.5} /* <- Kcos */, 
-                                          rmb::ArmFeedforward::Kv_t{0.0} /* <- Kv */, 
-                                          rmb::ArmFeedforward::Ka_t{0.0} /* <- Ka */)
+    std::make_shared<rmb::ArmFeedforward>(
+      rmb::ArmFeedforward::Ks_t{0.0} /* <- Ks */, 
+      rmb::ArmFeedforward::Ks_t{0.5} /* <- Kcos */, 
+      rmb::ArmFeedforward::Kv_t{0.0} /* <- Kv */, 
+      rmb::ArmFeedforward::Ka_t{0.0} /* <- Ka */
+    )
   };
 
   const rmb::SparkMaxPositionController::Range range {
@@ -88,15 +96,15 @@ namespace Arm {
     false /* <- useSmartMotion */, 
     0.0_rpm /* <- maxVelocity */, 0.0_rad_per_s /* <- minVelocity */,
     0.0_rad_per_s_sq  /* <- maxAcceleration */,
-    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrategy */
+    rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal /* <- accelStrat */
   };
 
   const rmb::SparkMaxPositionController::FeedbackConfig feedbackConfig {
     45.0 * (54.0 / 22.0) /* <- gearRatio */, 
-    rmb::SparkMaxPositionController::EncoderType::HallSensor/* <- encoderType */,
+    rmb::SparkMaxPositionController::EncoderType::HallSensor/* <- encoder */,
     42 /* <- countPerRev */,
-    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- forwardSwitch */,
-    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- reverseSwitch */
+    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- fwd */,
+    rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- rev */
   };
 
   const units::meter_t length = 47.5_in;

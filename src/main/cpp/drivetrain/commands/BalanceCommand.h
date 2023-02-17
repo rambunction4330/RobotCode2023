@@ -19,10 +19,9 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class BalanceCommand : public frc2::CommandHelper<frc2::CommandBase, BalanceCommand> {
+class BalanceCommand : 
+public frc2::CommandHelper<frc2::CommandBase, BalanceCommand> {
  public:
-  using Gain = units::compound_unit<units::meters, units::inverse<units::radians>>;
-  using Gain_t = units::unit_t<Gain>;
 
   BalanceCommand(DriveSubsystem& driveSubsystem);
 
@@ -38,9 +37,11 @@ private:
   DriveSubsystem& driveSubsystem;
   frc::Pose2d offset;
 
-  frc::TrapezoidProfile<units::meters>::Constraints constraints = {1.0_mps, 7.0_mps_sq};
+  frc::TrapezoidProfile<units::meters>::Constraints constraints { 
+    1.0_mps, 7.0_mps_sq 
+  };
+
   frc::PIDController balanceController {0.12, 0.175, 0.0};
-  units::meter_t goal = 0.0_m;
   units::meter_t minX = -0.4_m;
   units::meter_t maxX = 0.4_m;
 
