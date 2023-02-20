@@ -1,11 +1,11 @@
 #pragma once
 
-#include <limits>
 #include <functional>
+#include <limits>
 
 #include <units/angle.h>
-#include <units/angular_velocity.h>
 #include <units/angular_acceleration.h>
+#include <units/angular_velocity.h>
 
 #include <rev/CANSparkMax.h>
 
@@ -15,42 +15,47 @@
 namespace rmb {
 
 namespace SparkMaxPositionControllerHelper {
-  struct MotorConfig {
-    int id;
-    rev::CANSparkMax::MotorType motorType = rev::CANSparkMax::MotorType::kBrushless;
-    bool inverted = false;
-  };
+struct MotorConfig {
+  int id;
+  rev::CANSparkMax::MotorType motorType =
+      rev::CANSparkMax::MotorType::kBrushless;
+  bool inverted = false;
+};
 
-  struct PIDConfig {
-    double p = 0.0, i = 0.0, d = 0.0, ff = 0.0;
-    units::turn_t tolerance = 0.0_rad;
-    double iZone = 0.0, iMaxAccumulator = 0.0;
-    double maxOutput = 1.0, minOutput = -1.0;
-  };
+struct PIDConfig {
+  double p = 0.0, i = 0.0, d = 0.0, ff = 0.0;
+  units::turn_t tolerance = 0.0_rad;
+  double iZone = 0.0, iMaxAccumulator = 0.0;
+  double maxOutput = 1.0, minOutput = -1.0;
+};
 
-  struct Range {
-    units::radian_t minPosition = -std::numeric_limits<units::radian_t>::infinity();
-    units::radian_t maxPosition = std::numeric_limits<units::radian_t>::infinity();
-    bool isContinouse = false;
-  };
+struct Range {
+  units::radian_t minPosition =
+      -std::numeric_limits<units::radian_t>::infinity();
+  units::radian_t maxPosition =
+      std::numeric_limits<units::radian_t>::infinity();
+  bool isContinouse = false;
+};
 
-  struct ProfileConfig {
-    bool useSmartMotion = false;
-    units::radians_per_second_t maxVelocity = 0.0_rad_per_s, minVelocity = 0.0_rad_per_s;
-    units::radians_per_second_squared_t maxAcceleration = 0.0_rad_per_s_sq;
-    rev::SparkMaxPIDController::AccelStrategy accelStrategy = rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal;
-  };
+struct ProfileConfig {
+  bool useSmartMotion = false;
+  units::radians_per_second_t maxVelocity = 0.0_rad_per_s,
+                              minVelocity = 0.0_rad_per_s;
+  units::radians_per_second_squared_t maxAcceleration = 0.0_rad_per_s_sq;
+  rev::SparkMaxPIDController::AccelStrategy accelStrategy =
+      rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal;
+};
 
-  enum EncoderType { HallSensor, Quadrature, Alternate, Absolute };
-  enum LimitSwitchConfig { Disabled, NormalyOpen, NormalyClosed };
+enum EncoderType { HallSensor, Quadrature, Alternate, Absolute };
+enum LimitSwitchConfig { Disabled, NormalyOpen, NormalyClosed };
 
-  struct FeedbackConfig {
-    double gearRatio = 1.0;
-    EncoderType encoderType = HallSensor;
-    int countPerRev = 42;
-    LimitSwitchConfig forwardSwitch = Disabled, reverseSwitch = Disabled;
-  };
-}
+struct FeedbackConfig {
+  double gearRatio = 1.0;
+  EncoderType encoderType = HallSensor;
+  int countPerRev = 42;
+  LimitSwitchConfig forwardSwitch = Disabled, reverseSwitch = Disabled;
+};
+} // namespace SparkMaxPositionControllerHelper
 
 /**
  * A wrapper around the SparkMax motorcontroller that allows for the user to set
@@ -66,42 +71,45 @@ public:
   using LimitSwitchConfig = SparkMaxPositionControllerHelper::LimitSwitchConfig;
   using FeedbackConfig = SparkMaxPositionControllerHelper::FeedbackConfig;
 
-  SparkMaxPositionController(SparkMaxPositionController&&) = delete;
-  SparkMaxPositionController(const SparkMaxPositionController&) = delete;
-    
-  SparkMaxPositionController(const MotorConfig motorConfig, const PIDConfig pidConfig = {},
-                             const std::shared_ptr<Feedforward<units::radians>> feedforward = std::make_shared<SimpleFeedforward<units::radians>>(), 
-                             const Range range = {}, const ProfileConfig profileConfig = {}, 
-                             const FeedbackConfig feedbackConfig = {}, std::initializer_list<const MotorConfig> followers = {});
+  SparkMaxPositionController(SparkMaxPositionController &&) = delete;
+  SparkMaxPositionController(const SparkMaxPositionController &) = delete;
+
+  SparkMaxPositionController(
+      const MotorConfig motorConfig, const PIDConfig pidConfig = {},
+      const std::shared_ptr<Feedforward<units::radians>> feedforward =
+          std::make_shared<SimpleFeedforward<units::radians>>(),
+      const Range range = {}, const ProfileConfig profileConfig = {},
+      const FeedbackConfig feedbackConfig = {},
+      std::initializer_list<const MotorConfig> followers = {});
 
   //--------------------
   // Controller Methods
   //--------------------
 
   /**
-   * Setting the target position. 
-   * 
+   * Setting the target position.
+   *
    * @param position The target position in radians.
    */
-  void setPosition(units::radian_t position);
+  void setPosition(units::radian_t position) override;
 
   /**
    * Gets the target position.
-   * 
+   *
    * @return The target position in radians.
    */
-  units::radian_t getTargetPosition() const;
+  units::radian_t getTargetPosition() const override;
 
   /**
    * Gets the minimum position.
-   * 
+   *
    * @return The minimum position in radians.
    */
   units::radian_t getMinPosition() const override;
 
   /**
    * Gets the maximum position.
-   * 
+   *
    * @return The maximum position in radians.
    */
   units::radian_t getMaxPosition() const override;
@@ -109,12 +117,12 @@ public:
   /**
    * Disables the motor.
    */
-  void disable();
+  void disable() override;
 
   /**
    * Stops the motor until `setPosition` is called again.
    */
-  void stop();
+  void stop() override;
 
   //-----------------
   // Encoder Methods
@@ -125,7 +133,7 @@ public:
    *
    * @return The velocity of the motor in radians per second.
    */
-  units::radians_per_second_t getVelocity() const;
+  units::radians_per_second_t getVelocity() const override;
 
   /**
    * Gets the position of the motor.
@@ -137,7 +145,7 @@ public:
   /**
    * Zeros the positon th emotor so the current position is set to the offset.
    *
-   * @param offset the offset from the current position at which to set the 
+   * @param offset the offset from the current position at which to set the
    *               zero position.
    */
   void zeroPosition(units::radian_t offset = 0_rad);
@@ -148,7 +156,7 @@ public:
 
   /**
    * Gets a controllers tolerance
-   * 
+   *
    * @return tolerance in radians
    */
   units::radian_t getTolerance() const;
