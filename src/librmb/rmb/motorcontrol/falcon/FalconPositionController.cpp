@@ -22,7 +22,8 @@ FalconPositionController::FalconPositionController(
   motorcontroller.Config_kI(0, pidConfig.i);
   motorcontroller.Config_kP(0, pidConfig.p);
   motorcontroller.Config_kF(0, pidConfig.ff);
-  motorcontroller.ConfigAllowableClosedloopError(0, RawPositionUnit_t(pidConfig.tolerance)());
+  motorcontroller.ConfigAllowableClosedloopError(
+      0, RawPositionUnit_t(pidConfig.tolerance)());
 
   motorcontroller.Config_IntegralZone(0, pidConfig.iZone);
   motorcontroller.ConfigMaxIntegralAccumulator(0, pidConfig.iMaxAccumulator);
@@ -38,13 +39,14 @@ FalconPositionController::FalconPositionController(
 void FalconPositionController::setPosition(units::radian_t position) {
   RawPositionUnit_t targetPosition(position);
 
-  if(targetPosition > range.maxPosition) {
+  if (targetPosition > range.maxPosition) {
     targetPosition = range.maxPosition;
-  } else if(targetPosition < range.minPosition) {
+  } else if (targetPosition < range.minPosition) {
     targetPosition = range.minPosition;
   }
 
-  motorcontroller.Set(ctre::phoenix::motorcontrol::ControlMode::Position, (targetPosition * gearRatio)());
+  motorcontroller.Set(ctre::phoenix::motorcontrol::ControlMode::Position,
+                      (targetPosition * gearRatio)());
 }
 
 units::radian_t FalconPositionController::getTargetPosition() const {
@@ -59,24 +61,23 @@ units::radian_t FalconPositionController::getMaxPosition() const {
   return range.maxPosition;
 }
 
-void FalconPositionController::disable() {
-  motorcontroller.Disable();
-}
+void FalconPositionController::disable() { motorcontroller.Disable(); }
 
-void FalconPositionController::stop() {
-  motorcontroller.StopMotor();
-}
+void FalconPositionController::stop() { motorcontroller.StopMotor(); }
 
 units::radians_per_second_t FalconPositionController::getVelocity() const {
-  return RawVelocityUnit_t(motorcontroller.GetSelectedSensorVelocity() / gearRatio);
+  return RawVelocityUnit_t(motorcontroller.GetSelectedSensorVelocity() /
+                           gearRatio);
 }
 
 units::radian_t FalconPositionController::getPosition() const {
-  return RawPositionUnit_t(motorcontroller.GetSelectedSensorPosition() / gearRatio);
+  return RawPositionUnit_t(motorcontroller.GetSelectedSensorPosition() /
+                           gearRatio);
 }
 
 void FalconPositionController::zeroPosition(units::radian_t offset) {
-  motorcontroller.SetSelectedSensorPosition(RawPositionUnit_t(offset * gearRatio)());
+  motorcontroller.SetSelectedSensorPosition(
+      RawPositionUnit_t(offset * gearRatio)());
 }
 
 units::radian_t FalconPositionController::getTolerance() const {

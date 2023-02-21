@@ -1,13 +1,13 @@
 #pragma once
 
-#include <initializer_list>
 #include <functional>
+#include <initializer_list>
 
 #include <rev/CANSparkMax.h>
 
 #include <units/angle.h>
-#include <units/angular_velocity.h>
 #include <units/angular_acceleration.h>
+#include <units/angular_velocity.h>
 
 #include "rmb/motorcontrol/feedback/AngularVelocityFeedbackController.h"
 #include "rmb/motorcontrol/feedforward/Feedforward.h"
@@ -16,39 +16,42 @@
 namespace rmb {
 
 namespace SparkMaxVelocityControllerHelper {
-  struct MotorConfig {
-    int id;
-    rev::CANSparkMax::MotorType motorType = rev::CANSparkMax::MotorType::kBrushless;
-    bool inverted = false;
-  };
+struct MotorConfig {
+  int id;
+  rev::CANSparkMax::MotorType motorType =
+      rev::CANSparkMax::MotorType::kBrushless;
+  bool inverted = false;
+};
 
-  struct PIDConfig {
-    double p = 0.0, i = 0.0, d = 0.0, ff = 0.0;
-    units::radians_per_second_t tolerance = 0.0_rad_per_s;
-    double iZone = 0.0, iMaxAccumulator = 0.0;
-    double maxOutput = 1.0, minOutput = -1.0;
-  };
+struct PIDConfig {
+  double p = 0.0, i = 0.0, d = 0.0, ff = 0.0;
+  units::radians_per_second_t tolerance = 0.0_rad_per_s;
+  double iZone = 0.0, iMaxAccumulator = 0.0;
+  double maxOutput = 1.0, minOutput = -1.0;
+};
 
-  struct ProfileConfig {
-    bool useSmartMotion = false;
-    units::radians_per_second_t maxVelocity = 0.0_rad_per_s, minVelocity = 0.0_rad_per_s;
-    units::radians_per_second_squared_t maxAcceleration = 0.0_rad_per_s_sq;
-    rev::SparkMaxPIDController::AccelStrategy accelStrategy = rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal;
-  };
+struct ProfileConfig {
+  bool useSmartMotion = false;
+  units::radians_per_second_t maxVelocity = 0.0_rad_per_s,
+                              minVelocity = 0.0_rad_per_s;
+  units::radians_per_second_squared_t maxAcceleration = 0.0_rad_per_s_sq;
+  rev::SparkMaxPIDController::AccelStrategy accelStrategy =
+      rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal;
+};
 
-  enum EncoderType { HallSensor, Quadrature, Alternate, Absolute };
-  enum LimitSwitchConfig { Disabled, NormalyOpen, NormalyClosed };
+enum EncoderType { HallSensor, Quadrature, Alternate, Absolute };
+enum LimitSwitchConfig { Disabled, NormalyOpen, NormalyClosed };
 
-  struct FeedbackConfig {
-    double gearRatio = 1.0;
-    EncoderType encoderType = HallSensor;
-    int countPerRev = 42;
-    LimitSwitchConfig forwardSwitch = Disabled, reverseSwitch = Disabled;
-  };
-}
+struct FeedbackConfig {
+  double gearRatio = 1.0;
+  EncoderType encoderType = HallSensor;
+  int countPerRev = 42;
+  LimitSwitchConfig forwardSwitch = Disabled, reverseSwitch = Disabled;
+};
+} // namespace SparkMaxVelocityControllerHelper
 
 /**
- * A wrapper around the SparkMax motorcontroller so that it can complies with 
+ * A wrapper around the SparkMax motorcontroller so that it can complies with
  * the `AngularVelocityFeedbackController` interface.
  */
 class SparkMaxVelocityController : public AngularVelocityFeedbackController {
@@ -59,19 +62,21 @@ public:
   using EncoderType = SparkMaxVelocityControllerHelper::EncoderType;
   using LimitSwitchConfig = SparkMaxVelocityControllerHelper::LimitSwitchConfig;
   using FeedbackConfig = SparkMaxVelocityControllerHelper::FeedbackConfig;
-  
-  SparkMaxVelocityController(SparkMaxVelocityController&&) = delete;
-  SparkMaxVelocityController(const SparkMaxVelocityController&) = delete;
-    
-  SparkMaxVelocityController(const MotorConfig motorConfig, const PIDConfig pidConfig = {}, 
-                             const ProfileConfig profileConfig = {}, const FeedbackConfig feedbackConfig = {}, 
-                             std::initializer_list<const MotorConfig> followers = {});
 
-  rev::CANSparkMax& getMotor();
+  SparkMaxVelocityController(SparkMaxVelocityController &&) = delete;
+  SparkMaxVelocityController(const SparkMaxVelocityController &) = delete;
 
-  rev::SparkMaxPIDController& getPIDCOntroller();
+  SparkMaxVelocityController(
+      const MotorConfig motorConfig, const PIDConfig pidConfig = {},
+      const ProfileConfig profileConfig = {},
+      const FeedbackConfig feedbackConfig = {},
+      std::initializer_list<const MotorConfig> followers = {});
 
-  std::unique_ptr<rev::MotorFeedbackSensor>& getFeedbackSensor();
+  rev::CANSparkMax &getMotor();
+
+  rev::SparkMaxPIDController &getPIDCOntroller();
+
+  std::unique_ptr<rev::MotorFeedbackSensor> &getFeedbackSensor();
 
   //--------------------------------------------------
   // Methods Inherited from AngularVelocityController
@@ -79,14 +84,14 @@ public:
 
   /**
    * Sets the target angular velocity.
-   * 
+   *
    * @param velocity The target angular velocity in radians per second.
    */
   void setVelocity(units::radians_per_second_t velocity) override;
 
   /**
    * Gets the target angular velocity.
-   * 
+   *
    * @return The target angular velocity in radians per second.
    */
   units::radians_per_second_t getTargetVelocity() const override;
@@ -125,11 +130,11 @@ public:
   units::radian_t getPosition() const override;
 
   /**
-   * Zeros the angular positon the motor so the current position is set to 
-   * the offset. In the case of an absolute encoder this sets the zero offset with
-   * no regard to the current position.
+   * Zeros the angular positon the motor so the current position is set to
+   * the offset. In the case of an absolute encoder this sets the zero offset
+   * with no regard to the current position.
    *
-   * @param offset the offset from the current angular position at which to 
+   * @param offset the offset from the current angular position at which to
    *               set the zero position.
    */
   void zeroPosition(units::radian_t offset = 0_rad) override;
@@ -140,7 +145,7 @@ public:
 
   /**
    * Gets the motor's tolerance.
-   * 
+   *
    * @return the motor's tolerance in radians per second.
    */
   virtual units::radians_per_second_t getTolerance() const override;
