@@ -1,7 +1,9 @@
 #pragma once
 
+#include "drivetrain/DriveSubsystem.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Transform2d.h"
+#include "frc2/command/CommandPtr.h"
 #include <pathplanner/lib/PathPlanner.h>
 #include <pathplanner/lib/commands/FollowPathWithEvents.h>
 
@@ -31,7 +33,7 @@ const frc::Pose2d pose6Center =
 const frc::Pose2d pose6Positive =
     frc::Pose2d(frc::Translation2d(1.92_m, 5.04_m), frc::Rotation2d(0.0_rad));
 
-pathplanner::FollowPathWithEvents
-createAutoalignmentCommand(frc::Pose2d targetPose);
+frc2::CommandPtr
+createAutoalignmentCommand(frc::Pose2d targetPose, DriveSubsystem& driveSubsystem);
 
 } // namespace autoalignment
