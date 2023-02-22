@@ -53,8 +53,8 @@ void RobotContainer::setTeleopDefaults() {
 
   // Default manual manipulator control
   manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
-    manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    manipulatorSubsystem.incArmAngle(1.5_deg * -joystick.GetX());
+    // manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
+    // manipulatorSubsystem.incArmAngle(1.5_deg * -joystick.GetX());
   }, {&manipulatorSubsystem}));
 
   // Default manual claw control
@@ -78,10 +78,10 @@ void RobotContainer::endAutoCommand() {
 
 void RobotContainer::ConfigureBindings() {
   // Configure your trigger bindings here
-  // joystick.Button(7).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
-  // joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState));
-  // joystick.Button(9).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
-  // joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
-  // joystick.Button(11).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
-  // joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
+  joystick.Button(7).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
+  joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState));
+  joystick.Button(9).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
+  joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
+  joystick.Button(11).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
+  joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
 }

@@ -3,13 +3,16 @@
 
 #include <frc/trajectory/TrapezoidProfile.h>
 #include <frc2/command/InstantCommand.h>
+#include <iostream> 
 
 ClawSubsystem::ClawSubsystem() {
   clawMotor->zeroPosition(0.0_deg);
   clawMotor->setPosition(ClawConstants::range.minPosition);
 }
 
-void ClawSubsystem::Periodic() {}
+void ClawSubsystem::Periodic() {
+  // std::cout << units::angle::to_string(units::degree_t(clawMotor->getPosition())) << std::endl;
+}
 
 void ClawSubsystem::setClawClosed(bool setClosed) {
   clawClosed = setClosed;

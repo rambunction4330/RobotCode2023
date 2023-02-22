@@ -25,9 +25,9 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   constexpr static ManipulatorState compactState {11_in, 90.0_deg};
   constexpr static ManipulatorState cubeHighState {38.0_in, 10.0_deg};
   constexpr static ManipulatorState cubeMidState {11_in, 45_deg};
-  constexpr static ManipulatorState cubePickupState {38_in, -45_deg};
+  constexpr static ManipulatorState cubePickupState {38_in, -40_deg};
   constexpr static ManipulatorState coneMidState {11_in, 45_deg};
-  constexpr static ManipulatorState conePickupState {11_in, -7.5_deg};
+  constexpr static ManipulatorState conePickupState {11_in, -5_deg};
   constexpr static ManipulatorState substationState {38_in, 0.0_deg};
 
   ManipulatorSubsystem();

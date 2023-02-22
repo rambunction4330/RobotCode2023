@@ -10,14 +10,14 @@
 
 namespace ClawConstants {
   const rmb::SparkMaxPositionController::MotorConfig motorConfig {
-    41, rev::CANSparkMax::MotorType::kBrushed, false
+    41, rev::CANSparkMax::MotorType::kBrushless, false
   };
 
   const rmb::SparkMaxPositionController::PIDConfig pidConfig {
-    10.0 /*  <- P */ , 0.0 /* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
+    0.2 /*  <- P */ , 0.0 /* <- I */, 0.0 /* <- D */, 0.0 /* <- FF */,
     0.0_rad /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    0.4 /* <- maxOutput */, -0.15 /* <- minOutput */
+    0.6 /* <- maxOutput */, -0.1 /* <- minOutput */
   }; 
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
@@ -25,7 +25,7 @@ namespace ClawConstants {
   };
 
   const rmb::SparkMaxPositionController::Range range {
-    10_deg /* <- min */, 90_deg /* <- max */,
+    0_deg /* <- min */, 100_deg /* <- max */,
     false /* <- isContinouse */
   };
 
@@ -37,9 +37,9 @@ namespace ClawConstants {
   };
 
   const rmb::SparkMaxPositionController::FeedbackConfig feedbackConfig {
-    1.0 /* <- gearRatio */, 
-    rmb::SparkMaxPositionController::EncoderType::Quadrature/* <- encoder */,
-    4096 /* <- countPerRev */,
+    74.0 / 24.0 /* <- gearRatio */, 
+    rmb::SparkMaxPositionController::EncoderType::HallSensor/* <- encoder */,
+    42/* <- countPerRev */,
     rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- fwd */,
     rmb::SparkMaxPositionController::LimitSwitchConfig::Disabled /* <- rev */
   };

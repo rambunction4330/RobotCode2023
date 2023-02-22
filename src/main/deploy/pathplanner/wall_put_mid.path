@@ -53,16 +53,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.5,
-        "y": 2.0
+        "x": 5.3,
+        "y": 1.8
       },
       "prevControl": {
-        "x": 5.5,
-        "y": 1.5631856685534162
+        "x": 5.3,
+        "y": 1.4792859315974547
       },
       "nextControl": {
-        "x": 5.5,
-        "y": 1.5631856685534162
+        "x": 5.3,
+        "y": 1.4792859315974547
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -78,16 +78,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.2,
-        "y": 0.9450967460342645
+        "x": 5.875,
+        "y": 1.0
       },
       "prevControl": {
-        "x": 5.613072736530341,
-        "y": 0.9450967460342645
+        "x": 5.528095611657936,
+        "y": 1.0
       },
       "nextControl": {
-        "x": 5.613072736530341,
-        "y": 0.9450967460342645
+        "x": 5.528095611657936,
+        "y": 1.0
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -96,7 +96,9 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "claw_close"
+          "manipulator_cube_pickup",
+          "claw_close",
+          "manipulator_compact"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -105,16 +107,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.5,
-        "y": 2.0
+        "x": 5.3,
+        "y": 1.8
       },
       "prevControl": {
-        "x": 5.5,
-        "y": 1.575105445954886
+        "x": 5.3,
+        "y": 1.4986722272271027
       },
       "nextControl": {
-        "x": 5.5,
-        "y": 1.575105445954886
+        "x": 5.3,
+        "y": 1.4986722272271027
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -155,11 +157,11 @@
     },
     {
       "anchorPoint": {
-        "x": 1.85,
+        "x": 2.3,
         "y": 1.05
       },
       "prevControl": {
-        "x": 2.849843739757282,
+        "x": 3.2998437397572817,
         "y": 1.0499999999999998
       },
       "nextControl": null,
@@ -181,25 +183,18 @@
     }
   ],
   "maxVelocity": 2.0,
-  "maxAcceleration": 3.0,
+  "maxAcceleration": 1.75,
   "isReversed": true,
   "markers": [
     {
-      "position": 0.09651988636363631,
-      "names": [
-        "event",
-        "manipulator_cube_pickup"
-      ]
-    },
-    {
-      "position": 3.1,
+      "position": 0.05,
       "names": [
         "event",
         "manipulator_compact"
       ]
     },
     {
-      "position": 5.75,
+      "position": 5.7,
       "names": [
         "event",
         "manipulator_cube_mid"

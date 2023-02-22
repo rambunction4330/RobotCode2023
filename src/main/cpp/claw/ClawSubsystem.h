@@ -9,6 +9,8 @@
 #include <rmb/motorcontrol/sparkmax/SparkMaxPositionController.h>
 
 #include "claw/ClawConstants.h"
+#include "rev/CANSparkMax.h"
+#include "rev/CANSparkMaxLowLevel.h"
 
 class ClawSubsystem : public frc2::SubsystemBase {
   public:

@@ -12,8 +12,11 @@
 
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/FunctionalCommand.h>
+#include <frc2/command/WaitCommand.h>
 
 #include <pathplanner/lib/auto/RamseteAutoBuilder.h>
+
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/controller/LogitechJoystick.h>
@@ -91,8 +94,8 @@ class RobotContainer {
     ).Unwrap()},
  
     // Claw Commands
-    {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
-    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()}
+    {"claw_close", frc2::WaitCommand(0.0_s).ToPtr().AndThen(clawSubsystem.getClosedCommand(true)).AndThen(frc2::WaitCommand(0.0_s).ToPtr()).Unwrap()},
+    {"claw_open", frc2::WaitCommand(0.0_s).ToPtr().AndThen(clawSubsystem.getClosedCommand(false)).AndThen(frc2::WaitCommand(0.0_s).ToPtr()).Unwrap()}
   };
 
   // Auto Builder
