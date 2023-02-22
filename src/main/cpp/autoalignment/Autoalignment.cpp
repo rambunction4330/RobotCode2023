@@ -16,6 +16,7 @@
 const double blueAlliancePastChargingStationThresholdX = 5.45;
 const double blueAlliancePastChargingStationThresholdYPositive = 4.40;
 const double blueAlliancePastChargingStationThresholdYNegative = 1.13;
+const double blueAllianceBeforeChargingStationThresholdX = 1.45;
 
 /**TODO: this*/
 frc2::CommandPtr
@@ -23,6 +24,7 @@ autoalignment::createAutoalignmentCommand(frc::Pose2d targetPose,
                                           DriveSubsystem &driveSubsystem) {
   auto team = frc::DriverStation::GetAlliance();
   std::vector<pathplanner::PathPoint> pathPoints;
+
 
   if (team == frc::DriverStation::Alliance::kBlue) {
     auto currentPose = driveSubsystem.getPose();
@@ -32,10 +34,37 @@ autoalignment::createAutoalignmentCommand(frc::Pose2d targetPose,
            blueAlliancePastChargingStationThresholdYPositive) /
           2.0;
 
-      if(currentPose.Y()() > yMidpoint) {
-        pathplanner::PathPoint point(frc::Translation2d(units::meter_t(blueAlliancePastChargingStationThresholdX), units::meter_t(blueAlliancePastChargingStationThresholdYPositive)), frc::Rotation2d(0.0_deg));
-      } else {
+      if (currentPose.Y()() > yMidpoint) {
+        pathplanner::PathPoint pointA(
+            frc::Translation2d(
+                units::meter_t(blueAlliancePastChargingStationThresholdX),
+                units::meter_t(
+                    blueAlliancePastChargingStationThresholdYPositive)),
+            frc::Rotation2d(0.0_deg));
+        pathplanner::PathPoint pointB(
+            frc::Translation2d(
+                units::meter_t(blueAllianceBeforeChargingStationThresholdX),
+                units::meter_t(
+                    blueAlliancePastChargingStationThresholdYNegative)),
+            frc::Rotation2d(0.0_deg));
+        pathPoints.push_back(pointA);
+        pathPoints.push_back(pointB);
 
+      } else {
+        pathplanner::PathPoint pointA(
+            frc::Translation2d(
+                units::meter_t(blueAlliancePastChargingStationThresholdX),
+                units::meter_t(
+                    blueAlliancePastChargingStationThresholdYPositive)),
+            frc::Rotation2d(0.0_deg));
+        pathplanner::PathPoint pointB(
+            frc::Translation2d(
+                units::meter_t(blueAllianceBeforeChargingStationThresholdX),
+                units::meter_t(
+                    blueAlliancePastChargingStationThresholdYPositive)),
+            frc::Rotation2d(0.0_deg));
+        pathPoints.push_back(pointA);
+        pathPoints.push_back(pointB);
       }
     }
   } else if (team == frc::DriverStation::Alliance::kRed) {

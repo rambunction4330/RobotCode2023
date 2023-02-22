@@ -69,6 +69,10 @@ units::radian_t ManipulatorSubsystem::calculateArmMinPose() const {
   return -units::math::asin(o/h);
 }
 
+units::meter_t ManipulatorSubsystem::getTargetElevatorHeight() const {
+    return elevatorMotor->getTargetPosition();
+}
+
 units::radian_t ManipulatorSubsystem::calculateArmMaxPose() const {
   // Find hypotinus and side oposite of angle
   units::meter_t o = ManipulatorConstants::maxClawHeight - getElevatorHeight();
@@ -85,7 +89,7 @@ void ManipulatorSubsystem::setElevatorHeight(units::meter_t height) {
 void ManipulatorSubsystem::setElevatorHeightPercent(double heightPercentage) {
   // Calculate height from  percentage of total range.
   units::meter_t min = ManipulatorConstants::Elevator::minHeight;
-  units::meter_t max = ManipulatorConstants::Elevator::minHeight;
+  units::meter_t max = ManipulatorConstants::Elevator::maxHeight;
   units::meter_t height = min + (heightPercentage * (max-min));
 
   elevatorMotor->setPosition(height);

@@ -33,7 +33,7 @@ void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
   multiplier -= gamepad.GetRightTrigger() / 4.0;
 
   arcadeDrive(gamepad.GetLeftX() * multiplier, 
-              -gamepad.GetRightY() * multiplier);
+              -gamepad.GetRightY() * multiplier);// * 0.9);
 }
 
 frc2::CommandPtr 
