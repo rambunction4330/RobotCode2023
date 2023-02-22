@@ -6,12 +6,12 @@
 
 #include <iostream>
 
-#include <frc/Filesystem.h>
 #include <frc/DriverStation.h>
+#include <frc/Filesystem.h>
+#include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryConfig.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc/trajectory/TrajectoryUtil.h>
-#include <frc/trajectory/Trajectory.h>
 
 #include <frc2/command/RunCommand.h>
 
@@ -26,30 +26,31 @@ RobotContainer::RobotContainer() {
   // Setup Auto Routines
   for (std::string name : autoNames) {
     // Build Command
-    autoCommands.emplace_back(autoBuilder.fullAuto(
-      pathplanner::PathPlanner::loadPathGroup(
-        name, 2.0_mps, 2.0_mps_sq, true
-    )));
+    autoCommands.emplace_back(
+        autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
+            name, 2.0_mps, 2.0_mps_sq, true)));
 
     // Add to chooser
     autonomousChooser.AddOption(name, autoCommands.back().get());
   }
-  
+
   // Default value and send to ShuffleBoard
   autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
   frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
 }
 
 void RobotContainer::setAutoDefaults() {
-  // By default leave the drivetrain stopped so the robot doesnt move if 
-  // something goes wrong. No other defaults are given so the manuiulator and 
-  // claw retain thier state during auto. 
-  driveSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { driveSubsystem.stop(); }, {&driveSubsystem}));
+  // By default leave the drivetrain stopped so the robot doesnt move if
+  // something goes wrong. No other defaults are given so the manuiulator and
+  // claw retain thier state during auto.
+  driveSubsystem.SetDefaultCommand(
+      frc2::RunCommand([this]() { driveSubsystem.stop(); }, {&driveSubsystem}));
 }
 
 void RobotContainer::setTeleopDefaults() {
   // Default arcade drive
-  driveSubsystem.SetDefaultCommand(driveSubsystem.arcadeDriveCommand(driveGamepad));
+  driveSubsystem.SetDefaultCommand(
+      driveSubsystem.arcadeDriveCommand(driveGamepad));
 
   // Default manual manipulator control
   manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
@@ -58,11 +59,13 @@ void RobotContainer::setTeleopDefaults() {
   }, {&manipulatorSubsystem}));
 
   // Default manual claw control
-  clawSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
-    if (driveGamepad.GetRightBumperPressed()) {
-      clawSubsystem.toggleClaw();
-    }
-  }, {&clawSubsystem})); 
+  clawSubsystem.SetDefaultCommand(frc2::RunCommand(
+      [this]() {
+        if (driveGamepad.GetRightBumperPressed()) {
+          clawSubsystem.toggleClaw();
+        }
+      },
+      {&clawSubsystem}));
 }
 
 void RobotContainer::startAutoCommand() {
@@ -78,10 +81,16 @@ void RobotContainer::endAutoCommand() {
 
 void RobotContainer::ConfigureBindings() {
   // Configure your trigger bindings here
-  joystick.Button(7).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
-  joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeHighState));
-  joystick.Button(9).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
-  joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
-  joystick.Button(11).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
-  joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
+  joystick.Button(7).OnTrue(
+      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
+  joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::cubeHighState));
+  joystick.Button(9).OnTrue(
+      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
+  joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::cubePickupState));
+  joystick.Button(11).OnTrue(
+      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
+  joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(
+      ManipulatorSubsystem::conePickupState));
 }
