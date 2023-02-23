@@ -55,16 +55,18 @@ void RobotContainer::setTeleopDefaults() {
   // Default manual manipulator control
   manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
     // manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    // manipulatorSubsystem.incArmAngle(1.5_deg * -joystick.GetX());
+    manipulatorSubsystem.setElevatorHeight(manipulatorSubsystem.getElevatorHeight() + 1_in * manipulatorGamepad.GetLeftY());
+    manipulatorSubsystem.incArmAngle(1.5_deg * -manipulatorGamepad.GetRightY());
   }, {&manipulatorSubsystem}));
 
   // Default manual claw control
   clawSubsystem.SetDefaultCommand(frc2::RunCommand(
       [this]() {
+        double closeBoost = driveGamepad.GetLeftBumper() ? 0.60 : 0.05;
         if (driveGamepad.GetRawButton(2)) {
           clawSubsystem.setClawClosed(false);
         } else {
-          clawSubsystem.setClawClosed(true);
+          clawSubsystem.setClawClosed(true, closeBoost);
         }
       },
       {&clawSubsystem}));
@@ -83,16 +85,19 @@ void RobotContainer::endAutoCommand() {
 
 void RobotContainer::ConfigureBindings() {
   // Configure your trigger bindings here
-  joystick.Button(7).OnTrue(
+  /*joystick.Button(7).OnTrue(
       manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
   joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(
       ManipulatorSubsystem::cubeHighState));
   joystick.Button(9).OnTrue(
-      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubeMidState));
+      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneHighState));
   joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(
       ManipulatorSubsystem::cubePickupState));
   joystick.Button(11).OnTrue(
       manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
   joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::conePickupState));
+      ManipulatorSubsystem::conePickupState));*/
+
+  manipulatorGamepad.RightBumper().OnTrue(manipulatorSubsystem);
+  
 }

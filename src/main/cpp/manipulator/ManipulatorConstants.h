@@ -41,7 +41,7 @@ namespace Elevator {
 
   // Linear limts
   const static units::meter_t minHeight = 11_in;
-  const static units::meter_t maxHeight = 38_in;
+  const static units::meter_t maxHeight = 40_in;
 
   const rmb::SparkMaxPositionController::Range range {
     minHeight * (2_rad / sproketDiameter)/* <- min */,

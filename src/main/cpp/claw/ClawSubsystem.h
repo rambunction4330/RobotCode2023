@@ -16,7 +16,7 @@ class ClawSubsystem : public frc2::SubsystemBase {
 
     ClawSubsystem();
 
-    void setClawClosed(bool isClosed);
+    void setClawClosed(bool isClosed, double assistance = 0.0);
     bool getClawClosed() const;
 
     frc2::CommandPtr getClosedCommand(bool setClosed);
@@ -24,4 +24,6 @@ class ClawSubsystem : public frc2::SubsystemBase {
   private:
     rev::CANSparkMax clawMotor {41, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
     bool clawClosed = false;
+
+    double currentAssistance = 0.0;
 };

@@ -10,14 +10,15 @@ ClawSubsystem::ClawSubsystem() {
 
 void ClawSubsystem::Periodic() {
   if (clawClosed) { 
-    clawMotor.Set(0.05); 
+    clawMotor.Set(currentAssistance); 
   } else {
     clawMotor.Set(-0.4);
   }
 }
 
-void ClawSubsystem::setClawClosed(bool setClosed) {
+void ClawSubsystem::setClawClosed(bool setClosed, double assistance) {
   clawClosed = setClosed;
+  currentAssistance = assistance;
 }
 
 bool ClawSubsystem::getClawClosed() const {
