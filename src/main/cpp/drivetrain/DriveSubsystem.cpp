@@ -25,15 +25,15 @@ void DriveSubsystem::arcadeDrive(const rmb::LogitechJoystick& joystick) {
               joystick.GetTwist() * joystick.GetThrottle());
 }
 
-void DriveSubsystem::arcadeDrive(const rmb::LogitechGamepad& gamepad) {
+void DriveSubsystem::arcadeDrive(const frc2::CommandXboxController& gamepad) {
   // Limit to half speed by default, with the left trigger inceasing max speed, 
   // and right reducing it.
   double multiplier = 0.5;
-  multiplier += gamepad.GetLeftTrigger() / 2.0;
-  multiplier -= gamepad.GetRightTrigger() / 4.0;
+  multiplier += gamepad.GetLeftTriggerAxis() / 2.0;
+  multiplier -= gamepad.GetRightTriggerAxis() / 4.0;
 
-  arcadeDrive(gamepad.GetLeftX() * multiplier, 
-              -gamepad.GetRightY() * multiplier);
+  arcadeDrive(-gamepad.GetLeftY() * multiplier, 
+              -gamepad.GetRightX() * multiplier);
 }
 
 frc2::CommandPtr 
@@ -43,7 +43,7 @@ DriveSubsystem::arcadeDriveCommand(const rmb::LogitechJoystick& joystick) {
 }
 
 frc2::CommandPtr 
-DriveSubsystem::arcadeDriveCommand(const rmb::LogitechGamepad& gamepad) {
+DriveSubsystem::arcadeDriveCommand(const frc2::CommandXboxController& gamepad) {
   // Wrap drive function as continually executing command.
   return frc2::RunCommand([&]() { arcadeDrive(gamepad); }, {this}).ToPtr();
 }
@@ -60,12 +60,12 @@ void DriveSubsystem::curvatureDrive(const rmb::LogitechJoystick& joystick) {
                  joystick.GetTrigger());
 }
 
-void DriveSubsystem::curvatureDrive(const rmb::LogitechGamepad& gamepad) {
+void DriveSubsystem::curvatureDrive(const frc2::CommandXboxController& gamepad) {
   // Limit to half speed by default, with the left trigger inceasing max speed, 
   // and right reducing it.
   double multiplier = 0.5;
-  multiplier += gamepad.GetLeftTrigger() / 2.0;
-  multiplier -= gamepad.GetRightTrigger() / 4.0;
+  multiplier += gamepad.GetLeftTriggerAxis() / 2.0;
+  multiplier -= gamepad.GetRightTriggerAxis() / 4.0;
 
   curvatureDrive(gamepad.GetLeftX() * multiplier, 
                  gamepad.GetRightY() * multiplier, 
@@ -81,7 +81,7 @@ DriveSubsystem::curvatureDriveCommand(const rmb::LogitechJoystick& joystick) {
 }
 
 frc2::CommandPtr 
-DriveSubsystem::curvatureDriveCommand(const rmb::LogitechGamepad& gamepad) {
+DriveSubsystem::curvatureDriveCommand(const frc2::CommandXboxController& gamepad) {
   // Wrap drive function as continually executing command.
   return frc2::RunCommand([&]() { curvatureDrive(gamepad); }, {this}).ToPtr();
 }
@@ -90,12 +90,12 @@ void DriveSubsystem::tankDrive(double leftSpeed, double rightSpeed) {
   drive.tankDrive(leftSpeed, rightSpeed);
 }
 
-void DriveSubsystem::tankDrive(const rmb::LogitechGamepad& gamepad) {
+void DriveSubsystem::tankDrive(const frc2::CommandXboxController& gamepad) {
   tankDrive(gamepad.GetLeftX(), -gamepad.GetRightX());
 }
 
 frc2::CommandPtr 
-DriveSubsystem::tankDriveCommand(const rmb::LogitechGamepad& gamepad) {
+DriveSubsystem::tankDriveCommand(const frc2::CommandXboxController& gamepad) {
   // Wrap drive function as continually executing command.
   return frc2::RunCommand([&]() { tankDrive(gamepad); }, {this}).ToPtr();
 }

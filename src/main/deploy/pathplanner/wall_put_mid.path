@@ -96,6 +96,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
+          "claw_open",
           "manipulator_cube_pickup",
           "claw_close",
           "manipulator_compact"
@@ -174,7 +175,8 @@
         "names": [
           "manipulator_cube_mid",
           "claw_open",
-          "manipulator_compact"
+          "manipulator_compact",
+          "claw_close"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -187,10 +189,11 @@
   "isReversed": true,
   "markers": [
     {
-      "position": 0.05,
+      "position": 0.1,
       "names": [
         "event",
-        "manipulator_compact"
+        "manipulator_compact",
+        "claw_close"
       ]
     },
     {

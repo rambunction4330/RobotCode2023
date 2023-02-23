@@ -61,8 +61,10 @@ void RobotContainer::setTeleopDefaults() {
   // Default manual claw control
   clawSubsystem.SetDefaultCommand(frc2::RunCommand(
       [this]() {
-        if (driveGamepad.GetRightBumperPressed()) {
-          clawSubsystem.toggleClaw();
+        if (driveGamepad.GetRawButton(2)) {
+          clawSubsystem.setClawClosed(false);
+        } else {
+          clawSubsystem.setClawClosed(true);
         }
       },
       {&clawSubsystem}));
