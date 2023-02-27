@@ -17,9 +17,19 @@
 
 #include <pathplanner/lib/PathPlanner.h>
 
+#include "drivetrain/DriveSubsystem.h"
 #include "drivetrain/commands/BalanceCommand.h"
+#include "drivetrain/commands/JTurnCommand.h"
 #include "frc/GenericHID.h"
+#include "frc/geometry/Rotation2d.h"
+#include "frc/geometry/Transform2d.h"
+#include "frc/kinematics/ChassisSpeeds.h"
+#include "frc2/command/CommandScheduler.h"
 #include "frc2/command/button/Trigger.h"
+#include "pathplanner/lib/PathConstraints.h"
+#include "pathplanner/lib/PathPlannerTrajectory.h"
+#include "pathplanner/lib/PathPoint.h"
+#include "pathplanner/lib/auto/RamseteAutoBuilder.h"
 
 RobotContainer::RobotContainer() {
   // Configure button bindings
@@ -115,4 +125,7 @@ void RobotContainer::ConfigureBindings() {
   manipulatorGamepad.Circle().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
   manipulatorGamepad.Cross().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
   frc2::Trigger([this]() { return manipulatorGamepad.GetPOV() == 0; }).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
+
+  // Drive Button Bindings
+  driveGamepad.LeftStick().WhileTrue(JTurnCommand(driveSubsystem, autoBuilder).ToPtr());
 }
