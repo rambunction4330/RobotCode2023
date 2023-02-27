@@ -12,28 +12,22 @@
 
 namespace autoalignment {
 // locations
-const frc::Pose2d pose8Negative =
-    frc::Pose2d(frc::Translation2d(1.92_m, 0.45_m), frc::Rotation2d(0.0_rad));
-const frc::Pose2d pose8Center =
-    frc::Pose2d(frc::Translation2d(1.92_m, 1.06_m), frc::Rotation2d(0.0_rad));
-const frc::Pose2d pose8Positive =
-    frc::Pose2d(frc::Translation2d(1.92_m, 1.63_m), frc::Rotation2d(0.0_rad));
 
-const frc::Pose2d pose7Negative =
-    frc::Pose2d(frc::Translation2d(1.92_m, 2.21_m), frc::Rotation2d(0.0_rad));
-const frc::Pose2d pose7Center =
-    frc::Pose2d(frc::Translation2d(1.92_m, 2.75_m), frc::Rotation2d(0.0_rad));
-const frc::Pose2d pose7Positive =
-    frc::Pose2d(frc::Translation2d(1.92_m, 3.31_m), frc::Rotation2d(0.0_rad));
+enum FieldLocation {
+  FieldLocationTag8Negative,
+  FieldLocationTag8Center,
+  FieldLocationTag8Positive,
 
-const frc::Pose2d pose6Negative =
-    frc::Pose2d(frc::Translation2d(1.92_m, 3.86_m), frc::Rotation2d(0.0_rad));
-const frc::Pose2d pose6Center =
-    frc::Pose2d(frc::Translation2d(1.92_m, 4.41_m), frc::Rotation2d(0.0_rad));
-const frc::Pose2d pose6Positive =
-    frc::Pose2d(frc::Translation2d(1.92_m, 5.04_m), frc::Rotation2d(0.0_rad));
+  FieldLocationTag7Negative,
+  FieldLocationTag7Center,
+  FieldLocationTag7Positive,
+
+  FieldLocationTag6Negative,
+  FieldLocationTag6Center,
+  FieldLocationTag6Positive
+};
 
 frc2::CommandPtr
-createAutoalignmentCommand(frc::Pose2d targetPose, DriveSubsystem& driveSubsystem);
+createAutoalignmentCommand(FieldLocation location, DriveSubsystem& driveSubsystem);
 
 } // namespace autoalignment
