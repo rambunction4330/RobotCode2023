@@ -11,6 +11,10 @@
 #include <frc2/command/RunCommand.h>
 
 #include "drivetrain/commands/BalanceCommand.h"
+#include "units/acceleration.h"
+#include "units/length.h"
+#include "units/math.h"
+#include "units/velocity.h"
 
 DriveSubsystem::DriveSubsystem() {
   // Show the robots poition on the feild in shuffleboard.
@@ -33,8 +37,10 @@ void DriveSubsystem::arcadeDrive(const frc2::CommandXboxController &gamepad) {
   multiplier += gamepad.GetLeftTriggerAxis() / 2.0;
   multiplier -= gamepad.GetRightTriggerAxis() / 4.0;
 
-  arcadeDrive(-wpi::sgn(gamepad.GetLeftY()) * std::pow(gamepad.GetLeftY(), 2) * multiplier,
-              -wpi::sgn(gamepad.GetRightX()) * std::pow(gamepad.GetRightX(), 2) * multiplier);
+  arcadeDrive(-wpi::sgn(gamepad.GetLeftY()) * std::pow(gamepad.GetLeftY(), 2) *
+                  multiplier,
+              -wpi::sgn(gamepad.GetRightX()) *
+                  std::pow(gamepad.GetRightX(), 2) * multiplier);
 }
 
 frc2::CommandPtr
@@ -101,6 +107,16 @@ DriveSubsystem::tankDriveCommand(const frc2::CommandXboxController &gamepad) {
 
 void DriveSubsystem::resetOdometry(frc::Pose2d pose) {
   odometry.resetPose(pose);
+}
+
+units::meters_per_second_squared_t DriveSubsystem::getAcceleration() const {
+#define gToMPS_sq(x) x * 9.8_mps_sq
+  auto accelX_sq = units::math::pow<2>(gToMPS_sq(gyro->GetWorldLinearAccelX()));
+  auto accelY_sq = units::math::pow<2>(gToMPS_sq(gyro->GetWorldLinearAccelY()));
+  auto accelZ_sq = units::math::pow<2>(gToMPS_sq(gyro->GetWorldLinearAccelZ()));
+
+  return units::math::sqrt(accelX_sq + accelY_sq + accelZ_sq);
+#undef gToMPS_sq
 }
 
 frc::Pose2d DriveSubsystem::getPose() const { return odometry.getPose(); }
