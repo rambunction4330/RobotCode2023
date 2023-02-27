@@ -3,7 +3,7 @@
 #include <cameraserver/CameraServer.h>
 
 void Robot::RobotInit() {
-    frc::CameraServer::StartAutomaticCapture();
+  frc::CameraServer::StartAutomaticCapture();
 }
 
 void Robot::RobotPeriodic() {

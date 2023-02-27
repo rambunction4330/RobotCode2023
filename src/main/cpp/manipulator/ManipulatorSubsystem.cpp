@@ -101,6 +101,10 @@ units::meter_t ManipulatorSubsystem::getElevatorHeight() const {
   return elevatorMotor->getPosition();
 }
 
+units::meter_t ManipulatorSubsystem::getTargetElevatorHeight() const {
+  return elevatorMotor->getTargetPosition();
+}
+
 units::meter_t ManipulatorSubsystem::getElevatorError() const {
   return elevatorMotor->getError();
 }

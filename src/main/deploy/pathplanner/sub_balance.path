@@ -54,15 +54,15 @@
     {
       "anchorPoint": {
         "x": 6.0,
-        "y": 3.5
+        "y": 3.4
       },
       "prevControl": {
         "x": 5.533153940749845,
-        "y": 3.4882218839958514
+        "y": 3.3882218839958513
       },
       "nextControl": {
         "x": 5.533153940749845,
-        "y": 3.4882218839958514
+        "y": 3.3882218839958513
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -78,12 +78,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.75,
-        "y": 3.5042169470499656
+        "x": 3.7,
+        "y": 3.4
       },
       "prevControl": {
-        "x": 4.847031093459608,
-        "y": 3.5042169470499656
+        "x": 4.7970310934596085,
+        "y": 3.4
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -108,8 +108,8 @@
     {
       "position": 0.1,
       "names": [
-        "event",
-        "manipulator_compact"
+        "manipulator_compact",
+        "claw_close"
       ]
     }
   ]
