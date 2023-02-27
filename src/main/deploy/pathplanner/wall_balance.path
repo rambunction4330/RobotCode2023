@@ -19,7 +19,8 @@
         "names": [
           "claw_close",
           "manipulator_cube_high",
-          "claw_open"
+          "claw_open",
+          "manipulator_compact"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -78,11 +79,11 @@
     },
     {
       "anchorPoint": {
-        "x": 3.75,
+        "x": 3.7,
         "y": 2.1
       },
       "prevControl": {
-        "x": 4.3793876976009445,
+        "x": 4.329387697600945,
         "y": 2.1
       },
       "nextControl": null,
@@ -104,13 +105,5 @@
   "maxVelocity": 2.0,
   "maxAcceleration": 2.0,
   "isReversed": true,
-  "markers": [
-    {
-      "position": 0.1,
-      "names": [
-        "event",
-        "manipulator_compact"
-      ]
-    }
-  ]
+  "markers": []
 }

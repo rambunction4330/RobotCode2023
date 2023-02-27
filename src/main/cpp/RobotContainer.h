@@ -12,14 +12,18 @@
 
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/FunctionalCommand.h>
+#include <frc2/command/button/CommandXboxController.h>
 
 #include <pathplanner/lib/auto/RamseteAutoBuilder.h>
+
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/controller/LogitechJoystick.h>
 
 #include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/DriveSubsystem.h"
+#include "frc2/command/WaitCommand.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawSubsystem.h"
 
@@ -47,7 +51,9 @@ class RobotContainer {
    * Subsystems *
    **************/
   rmb::LogitechJoystick joystick{1, 0.0, true};
-  rmb::LogitechGamepad driveGamepad{0, 0.0, true};
+  frc2::CommandXboxController driveGamepad{0};
+  rmb::LogitechGamepad manipulatorGamepad{1};
+
   // rmb::LogitechJoystick driveStick{0, 0.0, true};
   DriveSubsystem driveSubsystem;
   ManipulatorSubsystem manipulatorSubsystem; 
@@ -92,7 +98,7 @@ class RobotContainer {
  
     // Claw Commands
     {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
-    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()}
+    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()},
   };
 
   // Auto Builder

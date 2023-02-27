@@ -27,7 +27,7 @@ namespace Elevator {
     0.08 /*  <- P */ , 0.0/* <- I */, 0.5 /* <- D */, 0.0 /* <- FF */,
     3.0_in * (2_rad / sproketDiameter) /* <- Tolerance */, 
     0.0 /* <- iZone */, 0.0 /* <- iMaxAccumulator */,
-    0.5 /* <- maxOutput */, -0.5 /* <- minOutput */
+    0.7 /* <- maxOutput */, -0.6 /* <- minOutput */
   };
 
   const std::shared_ptr<rmb::Feedforward<units::radians>> feedforward {
@@ -41,7 +41,7 @@ namespace Elevator {
 
   // Linear limts
   const static units::meter_t minHeight = 11_in;
-  const static units::meter_t maxHeight = 38_in;
+  const static units::meter_t maxHeight = 40_in;
 
   const rmb::SparkMaxPositionController::Range range {
     minHeight * (2_rad / sproketDiameter)/* <- min */,

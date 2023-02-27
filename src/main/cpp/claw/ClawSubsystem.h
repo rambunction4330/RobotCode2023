@@ -7,7 +7,8 @@
 #include <rmb/motorcontrol/feedback/LinearPositionFeedbackController.h>
 #include <rmb/motorcontrol/sparkmax/SparkMaxPositionController.h>
 
-#include "claw/ClawConstants.h"
+#include "rev/CANSparkMax.h"
+#include "rev/CANSparkMaxLowLevel.h"
 
 class ClawSubsystem : public frc2::SubsystemBase {
   public:
@@ -15,23 +16,14 @@ class ClawSubsystem : public frc2::SubsystemBase {
 
     ClawSubsystem();
 
-    void setClawClosed(bool isClosed);
-    void toggleClaw();
+    void setClawClosed(bool isClosed, double assistance = 0.0);
     bool getClawClosed() const;
 
     frc2::CommandPtr getClosedCommand(bool setClosed);
 
   private:
-    std::shared_ptr<rmb::AngularPositionFeedbackController> clawMotor{
-      std::make_shared<rmb::SparkMaxPositionController>(
-        ClawConstants::motorConfig,
-        ClawConstants::pidConfig,
-        ClawConstants::feedforward,
-        ClawConstants::range,
-        ClawConstants::profileConfig,
-        ClawConstants::feedbackConfig
-      )
-    }; 
-
+    rev::CANSparkMax clawMotor {41, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
     bool clawClosed = false;
+
+    double currentAssistance = 0.0;
 };

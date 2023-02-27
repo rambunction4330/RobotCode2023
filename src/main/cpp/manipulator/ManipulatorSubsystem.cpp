@@ -9,18 +9,20 @@
 
 ManipulatorSubsystem::ManipulatorSubsystem() {
   // Zero Arm
-  armMotor->zeroPosition(100_deg);
+  armMotor->zeroPosition(95_deg);
   setArmAngle(ManipulatorConstants::Arm::range.maxPosition);
+  setArmAngle(ManipulatorConstants::Elevator::range.minPosition);
 
   // Zero elevator
   elevatorMotor->zeroPosition(ManipulatorConstants::Elevator::minHeight);
-  setElevatorHeight(ManipulatorConstants::Elevator::maxHeight);
+  setElevatorHeight(ManipulatorConstants::Elevator::minHeight);
 }
 
 void ManipulatorSubsystem::Periodic() {
   // Continualy set arm position to it's target so that it will the dynamic 
   // limits again if teh elevator has moved.
   setArmAngle(armMotor->getTargetPosition());
+  // std::cout << "Target: " << units::angle 
 }
 
 void ManipulatorSubsystem::setArmAngle(units::radian_t angle) {
@@ -29,7 +31,7 @@ void ManipulatorSubsystem::setArmAngle(units::radian_t angle) {
     angle, calculateArmMinPose(), calculateArmMaxPose()
   );
 
-  armMotor->setPosition(clamped);
+  armMotor->setPosition(angle);
 }
 
 void ManipulatorSubsystem::incArmAngle(units::radian_t increment) {
@@ -92,7 +94,7 @@ void ManipulatorSubsystem::setElevatorHeightPercent(double heightPercentage) {
   units::meter_t max = ManipulatorConstants::Elevator::maxHeight;
   units::meter_t height = min + (heightPercentage * (max-min));
 
-  elevatorMotor->setPosition(height);
+ setElevatorHeight(height);
 }
 
 units::meter_t ManipulatorSubsystem::getElevatorHeight() const {

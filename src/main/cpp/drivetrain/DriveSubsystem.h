@@ -18,6 +18,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/Field2d.h>
 
+#include <frc2/command/button/CommandXboxController.h>
+
 #include <AHRS.h>
 
 #include <pathplanner/lib/PathPlannerTrajectory.h>
@@ -42,19 +44,19 @@ class DriveSubsystem : public frc2::SubsystemBase {
    ****************/
   void arcadeDrive(double xSpeed, double zRotation);
   void arcadeDrive(const rmb::LogitechJoystick& joystick);
-  void arcadeDrive(const rmb::LogitechGamepad& gamepad);
+  void arcadeDrive(const frc2::CommandXboxController& gamepad);
   frc2::CommandPtr arcadeDriveCommand(const rmb::LogitechJoystick& joystick);
-  frc2::CommandPtr arcadeDriveCommand(const rmb::LogitechGamepad& gamepad);
+  frc2::CommandPtr arcadeDriveCommand(const frc2::CommandXboxController& gamepad);
 
   void curvatureDrive(double xSpeed, double zRotation, bool turnInPlace);
   void curvatureDrive(const rmb::LogitechJoystick& stick);
-  void curvatureDrive(const rmb::LogitechGamepad& gamepad);
+  void curvatureDrive(const frc2::CommandXboxController& gamepad);
   frc2::CommandPtr curvatureDriveCommand(const rmb::LogitechJoystick& stick);
-  frc2::CommandPtr curvatureDriveCommand(const rmb::LogitechGamepad& gamepad);
+  frc2::CommandPtr curvatureDriveCommand(const frc2::CommandXboxController& gamepad);
 
   void tankDrive(double leftSpeed, double rightSpeed);
-  void tankDrive(const rmb::LogitechGamepad& gamepad);
-  frc2::CommandPtr tankDriveCommand(const rmb::LogitechGamepad& gamepad);
+  void tankDrive(const frc2::CommandXboxController& gamepad);
+  frc2::CommandPtr tankDriveCommand(const frc2::CommandXboxController& gamepad);
 
   /************
    * Odometry *
@@ -126,7 +128,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
     left, right, 
     DriveConstants::kinematics, 
     gyro,
-    // DriveConstants::visionTableString
+    DriveConstants::visionTableString
   };
 
   frc::Field2d displayFeild; 
