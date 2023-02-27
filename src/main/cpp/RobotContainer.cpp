@@ -27,7 +27,7 @@ RobotContainer::RobotContainer() {
 
   // Setup Auto Routines
   for (auto autoConfig : autoNames) {
-    // Build Command
+    // Build Commands
     autoCommands.emplace_back(
         autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
             autoConfig.name, autoConfig.maxVelocity, autoConfig.maxAcceleration, autoConfig.reversed)));
@@ -55,10 +55,12 @@ void RobotContainer::setTeleopDefaults() {
       driveSubsystem.arcadeDriveCommand(driveGamepad));
 
   // Default manual manipulator control
-  manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
+  manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() {
+    // Dead zones
     double leftY = std::abs(manipulatorGamepad.GetRawAxis(1)) < 0.05 ? 0.0 : manipulatorGamepad.GetRawAxis(1);
     manipulatorSubsystem.incArmAngle(1.0_deg * -leftY);
 
+    // Dead zones
     double rightY = std::abs(manipulatorGamepad.GetRawAxis(5)) < 0.05 ? 0.0 : manipulatorGamepad.GetRawAxis(5);
     manipulatorSubsystem.setElevatorHeight(manipulatorSubsystem.getTargetElevatorHeight() + (1.5_in * -rightY));
   }, {&manipulatorSubsystem}));
@@ -66,18 +68,28 @@ void RobotContainer::setTeleopDefaults() {
   // Default manual claw control
   clawSubsystem.SetDefaultCommand(frc2::RunCommand(
       [this]() {
-        double closeBoost = 0.0;
-        driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.0); 
+        // Leave rumble off by default.
+        driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.0);
+
+        // Set boost to help claw depending on button presses.
+        double closeBoost = 0.0; 
         if (driveGamepad.GetRightBumper()) { closeBoost = 0.3; }
         if (driveGamepad.GetLeftBumper()) { 
           closeBoost = 0.6;
+
+          // Ruble when applying extra closing boost.
           driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
         }
 
+        // Open claw when Padddles is pressed.
         if (driveGamepad.GetRawButton(2)) {
           clawSubsystem.setClawClosed(false);
+
+          // Rumble while stalling motor to open the claw.
           driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
         } else {
+
+          // Close teh claw with any relevant boosting.
           clawSubsystem.setClawClosed(true, closeBoost);
         }
       },
@@ -96,20 +108,7 @@ void RobotContainer::endAutoCommand() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  // Configure your trigger bindings here
-  /*joystick.Button(7).OnTrue(
-      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
-  joystick.Button(8).OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::cubeHighState));
-  joystick.Button(9).OnTrue(
-      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneHighState));
-  joystick.Button(10).OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::cubePickupState));
-  joystick.Button(11).OnTrue(
-      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
-  joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::conePickupState));*/
-
+  // Manipulator Button Bindings.
   manipulatorGamepad.R1().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::substationState));
   manipulatorGamepad.L1().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneHighState));
   manipulatorGamepad.Triangle().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
