@@ -4,6 +4,8 @@
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Transform2d.h"
 #include "frc2/command/CommandPtr.h"
+#include "pathplanner/lib/PathConstraints.h"
+#include "pathplanner/lib/auto/RamseteAutoBuilder.h"
 #include <pathplanner/lib/PathPlanner.h>
 #include <pathplanner/lib/commands/FollowPathWithEvents.h>
 
@@ -40,6 +42,6 @@ enum FieldLocation {
 };
 
 frc2::CommandPtr
-createAutoalignmentCommand(FieldLocation location, DriveSubsystem& driveSubsystem);
+createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoBuilder, pathplanner::PathConstraints constraints, FieldLocation location, DriveSubsystem& driveSubsystem);
 
 } // namespace autoalignment

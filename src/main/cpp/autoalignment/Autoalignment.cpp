@@ -10,6 +10,7 @@
 #include "frc/geometry/Transform2d.h"
 #include "frc2/command/CommandPtr.h"
 
+#include "pathplanner/lib/PathConstraints.h"
 #include "pathplanner/lib/PathPlanner.h"
 #include "pathplanner/lib/PathPlannerTrajectory.h"
 #include "pathplanner/lib/PathPoint.h"
@@ -113,7 +114,7 @@ matchFieldLocationToPose(autoalignment::FieldLocation location) {
 }
 
 frc2::CommandPtr
-autoalignment::createAutoalignmentCommand(FieldLocation location,
+autoalignment::createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoBuilder, pathplanner::PathConstraints pathConstraints, FieldLocation location,
                                           DriveSubsystem &driveSubsystem) {
   auto targetPose = matchFieldLocationToPose(location);
   auto team = frc::DriverStation::GetAlliance();
@@ -190,17 +191,8 @@ autoalignment::createAutoalignmentCommand(FieldLocation location,
 
   pathplanner::PathPlannerTrajectory trajectory =
       pathplanner::PathPlanner::generatePath(
-          pathplanner::PathConstraints(4_mps, 3_mps_sq), pathPoints);
+          pathConstraints, pathPoints);
 
-  pathplanner::RamseteAutoBuilder builder(
-      [&]() { return driveSubsystem.getPose(); },
-      [&](frc::Pose2d initPose) { driveSubsystem.resetOdometry(initPose); },
-      DriveConstants::ramseteController, DriveConstants::kinematics,
-      [&](units::meters_per_second_t left, units::meters_per_second_t right) {
-        driveSubsystem.driveWheelSpeeds(left, right);
-      },
-      std::unordered_map<std::string, std::shared_ptr<frc2::Command>>(),
-      {&driveSubsystem}, true);
 
-  return builder.fullAuto(trajectory);
+  return autoBuilder.fullAuto(trajectory);
 }
