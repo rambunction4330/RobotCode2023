@@ -26,10 +26,15 @@
 
 #include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/DriveSubsystem.h"
+#include "frc/DriverStation.h"
+#include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Translation2d.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawSubsystem.h"
 #include "units/acceleration.h"
 #include "units/velocity.h"
+
+#define FEILD_WIDTH 16.53_m
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -47,22 +52,6 @@ class RobotContainer {
 
   void startAutoCommand();
   void endAutoCommand();
-
-  void buildAutos() {
-  for (auto autoConfig : autoNames) {
-    // Build Command
-    autoCommands.emplace_back(
-        autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
-            autoConfig.name, autoConfig.maxVelocity, autoConfig.maxAcceleration, autoConfig.reversed)));
-
-    // Add to chooser
-    autonomousChooser.AddOption(autoConfig.name, autoCommands.back().get());
-  }
-
-  // Default value and send to ShuffleBoard
-  autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
-  frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
-  }
 
  private: 
   void ConfigureBindings(); 
@@ -122,13 +111,32 @@ class RobotContainer {
 
   // Auto Builder
   pathplanner::RamseteAutoBuilder autoBuilder {
-    [this]() { return driveSubsystem.getPose(); }, 
+    [this]() { 
+      frc::Pose2d rawPose = driveSubsystem.getPose();
+
+      if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+        return rawPose;
+      }
+
+      frc::Translation2d translation {FEILD_WIDTH - rawPose.X(), rawPose.Y()};
+      frc::Rotation2d rotation = rawPose.Rotation() + frc::Rotation2d(180_deg);
+
+      return frc::Pose2d(translation, rotation);
+    }, 
     [this](frc::Pose2d initPose) { 
-      driveSubsystem.resetOdometry(initPose); 
+      if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+        driveSubsystem.resetOdometry(initPose);
+        return;
+      }
+
+      frc::Translation2d translation {FEILD_WIDTH - initPose.X(), initPose.Y()};
+      frc::Rotation2d rotation = initPose.Rotation() + frc::Rotation2d(180_deg);
+
+      driveSubsystem.resetOdometry(frc::Pose2d(translation, rotation)); 
     }, DriveConstants::ramseteController, DriveConstants::kinematics,
     [this](units::meters_per_second_t left, units::meters_per_second_t right) { 
       driveSubsystem.driveWheelSpeeds(left, right); 
-    }, eventMap, {&driveSubsystem}, true
+    }, eventMap, {&driveSubsystem}, false
   };
 
 
