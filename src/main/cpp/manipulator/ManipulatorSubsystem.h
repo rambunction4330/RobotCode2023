@@ -43,7 +43,6 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   units::meter_t getElevatorHeight() const;
   units::meter_t getTargetElevatorHeight() const;
   units::meter_t getElevatorError() const;
-  units::meter_t getTargetElevatorHeight() const;
   bool elevatorAtHeight();
   bool elevatorIsRaising();
   bool elevatorIsLowering();

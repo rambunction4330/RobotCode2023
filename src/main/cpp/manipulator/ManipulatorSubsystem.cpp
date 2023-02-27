@@ -71,10 +71,6 @@ units::radian_t ManipulatorSubsystem::calculateArmMinPose() const {
   return -units::math::asin(o/h);
 }
 
-units::meter_t ManipulatorSubsystem::getTargetElevatorHeight() const {
-    return elevatorMotor->getTargetPosition();
-}
-
 units::radian_t ManipulatorSubsystem::calculateArmMaxPose() const {
   // Find hypotinus and side oposite of angle
   units::meter_t o = ManipulatorConstants::maxClawHeight - getElevatorHeight();
