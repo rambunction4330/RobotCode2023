@@ -24,7 +24,19 @@ enum FieldLocation {
 
   FieldLocationTag6Negative,
   FieldLocationTag6Center,
-  FieldLocationTag6Positive
+  FieldLocationTag6Positive,
+
+  FieldLocationTag3Negative,
+  FieldLocationTag3Center,
+  FieldLocationTag3Positive,
+
+  FieldLocationTag2Negative,
+  FieldLocationTag2Center,
+  FieldLocationTag2Positive,
+
+  FieldLocationTag1Negative,
+  FieldLocationTag1Center,
+  FieldLocationTag1Positive
 };
 
 frc2::CommandPtr

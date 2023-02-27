@@ -47,30 +47,71 @@ const static frc::Pose2d pose6Center =
 const static frc::Pose2d pose6Positive =
     frc::Pose2d(frc::Translation2d(1.92_m, 5.04_m), frc::Rotation2d(0.0_rad));
 
-constexpr const frc::Pose2d& matchFieldLocationToPose(autoalignment::FieldLocation location) {
-  switch(location) {
-    case autoalignment::FieldLocationTag8Negative:
-      return pose8Negative;
-    case autoalignment::FieldLocationTag8Center:
-      return pose8Center;
-    case autoalignment::FieldLocationTag8Positive:
-      return pose8Positive;
-    case autoalignment::FieldLocationTag7Negative:
-      return pose7Negative;
-    case autoalignment::FieldLocationTag7Center:
-      return pose7Center;
-    case autoalignment::FieldLocationTag7Positive:
-      return pose7Positive;
-    case autoalignment::FieldLocationTag6Negative:
-      return pose6Negative;
-    case autoalignment::FieldLocationTag6Center:
-      return pose6Center;
-    case autoalignment::FieldLocationTag6Positive:
-      return pose6Positive;
+const static frc::Pose2d pose3Negative =
+    frc::Pose2d(frc::Translation2d(14.61_m, 0.41_m), frc::Rotation2d(0.0_rad));
+const static frc::Pose2d pose3Center =
+    frc::Pose2d(frc::Translation2d(14.61_m, 1.06_m), frc::Rotation2d(0.0_rad));
+const static frc::Pose2d pose3Positive =
+    frc::Pose2d(frc::Translation2d(14.61_m, 1.63_m), frc::Rotation2d(0.0_rad));
+
+const static frc::Pose2d pose2Negative =
+    frc::Pose2d(frc::Translation2d(14.61_m, 2.21_m), frc::Rotation2d(0.0_rad));
+const static frc::Pose2d pose2Center =
+    frc::Pose2d(frc::Translation2d(14.61_m, 2.75_m), frc::Rotation2d(0.0_rad));
+const static frc::Pose2d pose2Positive =
+    frc::Pose2d(frc::Translation2d(14.61_m, 3.31_m), frc::Rotation2d(0.0_rad));
+
+const static frc::Pose2d pose1Negative =
+    frc::Pose2d(frc::Translation2d(14.61_m, 3.85_m), frc::Rotation2d(0.0_rad));
+const static frc::Pose2d pose1Center =
+    frc::Pose2d(frc::Translation2d(14.61_m, 4.41_m), frc::Rotation2d(0.0_rad));
+const static frc::Pose2d pose1Positive =
+    frc::Pose2d(frc::Translation2d(14.61_m, 5.04_m), frc::Rotation2d(0.0_rad));
+
+constexpr const frc::Pose2d &
+matchFieldLocationToPose(autoalignment::FieldLocation location) {
+  switch (location) {
+  case autoalignment::FieldLocationTag8Negative:
+    return pose8Negative;
+  case autoalignment::FieldLocationTag8Center:
+    return pose8Center;
+  case autoalignment::FieldLocationTag8Positive:
+    return pose8Positive;
+  case autoalignment::FieldLocationTag7Negative:
+    return pose7Negative;
+  case autoalignment::FieldLocationTag7Center:
+    return pose7Center;
+  case autoalignment::FieldLocationTag7Positive:
+    return pose7Positive;
+  case autoalignment::FieldLocationTag6Negative:
+    return pose6Negative;
+  case autoalignment::FieldLocationTag6Center:
+    return pose6Center;
+  case autoalignment::FieldLocationTag6Positive:
+    return pose6Positive;
+  case autoalignment::FieldLocationTag3Negative:
+    return pose3Negative;
+  case autoalignment::FieldLocationTag3Center:
+    return pose3Center;
+  case autoalignment::FieldLocationTag3Positive:
+    return pose3Positive;
+  case autoalignment::FieldLocationTag2Negative:
+    return pose2Negative;
+  case autoalignment::FieldLocationTag2Center:
+    return pose2Center;
+  case autoalignment::FieldLocationTag2Positive:
+    return pose2Positive;
+  case autoalignment::FieldLocationTag1Negative:
+    return pose1Negative;
+  case autoalignment::FieldLocationTag1Center:
+    return pose1Center;
+  case autoalignment::FieldLocationTag1Positive:
+    return pose1Positive;
+  default:
+    return pose8Negative;
   }
 }
 
-/**TODO: this*/
 frc2::CommandPtr
 autoalignment::createAutoalignmentCommand(FieldLocation location,
                                           DriveSubsystem &driveSubsystem) {
@@ -129,7 +170,7 @@ autoalignment::createAutoalignmentCommand(FieldLocation location,
 
       pathPoints.push_back(pathplanner::PathPoint(
           frc::Translation2d(targetXPos, targetSideOfChargingStationYPos),
-          frc::Rotation2d(0.0_deg)));
+          frc::Rotation2d(180.0_deg)));
     }
 
     if (currentPose.X() < redAllianceBeforeChargingStationThresholdX) {
@@ -137,7 +178,7 @@ autoalignment::createAutoalignmentCommand(FieldLocation location,
           redAllianceBeforeChargingStationThresholdX;
       pathPoints.push_back(pathplanner::PathPoint(
           frc::Translation2d(targetXPos, targetSideOfChargingStationYPos),
-          frc::Rotation2d(0.0_deg)));
+          frc::Rotation2d(180.0_deg)));
     }
 
     pathPoints.push_back(pathplanner::PathPoint(
