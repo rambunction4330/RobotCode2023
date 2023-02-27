@@ -7,6 +7,8 @@
 #include <rmb/motorcontrol/feedback/LinearPositionFeedbackController.h>
 #include <rmb/motorcontrol/sparkmax/SparkMaxPositionController.h>
 
+#include "ctre/phoenix/motorcontrol/can/TalonFX.h"
+#include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 #include "rev/CANSparkMax.h"
 #include "rev/CANSparkMaxLowLevel.h"
 
@@ -16,13 +18,13 @@ class ClawSubsystem : public frc2::SubsystemBase {
 
     ClawSubsystem();
 
-    void setClawClosed(bool isClosed, double assistance = 0.0);
+    void setClawClosed(bool isClosed, double assistance = 0.05);
     bool getClawClosed() const;
 
     frc2::CommandPtr getClosedCommand(bool setClosed);
 
   private:
-    rev::CANSparkMax clawMotor {41, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX clawMotor {41};
     bool clawClosed = false;
 
     double currentAssistance = 0.0;

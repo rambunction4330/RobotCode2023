@@ -29,7 +29,7 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   constexpr static ManipulatorState coneMidState {11_in, 45_deg};
   constexpr static ManipulatorState coneHighState {40.0_in, 45_deg};
   constexpr static ManipulatorState conePickupState {11_in, -0.0_deg};
-  constexpr static ManipulatorState substationState {40.0_in, 10.0_deg};
+  constexpr static ManipulatorState substationState {40.0_in, 15.0_deg};
 
   ManipulatorSubsystem();
 
@@ -41,6 +41,7 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   void setElevatorHeight(units::meter_t height);
   void setElevatorHeightPercent(double height);
   units::meter_t getElevatorHeight() const;
+  units::meter_t getTargetElevatorHeight() const;
   units::meter_t getElevatorError() const;
   bool elevatorAtHeight();
   bool elevatorIsRaising();

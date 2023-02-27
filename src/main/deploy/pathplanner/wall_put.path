@@ -191,7 +191,6 @@
     {
       "position": 0.1,
       "names": [
-        "event",
         "manipulator_compact",
         "claw_close"
       ]
@@ -199,7 +198,6 @@
     {
       "position": 5.7,
       "names": [
-        "event",
         "manipulator_cube_mid"
       ]
     }

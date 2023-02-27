@@ -12,9 +12,12 @@
 
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/FunctionalCommand.h>
+#include <frc2/command/WaitCommand.h>
 #include <frc2/command/button/CommandXboxController.h>
+#include <frc2/command/button/CommandPS4Controller.h>
 
 #include <pathplanner/lib/auto/RamseteAutoBuilder.h>
+#include <pathplanner/lib/PathPlanner.h>
 
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 
@@ -23,9 +26,10 @@
 
 #include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/DriveSubsystem.h"
-#include "frc2/command/WaitCommand.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawSubsystem.h"
+#include "units/acceleration.h"
+#include "units/velocity.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -44,15 +48,30 @@ class RobotContainer {
   void startAutoCommand();
   void endAutoCommand();
 
+  void buildAutos() {
+  for (auto autoConfig : autoNames) {
+    // Build Command
+    autoCommands.emplace_back(
+        autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
+            autoConfig.name, autoConfig.maxVelocity, autoConfig.maxAcceleration, autoConfig.reversed)));
+
+    // Add to chooser
+    autonomousChooser.AddOption(autoConfig.name, autoCommands.back().get());
+  }
+
+  // Default value and send to ShuffleBoard
+  autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
+  frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
+  }
+
  private: 
-  void ConfigureBindings();
+  void ConfigureBindings(); 
 
   /**************
    * Subsystems *
    **************/
-  rmb::LogitechJoystick joystick{1, 0.0, true};
   frc2::CommandXboxController driveGamepad{0};
-  rmb::LogitechGamepad manipulatorGamepad{1};
+  frc2::CommandPS4Controller manipulatorGamepad{1};
 
   // rmb::LogitechJoystick driveStick{0, 0.0, true};
   DriveSubsystem driveSubsystem;
@@ -116,23 +135,26 @@ class RobotContainer {
   /****************
    * Auto Chooser *
    ****************/
+  struct AutoConfiguration {
+    std::string name;
+    units::meters_per_second_t maxVelocity = 2.0_mps;
+    units::meters_per_second_squared_t maxAcceleration = 2.0_mps_sq;
+    bool reversed = true;
+  };
 
-  std::array<std::string, 15> autoNames {
-    "wall_move",
-    "wall_balance",
-    "wall_put_mid",
-    "wall_put_high",
-    "center_move_wall",
-    "center_move_sub",
-    "center_balance",
-    "center_wall_put_mid",
-    "center_wall_put_high",
-    "center_sub_put_mid",
-    "center_sub_put_high",
-    "sub_move",
-    "sub_balance",
-    "sub_put_mid",
-    "sub_put_high"
+  std::array<AutoConfiguration, 10> autoNames {
+    {
+      {"wall_move"},
+      {"wall_balance"},
+      {"wall_put"},
+      {"center_move_wall"},
+      {"center_move_sub"},
+      {"center_balance", 1.0_mps, 1.0_mps_sq},
+      {"sub_move"},
+      {"sub_balance"},
+      {"sub_put", 1.5_mps, 1.5_mps_sq},
+      {"test", 1.5_mps, 1.5_mps_sq},
+    }
   };
 
   frc2::CommandPtr noAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();

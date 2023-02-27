@@ -5,14 +5,15 @@
 #include <iostream> 
 
 ClawSubsystem::ClawSubsystem() {
-  clawMotor.RestoreFactoryDefaults();
+  clawMotor.ConfigFactoryDefault();
+  clawMotor.ConfigStatorCurrentLimit({true, 60, 0, 0});
 }
 
 void ClawSubsystem::Periodic() {
   if (clawClosed) { 
-    clawMotor.Set(currentAssistance); 
+    clawMotor.Set(currentAssistance);
   } else {
-    clawMotor.Set(-0.4);
+    clawMotor.Set(-0.6);
   }
 }
 

@@ -18,20 +18,22 @@
 #include <pathplanner/lib/PathPlanner.h>
 
 #include "drivetrain/commands/BalanceCommand.h"
+#include "frc/GenericHID.h"
+#include "frc2/command/button/Trigger.h"
 
 RobotContainer::RobotContainer() {
   // Configure button bindings
   ConfigureBindings();
 
   // Setup Auto Routines
-  for (std::string name : autoNames) {
+  for (auto autoConfig : autoNames) {
     // Build Command
     autoCommands.emplace_back(
         autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
-            name, 2.0_mps, 2.0_mps_sq, true)));
+            autoConfig.name, autoConfig.maxVelocity, autoConfig.maxAcceleration, autoConfig.reversed)));
 
     // Add to chooser
-    autonomousChooser.AddOption(name, autoCommands.back().get());
+    autonomousChooser.AddOption(autoConfig.name, autoCommands.back().get());
   }
 
   // Default value and send to ShuffleBoard
@@ -54,17 +56,27 @@ void RobotContainer::setTeleopDefaults() {
 
   // Default manual manipulator control
   manipulatorSubsystem.SetDefaultCommand(frc2::RunCommand([this]() { 
-    // manipulatorSubsystem.setElevatorHeightPercent(joystick.GetThrottle());
-    manipulatorSubsystem.setElevatorHeight(manipulatorSubsystem.getElevatorHeight() + 1_in * manipulatorGamepad.GetLeftY());
-    manipulatorSubsystem.incArmAngle(1.5_deg * -manipulatorGamepad.GetRightY());
+    double leftY = std::abs(manipulatorGamepad.GetRawAxis(1)) < 0.05 ? 0.0 : manipulatorGamepad.GetRawAxis(1);
+    manipulatorSubsystem.incArmAngle(1.0_deg * -leftY);
+
+    double rightY = std::abs(manipulatorGamepad.GetRawAxis(5)) < 0.05 ? 0.0 : manipulatorGamepad.GetRawAxis(5);
+    manipulatorSubsystem.setElevatorHeight(manipulatorSubsystem.getTargetElevatorHeight() + (1.5_in * -rightY));
   }, {&manipulatorSubsystem}));
 
   // Default manual claw control
   clawSubsystem.SetDefaultCommand(frc2::RunCommand(
       [this]() {
-        double closeBoost = driveGamepad.GetLeftBumper() ? 0.60 : 0.05;
+        double closeBoost = 0.0;
+        driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.0); 
+        if (driveGamepad.GetRightBumper()) { closeBoost = 0.3; }
+        if (driveGamepad.GetLeftBumper()) { 
+          closeBoost = 0.6;
+          driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
+        }
+
         if (driveGamepad.GetRawButton(2)) {
           clawSubsystem.setClawClosed(false);
+          driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
         } else {
           clawSubsystem.setClawClosed(true, closeBoost);
         }
@@ -98,6 +110,10 @@ void RobotContainer::ConfigureBindings() {
   joystick.Button(12).OnTrue(manipulatorSubsystem.getStateCommand(
       ManipulatorSubsystem::conePickupState));*/
 
-  manipulatorGamepad.RightBumper().OnTrue(manipulatorSubsystem);
-  
+  manipulatorGamepad.R1().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::substationState));
+  manipulatorGamepad.L1().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneHighState));
+  manipulatorGamepad.Triangle().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
+  manipulatorGamepad.Circle().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
+  manipulatorGamepad.Cross().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
+  frc2::Trigger([this]() { return manipulatorGamepad.GetPOV() == 0; }).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
 }
