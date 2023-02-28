@@ -92,7 +92,7 @@ void RobotContainer::setTeleopDefaults() {
         }
 
         // Open claw when Padddles is pressed.
-        if (driveGamepad.GetRawButton(2)) {
+        if (driveGamepad.GetRawButton(1)) {
           clawSubsystem.setClawClosed(false);
 
           // Rumble while stalling motor to open the claw.
@@ -127,5 +127,5 @@ void RobotContainer::ConfigureBindings() {
   frc2::Trigger([this]() { return manipulatorGamepad.GetPOV() == 0; }).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
 
   // Drive Button Bindings
-  driveGamepad.LeftStick().WhileTrue(JTurnCommand(driveSubsystem, autoBuilder).ToPtr());
+  driveGamepad.B().WhileTrue(JTurnCommand(driveSubsystem, autoBuilder).ToPtr());
 }
