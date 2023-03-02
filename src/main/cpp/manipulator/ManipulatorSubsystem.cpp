@@ -62,6 +62,21 @@ bool ManipulatorSubsystem::armIsLowering() const {
   return !armAtPosition() && getArmError() > 0.0_rad;
 }
 
+frc2::CommandPtr ManipulatorSubsystem::manualZeroArmCommand(frc2::CommandPS4Controller& controller) {
+  return frc2::FunctionalCommand([this] {
+    armMotor->zeroPosition(ManipulatorConstants::Arm::range.minPosition);
+    armMotor->setPosition(ManipulatorConstants::Arm::range.minPosition);
+  }, [this, &controller] () {
+    double leftY = std::abs(controller.GetRawAxis(1)) < 0.05 ? 0.0 : controller.GetRawAxis(1);
+    incArmAngle(1.0_deg * -leftY);
+  }, [this](bool) {
+    armMotor->zeroPosition(ManipulatorConstants::Arm::range.maxPosition + 5.0_deg);
+    armMotor->setPosition(ManipulatorConstants::Arm::range.maxPosition);
+  }, []() {
+    return false;
+  }).ToPtr();
+}
+
 units::radian_t ManipulatorSubsystem::calculateArmMinPose() const {
   // Find hypotinus and side oposite of angle
   units::meter_t o = getElevatorHeight() - ManipulatorConstants::minClawHeight;

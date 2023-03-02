@@ -10,7 +10,14 @@
 #include <array>
 #include <iostream>
 
+#include <units/acceleration.h>
+#include <units/velocity.h>
+
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/DriverStation.h>
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Translation2d.h>
+
 #include <frc2/command/FunctionalCommand.h>
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/button/CommandXboxController.h>
@@ -24,12 +31,13 @@
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/controller/LogitechJoystick.h>
 
-#include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/DriveSubsystem.h"
+#include "drivetrain/commands/BalanceCommand.h"
+#include "drivetrain/commands/JTurnCommand.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawSubsystem.h"
-#include "units/acceleration.h"
-#include "units/velocity.h"
+
+#define FEILD_WIDTH 16.53_m
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -48,32 +56,18 @@ class RobotContainer {
   void startAutoCommand();
   void endAutoCommand();
 
-  void buildAutos() {
-  for (auto autoConfig : autoNames) {
-    // Build Command
-    autoCommands.emplace_back(
-        autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
-            autoConfig.name, autoConfig.maxVelocity, autoConfig.maxAcceleration, autoConfig.reversed)));
-
-    // Add to chooser
-    autonomousChooser.AddOption(autoConfig.name, autoCommands.back().get());
-  }
-
-  // Default value and send to ShuffleBoard
-  autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
-  frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
-  }
-
  private: 
   void ConfigureBindings(); 
+
+  /***************
+   * Controllers *
+   ***************/
+  frc2::CommandXboxController driveGamepad{0};
+  frc2::CommandPS4Controller manipulatorGamepad{1};
 
   /**************
    * Subsystems *
    **************/
-  frc2::CommandXboxController driveGamepad{0};
-  frc2::CommandPS4Controller manipulatorGamepad{1};
-
-  // rmb::LogitechJoystick driveStick{0, 0.0, true};
   DriveSubsystem driveSubsystem;
   ManipulatorSubsystem manipulatorSubsystem; 
   ClawSubsystem clawSubsystem; 
@@ -122,19 +116,53 @@ class RobotContainer {
 
   // Auto Builder
   pathplanner::RamseteAutoBuilder autoBuilder {
-    [this]() { return driveSubsystem.getPose(); }, 
+    [this]() { 
+      // Absolute piositon of robt onthe feils with the right corrner of the 
+      // blue alliance side as the origin.
+      frc::Pose2d rawPose = driveSubsystem.getPose();
+      
+      // Autos are designed for the blue alliance side, so on that side the 
+      // raw feild position can be used. When starting on the red side, the 
+      // provided must be modified to trick the path following command into 
+      // thinking it is still on the red side.
+      if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+        return rawPose;
+      }
+
+      // Mirros field position from red back to blue side
+      frc::Translation2d translation {FEILD_WIDTH - rawPose.X(), rawPose.Y()};
+
+      // Flip rotation to be facing the other direction.
+      frc::Rotation2d rotation = -rawPose.Rotation() + frc::Rotation2d(180_deg);
+
+      // return transformed position.
+      return frc::Pose2d(translation, rotation);
+    }, 
     [this](frc::Pose2d initPose) { 
-      driveSubsystem.resetOdometry(initPose); 
+      // Autos are designed for the blue alliance side, so on that side the 
+      // absolute feild position can be used. When starting on the red side,
+      // the provided must be modified to trick the path following command into 
+      // thinking it is still on the red side.
+      if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+        driveSubsystem.resetOdometry(initPose);
+        return;
+      }
+
+      // Mirror the start position over tot he red side of th field.
+      frc::Translation2d translation {FEILD_WIDTH - initPose.X(), initPose.Y()};
+
+      // Flip the rotation to face the oposite direction.
+      frc::Rotation2d rotation = -initPose.Rotation() + frc::Rotation2d(180_deg);
+
+      // Reset to transformed position.
+      driveSubsystem.resetOdometry(frc::Pose2d(translation, rotation)); 
     }, DriveConstants::ramseteController, DriveConstants::kinematics,
     [this](units::meters_per_second_t left, units::meters_per_second_t right) { 
       driveSubsystem.driveWheelSpeeds(left, right); 
-    }, eventMap, {&driveSubsystem}, true
+    }, eventMap, {&driveSubsystem}, false
   };
 
-
-  /****************
-   * Auto Chooser *
-   ****************/
+  // Struter to keep track of auto file and relevant configs.
   struct AutoConfiguration {
     std::string name;
     units::meters_per_second_t maxVelocity = 2.0_mps;
@@ -142,6 +170,7 @@ class RobotContainer {
     bool reversed = true;
   };
 
+  // List of possible autos and relevant configs.
   std::array<AutoConfiguration, 10> autoNames {
     {
       {"wall_move"},
@@ -149,7 +178,7 @@ class RobotContainer {
       {"wall_put"},
       {"center_move_wall"},
       {"center_move_sub"},
-      {"center_balance", 1.0_mps, 1.0_mps_sq},
+      {"center_balance", 1.5_mps, 1.5_mps_sq},
       {"sub_move"},
       {"sub_balance"},
       {"sub_put", 1.5_mps, 1.5_mps_sq},
@@ -157,6 +186,9 @@ class RobotContainer {
     }
   };
 
+  /****************
+   * Auto Chooser *
+   ****************/
   frc2::CommandPtr noAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
   std::vector<frc2::CommandPtr> autoCommands;
   frc2::Command* currentAuto = noAutoCommand.get();

@@ -11,6 +11,10 @@
 #include <frc2/command/RunCommand.h>
 
 #include "drivetrain/commands/BalanceCommand.h"
+#include "units/acceleration.h"
+#include "units/length.h"
+#include "units/math.h"
+#include "units/velocity.h"
 
 DriveSubsystem::DriveSubsystem() {
   // Show the robots poition on the feild in shuffleboard.
@@ -32,11 +36,11 @@ void DriveSubsystem::arcadeDrive(const frc2::CommandXboxController &gamepad) {
   double multiplier = 0.5;
   multiplier += gamepad.GetLeftTriggerAxis() / 2.0;
   multiplier -= gamepad.GetRightTriggerAxis() / 4.0;
+  double leftY = abs(gamepad.GetLeftY()) > 0.05 ? gamepad.GetLeftY() : 0.0;
+  double rightX = abs(gamepad.GetRightX()) > 0.05 ? gamepad.GetRightX() : 0.0;
 
-  arcadeDrive(-wpi::sgn(gamepad.GetLeftY()) * std::pow(gamepad.GetLeftY(), 2) *
-                  multiplier,
-              -wpi::sgn(gamepad.GetRightX()) *
-                  std::pow(gamepad.GetRightX(), 2) * multiplier);
+  arcadeDrive(-wpi::sgn(leftY) * std::pow(leftY, 2) * multiplier,
+              -wpi::sgn(rightX) * std::pow(rightX, 2) * multiplier);
 }
 
 frc2::CommandPtr
@@ -72,6 +76,7 @@ void DriveSubsystem::curvatureDrive(
 
   curvatureDrive(gamepad.GetLeftX() * multiplier,
                  gamepad.GetRightY() * multiplier, gamepad.GetLeftBumper());
+
 }
 
 frc2::CommandPtr
@@ -103,6 +108,14 @@ DriveSubsystem::tankDriveCommand(const frc2::CommandXboxController &gamepad) {
 
 void DriveSubsystem::resetOdometry(frc::Pose2d pose) {
   odometry.resetPose(pose);
+}
+
+units::meters_per_second_squared_t DriveSubsystem::getAcceleration() const {
+  auto accelX_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelX()));
+  auto accelY_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelY()));
+  auto accelZ_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelZ()));
+
+  return units::math::sqrt(accelX_sq + accelY_sq + accelZ_sq);
 }
 
 frc::Pose2d DriveSubsystem::getPose() const { return odometry.getPose(); }

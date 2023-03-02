@@ -4,6 +4,7 @@
 
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc2/command/button/CommandPS4Controller.h>
 
 #include <rmb/motorcontrol/feedback/AngularPositionFeedbackController.h>
 #include <rmb/motorcontrol/feedback/LinearPositionFeedbackController.h>
@@ -58,6 +59,7 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   bool armAtPosition() const;
   bool armIsRaising() const;
   bool armIsLowering() const;
+  frc2::CommandPtr manualZeroArmCommand(frc2::CommandPS4Controller& controller);
 
   /**********
    * States *

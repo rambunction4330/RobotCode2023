@@ -58,9 +58,11 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void tankDrive(const frc2::CommandXboxController& gamepad);
   frc2::CommandPtr tankDriveCommand(const frc2::CommandXboxController& gamepad);
 
+
   /************
    * Odometry *
    ************/
+  units::meters_per_second_squared_t getAcceleration() const;
   void resetOdometry(frc::Pose2d pose = frc::Pose2d());
   frc::Pose2d getPose() const;
   frc::DifferentialDriveWheelSpeeds getWheelSpeeds() const;
