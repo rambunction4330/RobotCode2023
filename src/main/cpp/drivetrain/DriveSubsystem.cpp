@@ -11,6 +11,10 @@
 #include <frc2/command/RunCommand.h>
 
 #include "drivetrain/commands/BalanceCommand.h"
+#include "units/acceleration.h"
+#include "units/length.h"
+#include "units/math.h"
+#include "units/velocity.h"
 
 DriveSubsystem::DriveSubsystem() {
   // Show the robots poition on the feild in shuffleboard.
@@ -104,6 +108,14 @@ DriveSubsystem::tankDriveCommand(const frc2::CommandXboxController &gamepad) {
 
 void DriveSubsystem::resetOdometry(frc::Pose2d pose) {
   odometry.resetPose(pose);
+}
+
+units::meters_per_second_squared_t DriveSubsystem::getAcceleration() const {
+  auto accelX_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelX()));
+  auto accelY_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelY()));
+  auto accelZ_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelZ()));
+
+  return units::math::sqrt(accelX_sq + accelY_sq + accelZ_sq);
 }
 
 frc::Pose2d DriveSubsystem::getPose() const { return odometry.getPose(); }
