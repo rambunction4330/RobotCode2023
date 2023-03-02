@@ -10,7 +10,14 @@
 #include <array>
 #include <iostream>
 
+#include <units/acceleration.h>
+#include <units/velocity.h>
+
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/DriverStation.h>
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Translation2d.h>
+
 #include <frc2/command/FunctionalCommand.h>
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/button/CommandXboxController.h>
@@ -24,15 +31,11 @@
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/controller/LogitechJoystick.h>
 
-#include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/DriveSubsystem.h"
-#include "frc/DriverStation.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/geometry/Translation2d.h"
+#include "drivetrain/commands/BalanceCommand.h"
+#include "drivetrain/commands/JTurnCommand.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawSubsystem.h"
-#include "units/acceleration.h"
-#include "units/velocity.h"
 
 #define FEILD_WIDTH 16.53_m
 
@@ -175,14 +178,13 @@ class RobotContainer {
       {"wall_put"},
       {"center_move_wall"},
       {"center_move_sub"},
-      {"center_balance", 1.0_mps, 1.0_mps_sq},
+      {"center_balance", 1.5_mps, 1.5_mps_sq},
       {"sub_move"},
       {"sub_balance"},
       {"sub_put", 1.5_mps, 1.5_mps_sq},
       {"test", 1.5_mps, 1.5_mps_sq},
     }
   };
-
 
   /****************
    * Auto Chooser *

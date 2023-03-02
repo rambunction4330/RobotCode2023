@@ -12,15 +12,26 @@
 #include <frc/trajectory/TrajectoryConfig.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc/trajectory/TrajectoryUtil.h>
+#include <frc/GenericHID.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/geometry/Transform2d.h>
+#include <frc/kinematics/ChassisSpeeds.h>
 
 #include <frc2/command/RunCommand.h>
+#include <frc2/command/CommandScheduler.h>
+#include <frc2/command/button/Trigger.h>
 
 #include <pathplanner/lib/PathPlanner.h>
+#include <pathplanner/lib/PathConstraints.h>
+#include <pathplanner/lib/PathPlannerTrajectory.h>
+#include <pathplanner/lib/PathPoint.h>
+#include <pathplanner/lib/auto/RamseteAutoBuilder.h>
 
-#include "claw/ClawConstants.h"
+#include "drivetrain/DriveSubsystem.h"
 #include "drivetrain/commands/BalanceCommand.h"
-#include "frc/GenericHID.h"
-#include "frc2/command/button/Trigger.h"
+#include "drivetrain/commands/JTurnCommand.h"
+#include "manipulator/ManipulatorSubsystem.h"
+#include "claw/ClawConstants.h"
 
 RobotContainer::RobotContainer() {
   // Configure button bindings
@@ -81,6 +92,7 @@ void RobotContainer::setTeleopDefaults() {
         using namespace ClawSubsystemConstants;
         // Leave rumble off by default.
         driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.0);
+        manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.0);
 
         // Set boost to help claw depending on button presses.
         double closeBoost = 0.0;
@@ -92,14 +104,16 @@ void RobotContainer::setTeleopDefaults() {
 
           // Ruble when applying extra closing boost.
           driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
+          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
         }
 
         // Open claw when Padddles is pressed.
-        if (driveGamepad.GetRawButton(2)) {
+        if (driveGamepad.GetRawButton(1)) {
           clawSubsystem.setClawClosed(false);
 
           // Rumble while stalling motor to open the claw.
           driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
+          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
         } else {
           // Calculate needed boost
           auto currentAcceleration = driveSubsystem.getAcceleration();
@@ -135,17 +149,14 @@ void RobotContainer::endAutoCommand() {
 
 void RobotContainer::ConfigureBindings() {
   // Manipulator Button Bindings.
-  manipulatorGamepad.R1().OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::substationState));
-  manipulatorGamepad.L1().OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::coneHighState));
-  manipulatorGamepad.Triangle().OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::cubePickupState));
-  manipulatorGamepad.Circle().OnTrue(
-      manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
-  manipulatorGamepad.Cross().OnTrue(manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::conePickupState));
-  frc2::Trigger([this]() { return manipulatorGamepad.GetPOV() == 0; })
-      .OnTrue(manipulatorSubsystem.getStateCommand(
-          ManipulatorSubsystem::coneMidState));
+  manipulatorGamepad.R1().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::substationState));
+  manipulatorGamepad.L1().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneHighState));
+  manipulatorGamepad.Triangle().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::cubePickupState));
+  manipulatorGamepad.Circle().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
+  manipulatorGamepad.Cross().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
+  frc2::Trigger([this]() { return manipulatorGamepad.GetPOV() == 0; }).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
+  manipulatorGamepad.R2().WhileTrue(manipulatorSubsystem.manualZeroArmCommand(manipulatorGamepad));
+
+  // Drive Button Bindings
+  driveGamepad.B().WhileTrue(JTurnCommand(driveSubsystem, autoBuilder).ToPtr());
 }

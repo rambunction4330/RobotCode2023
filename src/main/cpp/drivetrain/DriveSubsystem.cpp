@@ -36,11 +36,11 @@ void DriveSubsystem::arcadeDrive(const frc2::CommandXboxController &gamepad) {
   double multiplier = 0.5;
   multiplier += gamepad.GetLeftTriggerAxis() / 2.0;
   multiplier -= gamepad.GetRightTriggerAxis() / 4.0;
+  double leftY = abs(gamepad.GetLeftY()) > 0.05 ? gamepad.GetLeftY() : 0.0;
+  double rightX = abs(gamepad.GetRightX()) > 0.05 ? gamepad.GetRightX() : 0.0;
 
-  arcadeDrive(-wpi::sgn(gamepad.GetLeftY()) * std::pow(gamepad.GetLeftY(), 2) *
-                  multiplier,
-              -wpi::sgn(gamepad.GetRightX()) *
-                  std::pow(gamepad.GetRightX(), 2) * multiplier);
+  arcadeDrive(-wpi::sgn(leftY) * std::pow(leftY, 2) * multiplier,
+              -wpi::sgn(rightX) * std::pow(rightX, 2) * multiplier);
 }
 
 frc2::CommandPtr
@@ -76,6 +76,7 @@ void DriveSubsystem::curvatureDrive(
 
   curvatureDrive(gamepad.GetLeftX() * multiplier,
                  gamepad.GetRightY() * multiplier, gamepad.GetLeftBumper());
+
 }
 
 frc2::CommandPtr
