@@ -178,7 +178,7 @@ class RobotContainer {
       {"wall_put"},
       {"center_move_wall"},
       {"center_move_sub"},
-      {"center_balance", 1.0_mps, 1.0_mps_sq},
+      {"center_balance", 1.5_mps, 1.5_mps_sq},
       {"sub_move"},
       {"sub_balance"},
       {"sub_put", 1.5_mps, 1.5_mps_sq},

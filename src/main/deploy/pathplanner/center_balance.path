@@ -19,8 +19,7 @@
         "names": [
           "claw_close",
           "manipulator_cube_high",
-          "claw_open",
-          "manipulator_compact"
+          "claw_open"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -29,15 +28,15 @@
     },
     {
       "anchorPoint": {
-        "x": 3.95,
+        "x": 4.0,
         "y": 2.7388294898117573
       },
       "prevControl": {
-        "x": 2.95,
+        "x": 3.0,
         "y": 2.7388294898117573
       },
       "nextControl": {
-        "x": 4.950000000000001,
+        "x": 5.0,
         "y": 2.7388294898117573
       },
       "holonomicAngle": 0,
@@ -48,8 +47,8 @@
       "stopEvent": {
         "names": [],
         "executionBehavior": "sequential",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "before",
+        "waitTime": 0.5
       }
     },
     {
@@ -79,11 +78,11 @@
     },
     {
       "anchorPoint": {
-        "x": 3.75,
+        "x": 3.65,
         "y": 2.75
       },
       "prevControl": {
-        "x": 5.533422606210431,
+        "x": 5.433422606210431,
         "y": 2.75
       },
       "nextControl": null,
@@ -93,12 +92,22 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "drivetrain_balance"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.06498579545454553,
+      "names": [
+        "manipulator_compact",
+        "claw_close"
+      ]
+    }
+  ]
 }

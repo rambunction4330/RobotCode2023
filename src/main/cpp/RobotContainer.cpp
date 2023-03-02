@@ -26,6 +26,7 @@
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc2/command/CommandScheduler.h"
 #include "frc2/command/button/Trigger.h"
+#include "manipulator/ManipulatorSubsystem.h"
 #include "pathplanner/lib/PathConstraints.h"
 #include "pathplanner/lib/PathPlannerTrajectory.h"
 #include "pathplanner/lib/PathPoint.h"
@@ -88,7 +89,8 @@ void RobotContainer::setTeleopDefaults() {
           closeBoost = 0.6;
 
           // Ruble when applying extra closing boost.
-          driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
+          driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
+          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
         }
 
         // Open claw when Padddles is pressed.
@@ -97,6 +99,7 @@ void RobotContainer::setTeleopDefaults() {
 
           // Rumble while stalling motor to open the claw.
           driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
+          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
         } else {
 
           // Close teh claw with any relevant boosting.
@@ -125,6 +128,7 @@ void RobotContainer::ConfigureBindings() {
   manipulatorGamepad.Circle().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::compactState));
   manipulatorGamepad.Cross().OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::conePickupState));
   frc2::Trigger([this]() { return manipulatorGamepad.GetPOV() == 0; }).OnTrue(manipulatorSubsystem.getStateCommand(ManipulatorSubsystem::coneMidState));
+  manipulatorGamepad.R2().WhileTrue(manipulatorSubsystem.manualZeroArmCommand(manipulatorGamepad));
 
   // Drive Button Bindings
   driveGamepad.B().WhileTrue(JTurnCommand(driveSubsystem, autoBuilder).ToPtr());

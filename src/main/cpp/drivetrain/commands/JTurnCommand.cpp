@@ -29,21 +29,21 @@ void JTurnCommand::Initialize() {
 
   // Transforms from intial robot position between path points
   frc::Pose2d fwdStartPose = initalPose + frc::Transform2d({0.0_m, 0.0_m}, 0.0_deg);
-  frc::Pose2d fwdEndPose = initalPose + frc::Transform2d({1.0_m, 1.0_m}, 90_deg);
+  frc::Pose2d fwdEndPose = initalPose + frc::Transform2d({0.8_m, 0.8_m}, 90_deg);
 
-  frc::Pose2d revStartPose = initalPose + frc::Transform2d({1.0_m, 1.0_m}, -90_deg);
-  frc::Pose2d revEndPose = initalPose + frc::Transform2d({2.0_m, 0.0_m}, 0.0_deg);
+  frc::Pose2d revStartPose = initalPose + frc::Transform2d({0.8_m, 0.8_m}, -90_deg);
+  frc::Pose2d revEndPose = initalPose + frc::Transform2d({1.6_m, 0.0_m}, 0.0_deg);
 
   // Generate path rom points
   std::vector<pathplanner::PathPlannerTrajectory> trajectoryGroup {
     pathplanner::PathPlanner::generatePath(
-      pathplanner::PathConstraints(3.75_mps, 2.0_mps_sq), reversed,
+      pathplanner::PathConstraints(4.0_mps, 4.0_mps_sq), reversed,
       std::vector<pathplanner::PathPoint> {
         pathplanner::PathPoint(fwdStartPose.Translation(), fwdStartPose.Rotation(), robotSpeed),
         pathplanner::PathPoint(fwdEndPose.Translation(), fwdEndPose.Rotation()),
       }
     ), pathplanner::PathPlanner::generatePath(
-      pathplanner::PathConstraints(3.75_mps, 2.0_mps_sq), !reversed,
+      pathplanner::PathConstraints(4.0_mps, 4.0_mps_sq), !reversed,
       std::vector<pathplanner::PathPoint> {
         pathplanner::PathPoint(revStartPose.Translation(), revStartPose.Rotation()),
         pathplanner::PathPoint(revEndPose.Translation(), revEndPose.Rotation(), -robotSpeed)
