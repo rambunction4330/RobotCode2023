@@ -110,13 +110,11 @@ void DriveSubsystem::resetOdometry(frc::Pose2d pose) {
 }
 
 units::meters_per_second_squared_t DriveSubsystem::getAcceleration() const {
-#define gToMPS_sq(x) x * 9.8_mps_sq
-  auto accelX_sq = units::math::pow<2>(gToMPS_sq(gyro->GetWorldLinearAccelX()));
-  auto accelY_sq = units::math::pow<2>(gToMPS_sq(gyro->GetWorldLinearAccelY()));
-  auto accelZ_sq = units::math::pow<2>(gToMPS_sq(gyro->GetWorldLinearAccelZ()));
+  auto accelX_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelX()));
+  auto accelY_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelY()));
+  auto accelZ_sq = units::math::pow<2>(units::standard_gravity_t(gyro->GetWorldLinearAccelZ()));
 
   return units::math::sqrt(accelX_sq + accelY_sq + accelZ_sq);
-#undef gToMPS_sq
 }
 
 frc::Pose2d DriveSubsystem::getPose() const { return odometry.getPose(); }
