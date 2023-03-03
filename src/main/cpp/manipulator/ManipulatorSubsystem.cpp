@@ -31,7 +31,7 @@ void ManipulatorSubsystem::setArmAngle(units::radian_t angle) {
     angle, calculateArmMinPose(), calculateArmMaxPose()
   );
 
-  armMotor->setPosition(angle);
+  armMotor->setPosition(clamped);
 }
 
 void ManipulatorSubsystem::incArmAngle(units::radian_t increment) {
@@ -79,7 +79,7 @@ frc2::CommandPtr ManipulatorSubsystem::manualZeroArmCommand(frc2::CommandPS4Cont
 
 units::radian_t ManipulatorSubsystem::calculateArmMinPose() const {
   // Find hypotinus and side oposite of angle
-  units::meter_t o = getElevatorHeight() - ManipulatorConstants::minClawHeight;
+  units::meter_t o = getTargetElevatorHeight() - ManipulatorConstants::minClawHeight;
   units::meter_t h =  ManipulatorConstants::Arm::length;
 
   // Determin angle
@@ -88,7 +88,7 @@ units::radian_t ManipulatorSubsystem::calculateArmMinPose() const {
 
 units::radian_t ManipulatorSubsystem::calculateArmMaxPose() const {
   // Find hypotinus and side oposite of angle
-  units::meter_t o = ManipulatorConstants::maxClawHeight - getElevatorHeight();
+  units::meter_t o = ManipulatorConstants::maxClawHeight - getTargetElevatorHeight();
   units::meter_t h =  ManipulatorConstants::Arm::length;
 
   // Determin angle
@@ -139,8 +139,8 @@ bool ManipulatorSubsystem::elevatorIsLowering() {
 
 void ManipulatorSubsystem::setState(const ManipulatorState state) {
   // Set both states
-  setArmAngle(state.armAngle);
   setElevatorHeight(state.elevatorHeight);
+  setArmAngle(state.armAngle);
 }
 
 frc2::CommandPtr ManipulatorSubsystem::getStateCommand(

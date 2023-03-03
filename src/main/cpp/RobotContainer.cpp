@@ -94,35 +94,37 @@ void RobotContainer::setTeleopDefaults() {
         driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.0);
         manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.0);
 
-        // Set boost to help claw depending on button presses.
-        double closeBoost = 0.0;
-        if (driveGamepad.GetRightBumper()) {
-          closeBoost = (closeBoostWithoutRamp + closeBoostMax) / 2.0;
-        }
-        if (driveGamepad.GetLeftBumper()) {
-          closeBoost = closeBoostMax;
-
-          // Ruble when applying extra closing boost.
-          driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
-          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
-        }
-
         // Open claw when Padddles is pressed.
         if (driveGamepad.GetRawButton(1)) {
           clawSubsystem.setClawClosed(false);
 
           // Rumble while stalling motor to open the claw.
           driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
-          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0); 
+          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5); 
         } else {
+          // Set boost to help claw depending on button presses.
+          double closeBoost = 0.0;
+
           // Calculate needed boost
           auto currentAcceleration = driveSubsystem.getAcceleration();
-          if (currentAcceleration > closeAssistRampMinAcceleration) {
+           if (driveGamepad.GetRightBumper()) {
+            closeBoost = (closeBoostWithoutRamp + closeBoostMax) / 2.0;
+
+            // Ruble when applying extra closing boost.
+            driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
+             manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.25); 
+          } else if (driveGamepad.GetLeftBumper()) {
+            closeBoost = closeBoostMax;
+
+            // Ruble when applying extra closing boost.
+            driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
+             manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5); 
+          } else if (currentAcceleration > closeAssistRampMinAcceleration) {
             closeBoost =
                 (closeBoostMax - closeBoostWithoutRamp) /
                     (closeAssistRampMaxAcceleration -
                      closeAssistRampMinAcceleration) *
-                    (currentAcceleration - closeAssistRampMinAcceleration) +
+                    (currentAcceleration - closeAssistRampMinAcceleration) + 
                 closeBoostWithoutRamp;
 
             closeBoost = std::min(closeBoost, closeBoostMax);

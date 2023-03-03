@@ -26,8 +26,8 @@ bool ClawSubsystem::getClawClosed() const {
   return clawClosed;
 }
 
-frc2::CommandPtr ClawSubsystem::getClosedCommand(bool setClosed) {
-  return frc2::InstantCommand([this, setClosed]() { 
-           setClawClosed(setClosed); 
+frc2::CommandPtr ClawSubsystem::getClosedCommand(bool setClosed, double assistance) {
+  return frc2::InstantCommand([this, setClosed, assistance]() { 
+           setClawClosed(setClosed, assistance); 
           }, {this}).ToPtr();
 }

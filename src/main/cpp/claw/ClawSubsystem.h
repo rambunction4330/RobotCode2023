@@ -18,10 +18,10 @@ class ClawSubsystem : public frc2::SubsystemBase {
 
     ClawSubsystem();
 
-    void setClawClosed(bool isClosed, double assistance = 0.05);
+    void setClawClosed(bool isClosed, double assistance = 0.0);
     bool getClawClosed() const;
 
-    frc2::CommandPtr getClosedCommand(bool setClosed);
+    frc2::CommandPtr getClosedCommand(bool setClosed, double assistance = 0.0);
 
   private:
     ctre::phoenix::motorcontrol::can::WPI_TalonFX clawMotor {41};

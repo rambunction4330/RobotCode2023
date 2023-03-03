@@ -7,10 +7,10 @@
 
 namespace ClawSubsystemConstants {
 
-units::meters_per_second_squared_t closeAssistRampMinAcceleration = 0.5_mps_sq;
-units::meters_per_second_squared_t closeAssistRampMaxAcceleration = 1.5_mps_sq;
+units::meters_per_second_squared_t closeAssistRampMinAcceleration = 5.0_mps_sq;
+units::meters_per_second_squared_t closeAssistRampMaxAcceleration = 10.0_mps_sq;
 
-double closeBoostWithoutRamp = 0.2;
-double closeBoostMax = 0.8;
+double closeBoostWithoutRamp = 0.0;
+double closeBoostMax = 0.3;
 
 }

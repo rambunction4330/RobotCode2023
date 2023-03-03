@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "claw_close",
+          "claw_close_boost",
           "manipulator_cube_high",
           "claw_open"
         ],
@@ -53,15 +53,15 @@
     },
     {
       "anchorPoint": {
-        "x": 5.8,
+        "x": 5.5,
         "y": 2.75
       },
       "prevControl": {
-        "x": 4.622648489743722,
+        "x": 4.322648489743722,
         "y": 2.75
       },
       "nextControl": {
-        "x": 4.622648489743722,
+        "x": 4.322648489743722,
         "y": 2.75
       },
       "holonomicAngle": 0,
@@ -78,11 +78,11 @@
     },
     {
       "anchorPoint": {
-        "x": 3.65,
+        "x": 3.75,
         "y": 2.75
       },
       "prevControl": {
-        "x": 5.433422606210431,
+        "x": 5.533422606210432,
         "y": 2.75
       },
       "nextControl": null,
@@ -103,7 +103,7 @@
   ],
   "markers": [
     {
-      "position": 0.06498579545454553,
+      "position": 0.1,
       "names": [
         "manipulator_compact",
         "claw_close"

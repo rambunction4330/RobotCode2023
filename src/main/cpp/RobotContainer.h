@@ -105,12 +105,14 @@ class RobotContainer {
       ManipulatorSubsystem::conePickupState
     ).Unwrap()},
 
+
     {"manipulator_substation", manipulatorSubsystem.getStateCommand(
       ManipulatorSubsystem::substationState
     ).Unwrap()},
  
     // Claw Commands
     {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
+    {"claw_close_boost", clawSubsystem.getClosedCommand(true, 0.15).Unwrap()},
     {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()},
   };
 
@@ -178,7 +180,7 @@ class RobotContainer {
       {"wall_put"},
       {"center_move_wall"},
       {"center_move_sub"},
-      {"center_balance", 1.5_mps, 1.5_mps_sq},
+      {"center_balance", 2.0_mps, 2.0_mps_sq},
       {"sub_move"},
       {"sub_balance"},
       {"sub_put", 1.5_mps, 1.5_mps_sq},

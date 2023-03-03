@@ -38,10 +38,11 @@ private:
   frc::Pose2d offset;
 
   frc::TrapezoidProfile<units::meters>::Constraints constraints { 
-    1.0_mps, 7.0_mps_sq 
+    2.0_mps, 7.0_mps_sq 
   };
 
-  frc::PIDController balanceController {0.12, 0.175, 0.0};
+
+  frc::PIDController balanceController {0.22, 0.225, 0.0};
   units::meter_t minX = -0.4_m;
   units::meter_t maxX = 0.4_m;
 
