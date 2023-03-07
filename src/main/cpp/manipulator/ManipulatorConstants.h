@@ -9,7 +9,7 @@
 
 namespace ManipulatorConstants {
 
-const units::inch_t minClawHeight = 8_in;
+const units::inch_t minClawHeight = 2_in;
 const units::inch_t maxClawHeight = 75_in;
 
 namespace Elevator {

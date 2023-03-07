@@ -9,7 +9,7 @@
 
 ManipulatorSubsystem::ManipulatorSubsystem() {
   // Zero Arm
-  armMotor->zeroPosition(95_deg);
+  armMotor->zeroPosition(92.5_deg);
   setArmAngle(ManipulatorConstants::Arm::range.maxPosition);
   setArmAngle(ManipulatorConstants::Elevator::range.minPosition);
 
@@ -70,7 +70,7 @@ frc2::CommandPtr ManipulatorSubsystem::manualZeroArmCommand(frc2::CommandPS4Cont
     double leftY = std::abs(controller.GetRawAxis(1)) < 0.05 ? 0.0 : controller.GetRawAxis(1);
     incArmAngle(1.0_deg * -leftY);
   }, [this](bool) {
-    armMotor->zeroPosition(ManipulatorConstants::Arm::range.maxPosition + 5.0_deg);
+    armMotor->zeroPosition(ManipulatorConstants::Arm::range.maxPosition + 2.5_deg);
     armMotor->setPosition(ManipulatorConstants::Arm::range.maxPosition);
   }, []() {
     return false;

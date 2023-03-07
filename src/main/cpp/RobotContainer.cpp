@@ -20,6 +20,7 @@
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/CommandScheduler.h>
 #include <frc2/command/button/Trigger.h>
+#include <frc2/command/ScheduleCommand.h>
 
 #include <pathplanner/lib/PathPlanner.h>
 #include <pathplanner/lib/PathConstraints.h>
@@ -30,6 +31,8 @@
 #include "drivetrain/DriveSubsystem.h"
 #include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/commands/JTurnCommand.h"
+#include "autoalignment/Autoalignment.h"
+#include "frc2/command/InstantCommand.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawConstants.h"
 
@@ -74,7 +77,7 @@ void RobotContainer::setTeleopDefaults() {
         double leftY = std::abs(manipulatorGamepad.GetRawAxis(1)) < 0.05
                            ? 0.0
                            : manipulatorGamepad.GetRawAxis(1);
-        manipulatorSubsystem.incArmAngle(1.0_deg * -leftY);
+        manipulatorSubsystem.incArmAngle(0.5_deg * -leftY);
 
         // Dead zones
         double rightY = std::abs(manipulatorGamepad.GetRawAxis(5)) < 0.05
@@ -82,7 +85,7 @@ void RobotContainer::setTeleopDefaults() {
                             : manipulatorGamepad.GetRawAxis(5);
         manipulatorSubsystem.setElevatorHeight(
             manipulatorSubsystem.getTargetElevatorHeight() +
-            (1.5_in * -rightY));
+            (1.0_in * -rightY));
       },
       {&manipulatorSubsystem}));
 
@@ -126,6 +129,8 @@ void RobotContainer::setTeleopDefaults() {
                      closeAssistRampMinAcceleration) *
                     (currentAcceleration - closeAssistRampMinAcceleration) + 
                 closeBoostWithoutRamp;
+            
+            closeBoost = boostFilter.Calculate(closeBoost);
 
             closeBoost = std::min(closeBoost, closeBoostMax);
           } else {
@@ -160,5 +165,5 @@ void RobotContainer::ConfigureBindings() {
   manipulatorGamepad.R2().WhileTrue(manipulatorSubsystem.manualZeroArmCommand(manipulatorGamepad));
 
   // Drive Button Bindings
-  driveGamepad.B().WhileTrue(JTurnCommand(driveSubsystem, autoBuilder).ToPtr());
+  /*driveGamepad.B().WhileTrue(autoalignment::AutoAlignmentCommand(driveSubsystem, autoBuilder).ToPtr());*/
 }

@@ -44,4 +44,32 @@ enum FieldLocation {
 frc2::CommandPtr
 createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoBuilder, pathplanner::PathConstraints constraints, FieldLocation location, DriveSubsystem& driveSubsystem);
 
+class AutoAlignmentCommand : 
+public frc2::CommandHelper<frc2::CommandBase, AutoAlignmentCommand> {
+ public:
+  AutoAlignmentCommand(DriveSubsystem& driveSubsystem, pathplanner::RamseteAutoBuilder& autoBuilder) :
+      driveSubsystem(driveSubsystem), autoBuilder(autoBuilder) {}
+
+  void Initialize() override {
+    trajectoryCommand = createAutoalignmentCommand(autoBuilder, {1.0_mps, 1.5_mps_sq}, FieldLocationTag8Positive, driveSubsystem).Unwrap();
+    trajectoryCommand->Initialize();
+  }
+
+  void Execute() override {
+    trajectoryCommand->Execute();
+  }
+
+  void End(bool interrupted) override {
+    trajectoryCommand->End(interrupted);
+  }
+
+  bool IsFinished() override {
+    return trajectoryCommand->IsFinished();
+  }
+
+ private:
+  DriveSubsystem& driveSubsystem;
+  pathplanner::RamseteAutoBuilder& autoBuilder;
+  std::unique_ptr<frc2::Command> trajectoryCommand = frc2::PrintCommand("ERROR\n").ToPtr().Unwrap();
+};
 } // namespace autoalignment

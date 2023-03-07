@@ -34,6 +34,7 @@
 #include "drivetrain/DriveSubsystem.h"
 #include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/commands/JTurnCommand.h"
+#include "frc/filter/LinearFilter.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawSubsystem.h"
 
@@ -114,6 +115,8 @@ class RobotContainer {
     {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
     {"claw_close_boost", clawSubsystem.getClosedCommand(true, 0.15).Unwrap()},
     {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()},
+
+    {"pause", frc2::WaitCommand(0.5_s).ToPtr().Unwrap()},
   };
 
   // Auto Builder
@@ -159,8 +162,12 @@ class RobotContainer {
       // Reset to transformed position.
       driveSubsystem.resetOdometry(frc::Pose2d(translation, rotation)); 
     }, DriveConstants::ramseteController, DriveConstants::kinematics,
-    [this](units::meters_per_second_t left, units::meters_per_second_t right) { 
-      driveSubsystem.driveWheelSpeeds(left, right); 
+    [this](units::meters_per_second_t left, units::meters_per_second_t right) {
+      if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) { 
+        driveSubsystem.driveWheelSpeeds(left, right); 
+      } else {
+        driveSubsystem.driveWheelSpeeds(right, left); 
+      }
     }, eventMap, {&driveSubsystem}, false
   };
 
@@ -173,17 +180,18 @@ class RobotContainer {
   };
 
   // List of possible autos and relevant configs.
-  std::array<AutoConfiguration, 10> autoNames {
+  std::array<AutoConfiguration, 11> autoNames {
     {
       {"wall_move"},
       {"wall_balance"},
-      {"wall_put"},
+      {"wall_put", 2.0_mps, 2.0_mps_sq},
       {"center_move_wall"},
       {"center_move_sub"},
-      {"center_balance", 2.0_mps, 2.0_mps_sq},
+      {"center_balance", 1.0_mps, 1.0_mps_sq},
       {"sub_move"},
       {"sub_balance"},
       {"sub_put", 1.5_mps, 1.5_mps_sq},
+      {"sub_put_cone", 2.0_mps, 2.5_mps_sq},
       {"test", 1.5_mps, 1.5_mps_sq},
     }
   };
@@ -194,6 +202,8 @@ class RobotContainer {
   frc2::CommandPtr noAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
   std::vector<frc2::CommandPtr> autoCommands;
   frc2::Command* currentAuto = noAutoCommand.get();
+
+  frc::LinearFilter<double> boostFilter = frc::LinearFilter<double>::MovingAverage(50);
 
   frc::SendableChooser<frc2::Command*> autonomousChooser;
 };

@@ -28,7 +28,7 @@ void BalanceCommand::Execute() {
   double feedback = -driveSubsystem.getRobotPitch().to<double>() - 0.06;
 
   // Clamp small angles to zero
-  if (abs(feedback) < 0.005) { feedback = 0.0; }
+  if (abs(feedback) < 0.0005) { feedback = 0.0; }
 
   // Calculate positon from PID and clamp to limits
   units::meter_t goal = units::meter_t(balanceController.Calculate(feedback));
@@ -48,7 +48,7 @@ void BalanceCommand::Execute() {
 
   // Conditionaly start a timer if the robot is balanced. If not the timer is 
   // reset. After 2 seconds of being balanced teh command will end.
-  if (units::math::abs(driveSubsystem.getRobotPitch()) < 2.5_deg) {
+  if (units::math::abs(driveSubsystem.getRobotPitch()) < 1.5_deg) {
     balanceTimer.Start();
   } else {
     balanceTimer.Stop();

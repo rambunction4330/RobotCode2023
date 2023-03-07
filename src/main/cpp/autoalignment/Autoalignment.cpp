@@ -28,25 +28,25 @@ const units::meter_t redAlliancePastChargingStationThresholdYPositive = 4.54_m;
 const units::meter_t redAlliancePastChargingStationThresholdYNegative = 0.98_m;
 
 const static frc::Pose2d pose8Negative =
-    frc::Pose2d(frc::Translation2d(1.92_m, 0.45_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 0.45_m), frc::Rotation2d(180.0_deg));
 const static frc::Pose2d pose8Center =
-    frc::Pose2d(frc::Translation2d(1.92_m, 1.06_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 1.06_m), frc::Rotation2d(180.0_deg));
 const static frc::Pose2d pose8Positive =
-    frc::Pose2d(frc::Translation2d(1.92_m, 1.63_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 1.63_m), frc::Rotation2d(180.0_deg));
 
 const static frc::Pose2d pose7Negative =
-    frc::Pose2d(frc::Translation2d(1.92_m, 2.21_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 2.21_m), frc::Rotation2d(180.0_deg));
 const static frc::Pose2d pose7Center =
-    frc::Pose2d(frc::Translation2d(1.92_m, 2.75_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 2.75_m), frc::Rotation2d(180.0_deg));
 const static frc::Pose2d pose7Positive =
-    frc::Pose2d(frc::Translation2d(1.92_m, 3.31_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 3.31_m), frc::Rotation2d(180.0_deg));
 
 const static frc::Pose2d pose6Negative =
-    frc::Pose2d(frc::Translation2d(1.92_m, 3.86_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 3.86_m), frc::Rotation2d(180.0_deg));
 const static frc::Pose2d pose6Center =
-    frc::Pose2d(frc::Translation2d(1.92_m, 4.41_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 4.41_m), frc::Rotation2d(180.0_deg));
 const static frc::Pose2d pose6Positive =
-    frc::Pose2d(frc::Translation2d(1.92_m, 5.04_m), frc::Rotation2d(0.0_rad));
+    frc::Pose2d(frc::Translation2d(2.5_m, 5.04_m), frc::Rotation2d(180.0_deg));
 
 const static frc::Pose2d pose3Negative =
     frc::Pose2d(frc::Translation2d(14.61_m, 0.41_m), frc::Rotation2d(0.0_rad));
@@ -120,9 +120,9 @@ autoalignment::createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoB
   auto team = frc::DriverStation::GetAlliance();
   std::vector<pathplanner::PathPoint> pathPoints;
   frc::Pose2d currentPose = driveSubsystem.getPose();
+  pathPoints.push_back({currentPose.Translation(), currentPose.Rotation()});
 
   if (team == frc::DriverStation::Alliance::kBlue) {
-    auto currentPose = driveSubsystem.getPose();
     const units::meter_t chargingStationHorizontalBisectionLineY =
         (blueAlliancePastChargingStationThresholdYPositive +
          blueAlliancePastChargingStationThresholdYNegative) /
@@ -139,7 +139,7 @@ autoalignment::createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoB
 
       pathPoints.push_back(pathplanner::PathPoint(
           frc::Translation2d(targetXPos, targetSideOfChargingStationYPos),
-          frc::Rotation2d(0.0_deg)));
+          frc::Rotation2d(180.0_deg)));
     }
 
     if (currentPose.X() > blueAllianceBeforeChargingStationThresholdX) {
@@ -147,7 +147,7 @@ autoalignment::createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoB
           blueAllianceBeforeChargingStationThresholdX;
       pathPoints.push_back(pathplanner::PathPoint(
           frc::Translation2d(targetXPos, targetSideOfChargingStationYPos),
-          frc::Rotation2d(0.0_deg)));
+          frc::Rotation2d(180.0_deg)));
     }
 
     pathPoints.push_back(pathplanner::PathPoint(
@@ -171,7 +171,7 @@ autoalignment::createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoB
 
       pathPoints.push_back(pathplanner::PathPoint(
           frc::Translation2d(targetXPos, targetSideOfChargingStationYPos),
-          frc::Rotation2d(180.0_deg)));
+          frc::Rotation2d(0.0_deg)));
     }
 
     if (currentPose.X() < redAllianceBeforeChargingStationThresholdX) {
@@ -179,7 +179,7 @@ autoalignment::createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoB
           redAllianceBeforeChargingStationThresholdX;
       pathPoints.push_back(pathplanner::PathPoint(
           frc::Translation2d(targetXPos, targetSideOfChargingStationYPos),
-          frc::Rotation2d(180.0_deg)));
+          frc::Rotation2d(0.0_deg)));
     }
 
     pathPoints.push_back(pathplanner::PathPoint(
@@ -194,5 +194,5 @@ autoalignment::createAutoalignmentCommand(pathplanner::RamseteAutoBuilder& autoB
           pathConstraints, pathPoints);
 
 
-  return autoBuilder.fullAuto(trajectory);
+  return autoBuilder.followPath(trajectory);
 }

@@ -7,6 +7,8 @@
 #include <cmath>
 #include <iostream>
 
+#include <frc/filter/LinearFilter.h>
+
 #include <frc2/command/RamseteCommand.h>
 #include <frc2/command/RunCommand.h>
 

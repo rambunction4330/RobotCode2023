@@ -56,7 +56,7 @@ namespace DriveConstants {
 
   static const frc::RamseteController ramseteController {
     units::unit_t<frc::RamseteController::b_unit>(1.0) /* <- b */,
-    units::unit_t<frc::RamseteController::zeta_unit>(0.9) /* <- zeta */ 
+    units::unit_t<frc::RamseteController::zeta_unit>(0.7) /* <- zeta */ 
   };
 
   static frc::DifferentialDriveKinematics kinematics{ 27.875_in };

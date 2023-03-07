@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 1.85,
-        "y": 1.05
+        "y": 3.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8499999999999996,
-        "y": 1.05
+        "x": 2.0832308070866143,
+        "y": 3.851044471255609
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -28,16 +28,16 @@
     },
     {
       "anchorPoint": {
-        "x": 3.95,
-        "y": 0.65
+        "x": 3.35,
+        "y": 4.7
       },
       "prevControl": {
-        "x": 3.47450196520659,
-        "y": 0.65
+        "x": 2.552643369175627,
+        "y": 4.388413078909491
       },
       "nextControl": {
-        "x": 5.351351096099883,
-        "y": 0.65
+        "x": 4.022222679756843,
+        "y": 4.962687719616871
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -53,16 +53,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.4,
-        "y": 2.0
+        "x": 4.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 5.416929574831373,
-        "y": 1.137433898131685
+        "x": 4.0,
+        "y": 5.204955045637713
       },
       "nextControl": {
-        "x": 5.416929574831373,
-        "y": 1.137433898131685
+        "x": 4.0,
+        "y": 5.204955045637713
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -78,16 +78,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.0,
-        "y": 0.85
+        "x": 5.55,
+        "y": 4.9
       },
       "prevControl": {
-        "x": 5.678355852050871,
-        "y": 0.9799526711578513
+        "x": 4.517752002293024,
+        "y": 5.026744117141353
       },
       "nextControl": {
-        "x": 5.678355852050871,
-        "y": 0.9799526711578513
+        "x": 4.517752002293024,
+        "y": 5.026744117141353
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -96,7 +96,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "manipulator_cube_pickup",
+          "manipulator_cone_pickup",
           "claw_close_boost",
           "pause",
           "manipulator_compact"
@@ -108,16 +108,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.4,
-        "y": 2.0
+        "x": 4.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 5.4,
-        "y": 1.1352538843659365
+        "x": 4.044673662263992,
+        "y": 4.206504838356898
       },
       "nextControl": {
-        "x": 5.4,
-        "y": 1.1352538843659365
+        "x": 4.044673662263992,
+        "y": 4.206504838356898
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -125,45 +125,25 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "manipulator_cube_high",
+          "claw_open",
+          "manipulator_compact",
+          "claw_close"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 3.95,
-        "y": 0.65
+        "x": 1.8,
+        "y": 4.75
       },
       "prevControl": {
-        "x": 5.332995871603277,
-        "y": 0.6499999999999999
-      },
-      "nextControl": {
-        "x": 2.972334277071071,
-        "y": 0.6500000000000001
-      },
-      "holonomicAngle": 0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 2.1,
-        "y": 0.95
-      },
-      "prevControl": {
-        "x": 2.697350031795278,
-        "y": 0.95
+        "x": 2.3228389380745824,
+        "y": 4.75
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -173,10 +153,10 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "manipulator_cube_mid",
+          "manipulator_cube_high",
           "claw_open",
-          "manipulator_compact",
-          "claw_close"
+          "pause",
+          "manipulator_compact"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -185,19 +165,19 @@
     }
   ],
   "maxVelocity": 2.0,
-  "maxAcceleration": 1.75,
+  "maxAcceleration": 2.0,
   "isReversed": true,
   "markers": [
     {
-      "position": 0.1,
+      "position": 0.05,
       "names": [
         "manipulator_compact"
       ]
     },
     {
-      "position": 5.7,
+      "position": 2.9,
       "names": [
-        "manipulator_cube_mid"
+        "manipulator_cone_pickup"
       ]
     }
   ]
