@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 1.85,
-        "y": 1.05
+        "y": 2.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8499999999999988,
-        "y": 1.05
+        "x": 2.255631174401119,
+        "y": 2.2
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -17,30 +17,55 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "claw_close",
+          "claw_close_boost",
           "manipulator_cube_high",
           "claw_open"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "after",
+        "waitTime": 0.2
       }
     },
     {
       "anchorPoint": {
-        "x": 3.95,
-        "y": 0.75
+        "x": 4.4,
+        "y": 2.2
       },
       "prevControl": {
-        "x": 2.682092798638781,
-        "y": 0.75
+        "x": 3.4000000000000004,
+        "y": 2.2
       },
       "nextControl": {
-        "x": 4.705368442276736,
-        "y": 0.75
+        "x": 5.4,
+        "y": 2.2
       },
       "holonomicAngle": 0,
       "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "sequential",
+        "waitBehavior": "before",
+        "waitTime": 0.5
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.75,
+        "y": 2.2
+      },
+      "prevControl": {
+        "x": 4.572648489743722,
+        "y": 2.2
+      },
+      "nextControl": {
+        "x": 4.572648489743722,
+        "y": 2.2
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -53,37 +78,12 @@
     },
     {
       "anchorPoint": {
-        "x": 5.5,
-        "y": 2.0
+        "x": 3.75,
+        "y": 2.2
       },
       "prevControl": {
-        "x": 5.5,
-        "y": 1.5414248360901963
-      },
-      "nextControl": {
-        "x": 5.5,
-        "y": 1.5414248360901963
-      },
-      "holonomicAngle": 0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "sequential",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 6.3,
-        "y": 0.95
-      },
-      "prevControl": {
-        "x": 5.903365004861605,
-        "y": 0.95
+        "x": 5.533422606210432,
+        "y": 2.2
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -92,21 +92,21 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "drivetrain_balance"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "maxVelocity": 1.5,
-  "maxAcceleration": 2.0,
-  "isReversed": true,
   "markers": [
     {
       "position": 0.1,
       "names": [
-        "manipulator_compact"
+        "manipulator_compact",
+        "claw_close"
       ]
     }
   ]

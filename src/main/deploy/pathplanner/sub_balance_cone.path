@@ -1,0 +1,116 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8493653515084807,
+        "y": 3.881424316668078
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.597801941290026,
+        "y": 3.881424316668078
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "claw_close_boost",
+          "manipulator_cube_high",
+          "claw_open"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0.2
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.95,
+        "y": 4.7
+      },
+      "prevControl": {
+        "x": 2.0082004343637214,
+        "y": 4.7
+      },
+      "nextControl": {
+        "x": 5.730617216102016,
+        "y": 4.7
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.0,
+        "y": 3.4
+      },
+      "prevControl": {
+        "x": 5.533153940749845,
+        "y": 3.3882218839958513
+      },
+      "nextControl": {
+        "x": 5.533153940749845,
+        "y": 3.3882218839958513
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.7,
+        "y": 3.4
+      },
+      "prevControl": {
+        "x": 4.7970310934596085,
+        "y": 3.4
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "drivetrain_balance"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 2.0,
+  "isReversed": true,
+  "markers": [
+    {
+      "position": 0.1,
+      "names": [
+        "manipulator_compact",
+        "claw_close"
+      ]
+    }
+  ]
+}

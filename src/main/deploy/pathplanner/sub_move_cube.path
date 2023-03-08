@@ -1,0 +1,61 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.85,
+        "y": 4.45
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8499999999999996,
+        "y": 4.45
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "claw_close",
+          "manipulator_cube_high",
+          "claw_open"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.2,
+        "y": 4.65
+      },
+      "prevControl": {
+        "x": 5.804040441097269,
+        "y": 4.65
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.1,
+      "names": [
+        "event",
+        "manipulator_compact"
+      ]
+    }
+  ]
+}

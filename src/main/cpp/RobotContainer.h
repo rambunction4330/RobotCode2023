@@ -116,7 +116,7 @@ class RobotContainer {
     {"claw_close_boost", clawSubsystem.getClosedCommand(true, 0.15).Unwrap()},
     {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()},
 
-    {"pause", frc2::WaitCommand(0.5_s).ToPtr().Unwrap()},
+    {"pause", frc2::WaitCommand(0.2_s).ToPtr().Unwrap()},
   };
 
   // Auto Builder
@@ -180,19 +180,23 @@ class RobotContainer {
   };
 
   // List of possible autos and relevant configs.
-  std::array<AutoConfiguration, 11> autoNames {
+  std::array<AutoConfiguration, 15> autoNames {
     {
-      {"wall_move"},
-      {"wall_balance"},
-      {"wall_put", 2.0_mps, 2.0_mps_sq},
-      {"center_move_wall"},
-      {"center_move_sub"},
-      {"center_balance", 1.0_mps, 1.0_mps_sq},
-      {"sub_move"},
-      {"sub_balance"},
-      {"sub_put", 1.5_mps, 1.5_mps_sq},
-      {"sub_put_cone", 2.0_mps, 2.5_mps_sq},
-      {"test", 1.5_mps, 1.5_mps_sq},
+      {"wall_move_cube"},
+      {"wall_move_cone"},
+      {"wall_balance_cube"},
+      {"wall_balance_cone"},
+      {"center_move_wall_cube"},
+      {"center_move_wall_cone"},
+      {"center_move_sub_cube"},
+      {"center_move_sub_cone"},
+      {"center_balance_cube", 1.0_mps, 1.0_mps_sq},
+      {"center_balance_cone", 1.0_mps, 1.0_mps_sq},
+      {"sub_move_cube"},
+      {"sub_move_cone"},
+      {"sub_balance_cube"},
+      {"sub_balance_cone"},
+      {"sub_put_cone", 3.0_mps, 3.0_mps_sq},
     }
   };
 
