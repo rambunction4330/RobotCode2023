@@ -116,7 +116,7 @@ class RobotContainer {
     {"claw_close_boost", clawSubsystem.getClosedCommand(true, 0.15).Unwrap()},
     {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()},
 
-    {"pause", frc2::WaitCommand(0.2_s).ToPtr().Unwrap()},
+    {"pause", frc2::WaitCommand(0.7_s).ToPtr().Unwrap()},
   };
 
   // Auto Builder
@@ -190,13 +190,13 @@ class RobotContainer {
       {"center_move_wall_cone"},
       {"center_move_sub_cube"},
       {"center_move_sub_cone"},
-      {"center_balance_cube", 1.0_mps, 1.0_mps_sq},
-      {"center_balance_cone", 1.0_mps, 1.0_mps_sq},
+      {"center_balance_cube", 1.0_mps, 0.75_mps_sq},
+      {"center_balance_cone", 1.0_mps, 0.75_mps_sq},
       {"sub_move_cube"},
       {"sub_move_cone"},
       {"sub_balance_cube"},
       {"sub_balance_cone"},
-      {"sub_put_cone", 3.0_mps, 3.0_mps_sq},
+      {"sub_put_cone", 3.0_mps, 2.8_mps_sq},
     }
   };
 

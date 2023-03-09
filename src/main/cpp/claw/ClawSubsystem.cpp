@@ -6,14 +6,14 @@
 
 ClawSubsystem::ClawSubsystem() {
   clawMotor.ConfigFactoryDefault();
-  clawMotor.ConfigStatorCurrentLimit({true, 50, 0, 0});
+  clawMotor.ConfigStatorCurrentLimit({true, 60, 0, 0});
 }
 
 void ClawSubsystem::Periodic() {
   if (clawClosed) { 
     clawMotor.Set(currentAssistance);
   } else {
-    clawMotor.Set(-0.7);
+    clawMotor.Set(-0.8);
   }
 }
 
