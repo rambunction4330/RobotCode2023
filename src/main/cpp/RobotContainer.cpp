@@ -16,6 +16,7 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Transform2d.h>
 #include <frc/kinematics/ChassisSpeeds.h>
+#include <frc/shuffleboard/BuiltInWidgets.h>
 
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/CommandScheduler.h>
@@ -32,6 +33,7 @@
 #include "drivetrain/commands/BalanceCommand.h"
 #include "drivetrain/commands/JTurnCommand.h"
 #include "autoalignment/Autoalignment.h"
+#include "frc/smartdashboard/SmartDashboard.h"
 #include "frc2/command/InstantCommand.h"
 #include "manipulator/ManipulatorSubsystem.h"
 #include "claw/ClawConstants.h"
@@ -103,7 +105,7 @@ void RobotContainer::setTeleopDefaults() {
 
           // Rumble while stalling motor to open the claw.
           driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 1.0);
-          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5); 
+          manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.75); 
         } else {
           // Set boost to help claw depending on button presses.
           double closeBoost = 0.0;
@@ -115,7 +117,7 @@ void RobotContainer::setTeleopDefaults() {
 
             // Ruble when applying extra closing boost.
             driveGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
-             manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.25); 
+             manipulatorGamepad.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.4); 
           } else if (driveGamepad.GetLeftBumper()) {
             closeBoost = closeBoostMax;
 
@@ -139,6 +141,7 @@ void RobotContainer::setTeleopDefaults() {
 
           clawSubsystem.setClawClosed(true, closeBoost);
         }
+        frc::SmartDashboard::PutBoolean("Claw Closed", clawSubsystem.getClawClosed());
       },
       {&clawSubsystem}));
 }

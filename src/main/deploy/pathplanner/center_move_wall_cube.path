@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "claw_close",
+          "claw_close_boost",
           "manipulator_cube_high",
           "claw_open"
         ],
