@@ -180,7 +180,7 @@ class RobotContainer {
   };
 
   // List of possible autos and relevant configs.
-  std::array<AutoConfiguration, 15> autoNames {
+  std::vector<AutoConfiguration> autoNames {
     {
       {"wall_move_cube"},
       {"wall_move_cone"},
@@ -190,13 +190,14 @@ class RobotContainer {
       {"center_move_wall_cone"},
       {"center_move_sub_cube"},
       {"center_move_sub_cone"},
-      {"center_balance_cube", 1.0_mps, 0.75_mps_sq},
-      {"center_balance_cone", 1.0_mps, 0.75_mps_sq},
+      {"center_balance_cube", 1.25_mps, 0.75_mps_sq},
+      {"center_balance_cone", 1.25_mps, 0.75_mps_sq},
       {"sub_move_cube"},
       {"sub_move_cone"},
       {"sub_balance_cube"},
       {"sub_balance_cone"},
       {"sub_put_cone", 3.0_mps, 2.8_mps_sq},
+      {"center_stay_cube", 0.1_mps, 0.001_mps_sq}
     }
   };
 
