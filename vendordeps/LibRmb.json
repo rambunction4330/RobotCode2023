@@ -1,0 +1,26 @@
+{
+    "fileName": "LibRmb.json",
+    "name": "LibRmb",
+    "version": "2023.0.0",
+    "uuid": "abcaeed8-c3ff-11ed-afa1-0242ac120002",
+    "mavenUrls": [
+        "https://raw.githubusercontent.com/rambunction4330/librmb/gh-pages/repos/releases"
+    ],
+    "jsonUrl": "https://rambunction4330.github.io/librmb/vendordep/LibRmb.json",
+    "javaDependencies": [],
+    "jniDependencies": [],
+    "cppDependencies": [
+        {
+            "groupId": "com.rambunction4330.lib",
+            "artifactId": "LibRmb-cpp",
+            "version": "2023.0.0",
+            "libName": "LibRmb",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxathena"
+            ]
+        }
+    ]
+}
