@@ -19,10 +19,10 @@ to locate the robots position on the feild.
 We uses gradle, as is standard in FRC, so the project can be built for testing with 
 the command:
 ```
-~$ ./gradlew build
+$ ./gradlew build
 ```
 
 Additionaly it deploys to the robot with:
 ```
-~$ ./gradlew deploy
+$ ./gradlew deploy
 ```
