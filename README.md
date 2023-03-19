@@ -9,6 +9,12 @@ The project heavily relies on our teams own library,
 functionality such as motor control and drivtrain. It is incorperated into
 this project as a vendor dependency.
 
+The computer vision section of the 2023 robot code that ran on a RaspberryPi 
+co-processor can be found
+[here](https://github.com/rambunction4330/Vision2023).
+It uses [AprilTags](https://github.com/AprilRobotics/apriltag)
+to locate the robots position on the feild.
+
 ## Building
 We uses gradle, as is standard in FRC, so the project can be built for testing with 
 the command:
