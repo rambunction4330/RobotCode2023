@@ -109,7 +109,7 @@ DriveSubsystem::tankDriveCommand(const frc2::CommandXboxController &gamepad) {
 }
 
 void DriveSubsystem::resetOdometry(frc::Pose2d pose) {
-  odometry.resetPose(pose);
+  drive.resetPose(pose);
 }
 
 units::meters_per_second_squared_t DriveSubsystem::getAcceleration() const {
@@ -120,10 +120,10 @@ units::meters_per_second_squared_t DriveSubsystem::getAcceleration() const {
   return units::math::sqrt(accelX_sq + accelY_sq + accelZ_sq);
 }
 
-frc::Pose2d DriveSubsystem::getPose() const { return odometry.getPose(); }
+frc::Pose2d DriveSubsystem::getPose() const { return drive.getPose(); }
 
 frc::DifferentialDriveWheelSpeeds DriveSubsystem::getWheelSpeeds() const {
-  return {left->getVelocity(), right->getVelocity()};
+  return drive.getWheelSpeeds();
 }
 
 frc::ChassisSpeeds DriveSubsystem::getChassisSpeeds() const {
@@ -131,8 +131,7 @@ frc::ChassisSpeeds DriveSubsystem::getChassisSpeeds() const {
 }
 
 void DriveSubsystem::stop() {
-  left->stop();
-  right->stop();
+  drive.tankDrive(0.0, 0.0);
 }
 
 void DriveSubsystem::driveWheelSpeeds(units::meters_per_second_t left,
@@ -160,5 +159,5 @@ frc2::CommandPtr DriveSubsystem::getBalanceCommand() {
 
 void DriveSubsystem::Periodic() {
   // Update odometry while sending the new positon to  shuffleboard.
-  displayFeild.SetRobotPose(odometry.updatePose());
+  displayFeild.SetRobotPose(drive.updatePose());
 }

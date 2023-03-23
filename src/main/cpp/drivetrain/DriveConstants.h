@@ -5,10 +5,8 @@
 
 #include <AHRS.h>
 
-#include <rmb/motorcontrol/feedback/LinearVelocityFeedbackController.h>
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 #include <rmb/drive/DifferentialDrive.h>
-#include <rmb/drive/DifferentialOdometry.h>
 
 namespace DriveConstants {
 

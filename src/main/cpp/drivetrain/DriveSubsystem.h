@@ -24,10 +24,9 @@
 
 #include <pathplanner/lib/PathPlannerTrajectory.h>
 
-#include <rmb/motorcontrol/feedback/LinearVelocityFeedbackController.h>
+#include <rmb/motorcontrol/LinearVelocityController.h>
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 #include <rmb/drive/DifferentialDrive.h>
-#include <rmb/drive/DifferentialOdometry.h>
 
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/controller/LogitechJoystick.h>
@@ -88,49 +87,45 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
-  std::shared_ptr<rmb::LinearVelocityFeedbackController> left {
-    rmb::asLinear(
-      (std::shared_ptr<rmb::AngularVelocityFeedbackController>)
-      std::make_shared<rmb::SparkMaxVelocityController>(
-        DriveConstants::leftLeader, DriveConstants::pidConfig, 
-        DriveConstants::profileConfig, DriveConstants::feedbackConfig, 
-        std::initializer_list<
-        const rmb::SparkMaxVelocityController::MotorConfig>{
-          DriveConstants::leftFollower
-        }
-      ),
-      DriveConstants::wheelDiameter / 2.0_rad
-    )
-  };
-
-  std::shared_ptr<rmb::LinearVelocityFeedbackController> right {
-    rmb::asLinear(
-      (std::shared_ptr<rmb::AngularVelocityFeedbackController>)
-      std::make_shared<rmb::SparkMaxVelocityController>(
-        DriveConstants::rightLeader, DriveConstants::pidConfig, 
-        DriveConstants::profileConfig, DriveConstants::feedbackConfig, 
-        std::initializer_list<
-        const rmb::SparkMaxVelocityController::MotorConfig>{
-          DriveConstants::rightFollower
-        }
-      ), 
-      DriveConstants::wheelDiameter / 2.0_rad
-    )
-  };
-
-  rmb::DifferentialDrive drive { 
-    left, right, DriveConstants::kinematics 
-  };
 
   std::shared_ptr<AHRS> gyro  {
     std::make_shared<AHRS>(DriveConstants::gyroPort)
   }; 
 
-  rmb::DifferentialOdometry odometry { 
-    left, right, 
-    DriveConstants::kinematics, 
-    gyro,
-   /*DriveConstants::visionTableString*/
+  rmb::DifferentialDrive drive { 
+    rmb::asLinear(
+      std::make_unique<rmb::SparkMaxVelocityController>(
+        rmb::SparkMaxVelocityController::CreateInfo {
+          DriveConstants::leftLeader, 
+          DriveConstants::pidConfig, 
+          DriveConstants::profileConfig, 
+          DriveConstants::feedbackConfig, 
+          std::initializer_list<
+          const rmb::SparkMaxVelocityController::MotorConfig>{
+            DriveConstants::leftFollower
+          }
+        }
+      ),
+      DriveConstants::wheelDiameter / 2.0_rad
+    ), 
+    rmb::asLinear(
+      std::make_unique<rmb::SparkMaxVelocityController>(
+        rmb::SparkMaxVelocityController::CreateInfo {
+          DriveConstants::rightLeader, 
+          DriveConstants::pidConfig, 
+          DriveConstants::profileConfig, 
+          DriveConstants::feedbackConfig, 
+          std::initializer_list<const rmb::SparkMaxVelocityController::MotorConfig>{
+            DriveConstants::rightFollower
+          }
+        }
+      ), 
+      DriveConstants::wheelDiameter / 2.0_rad
+    ),
+    gyro, 
+    DriveConstants::kinematics,
+    DriveConstants::ramseteController,
+    DriveConstants::visionTableString
   };
 
   frc::Field2d displayFeild; 

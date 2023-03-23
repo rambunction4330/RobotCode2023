@@ -6,8 +6,8 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandPS4Controller.h>
 
-#include <rmb/motorcontrol/feedback/AngularPositionFeedbackController.h>
-#include <rmb/motorcontrol/feedback/LinearPositionFeedbackController.h>
+#include <rmb/motorcontrol/AngularPositionController.h>
+#include <rmb/motorcontrol/LinearPositionController.h>
 #include <rmb/motorcontrol/sparkmax/SparkMaxPositionController.h>
 
 #include "manipulator/ManipulatorConstants.h"
@@ -73,19 +73,20 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   /************
    * Elevator *
    ************/
-  std::shared_ptr<rmb::LinearPositionFeedbackController> elevatorMotor {
+  std::unique_ptr<rmb::LinearPositionController> elevatorMotor {
     rmb::asLinear(
-      (std::shared_ptr<rmb::AngularPositionFeedbackController>)
-      std::make_shared<rmb::SparkMaxPositionController>(
-        ManipulatorConstants::Elevator::leader,
-        ManipulatorConstants::Elevator::pidConfig,
-        ManipulatorConstants::Elevator::feedforward,
-        ManipulatorConstants::Elevator::range,
-        ManipulatorConstants::Elevator::profileConfig,
-        ManipulatorConstants::Elevator::feedbackConfig,
-        std::initializer_list<
-        const rmb::SparkMaxPositionController::MotorConfig>{
-          ManipulatorConstants::Elevator::follower
+      std::make_unique<rmb::SparkMaxPositionController>(
+        rmb::SparkMaxPositionController::CreateInfo {
+          ManipulatorConstants::Elevator::leader,
+          ManipulatorConstants::Elevator::pidConfig,
+          ManipulatorConstants::Elevator::feedforward,
+          ManipulatorConstants::Elevator::range,
+          ManipulatorConstants::Elevator::profileConfig,
+          ManipulatorConstants::Elevator::feedbackConfig,
+          std::initializer_list<
+          const rmb::SparkMaxPositionController::MotorConfig>{
+            ManipulatorConstants::Elevator::follower
+          }
         }
       ),
       ManipulatorConstants::Elevator::sproketDiameter / 2.0_rad
@@ -95,14 +96,16 @@ class ManipulatorSubsystem : public frc2::SubsystemBase {
   /*******
    * Arm *
    *******/
-  std::shared_ptr<rmb::AngularPositionFeedbackController> armMotor{
-    std::make_shared<rmb::SparkMaxPositionController>(
-      ManipulatorConstants::Arm::motorConfig,
-      ManipulatorConstants::Arm::pidConfig,
-      ManipulatorConstants::Arm::feedforward,
-      ManipulatorConstants::Arm::range,
-      ManipulatorConstants::Arm::profileConfig,
-      ManipulatorConstants::Arm::feedbackConfig
+  std::unique_ptr<rmb::AngularPositionController> armMotor{
+    std::make_unique<rmb::SparkMaxPositionController>(
+      rmb::SparkMaxPositionController::CreateInfo {
+        ManipulatorConstants::Arm::motorConfig,
+        ManipulatorConstants::Arm::pidConfig,
+        ManipulatorConstants::Arm::feedforward,
+        ManipulatorConstants::Arm::range,
+        ManipulatorConstants::Arm::profileConfig,
+        ManipulatorConstants::Arm::feedbackConfig
+      }
     )
   };
 
