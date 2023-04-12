@@ -6,6 +6,7 @@
 
 #include <frc2/command/SubsystemBase.h>
 
+#include <memory>
 #include <thread>
 
 #include <units/acceleration.h>
@@ -31,8 +32,10 @@
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/controller/LogitechJoystick.h>
 #include <frc2/command/PrintCommand.h>
+#include <unordered_map>
 
 #include "DriveConstants.h"
+#include "frc2/command/Command.h"
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
@@ -77,6 +80,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   void driveWheelSpeeds(frc::DifferentialDriveWheelSpeeds wheelSpeeds);
   void driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds);
+  frc2::CommandPtr getAutoCommand(
+    std::vector<pathplanner::PathPlannerTrajectory> trajectoryGroup,
+    std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap);
 
   /***********
    * Balance *

@@ -44,11 +44,26 @@ RobotContainer::RobotContainer() {
 
   // Setup Auto Routines
   for (auto autoConfig : autoNames) {
+    
+    std::vector<pathplanner::PathPlannerTrajectory> trajectoryGroup = 
+      pathplanner::PathPlanner::loadPathGroup(
+        autoConfig.name, autoConfig.maxVelocity, 
+        autoConfig.maxAcceleration, autoConfig.reversed);
+
+    std::vector<pathplanner::PathPlannerTrajectory> newTrajectoryGroup;
+    newTrajectoryGroup.reserve(trajectoryGroup.size());
+
+    for (auto trajectory: trajectoryGroup) {
+      newTrajectoryGroup.push_back(
+        pathplanner::PathPlannerTrajectory::transformTrajectoryForAlliance(
+          trajectory, frc::DriverStation::GetAlliance())
+      );
+    }
+
     // Build Commands
     autoCommands.emplace_back(
-        autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
-            autoConfig.name, autoConfig.maxVelocity, autoConfig.maxAcceleration,
-            autoConfig.reversed)));
+      driveSubsystem.getAutoCommand(newTrajectoryGroup, eventMap)
+    );
 
     // Add to chooser
     autonomousChooser.AddOption(autoConfig.name, autoCommands.back().get());

@@ -148,6 +148,12 @@ void DriveSubsystem::driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds) {
   drive.driveChassisSpeeds(chassisSpeeds);
 }
 
+frc2::CommandPtr DriveSubsystem::getAutoCommand(
+    std::vector<pathplanner::PathPlannerTrajectory> trajectoryGroup,
+    std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap) {
+  return drive.fullPPAuto(trajectoryGroup, eventMap, {this});
+}
+
 units::radian_t DriveSubsystem::getRobotPitch() {
   return units::degree_t(gyro->GetRoll());
 }
